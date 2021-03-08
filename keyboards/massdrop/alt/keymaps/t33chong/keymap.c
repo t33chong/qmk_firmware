@@ -19,28 +19,28 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_LCTL, KC_LALT, KC_LGUI,                            KC_SPC,                             KC_UNDS, MO(15),  KC_LEFT, KC_DOWN, KC_RGHT  \
     ),
     [1] = LAYOUT_65_ansi_blocker(
-     /* KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_MINS, KC_EQL,  KC_BSPC, TO(0),   \ */
+     /* KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_MINS, KC_EQL,  KC_BSPC, KC_HOME, \ */
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
-     /* KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC, KC_BSLS, TO(1),   \ */
+     /* KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC, KC_BSLS, KC_END,  \ */
         _______, KC_WH_U, KC_MS_U, KC_WH_D, KC_HOME, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
-     /* KC_ESC,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,          KC_ENT,  TO(0),   \ */
+     /* KC_ESC,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,          KC_ENT,  KC_PGUP, \ */
         _______, KC_MS_L, KC_MS_D, KC_MS_R, KC_END,  _______, _______, KC_BTN1, KC_BTN2, KC_BTN3, KC_BTN4, KC_BTN5,          _______, _______, \
-     /* KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,          KC_UP,   TO(0),   \ */
+     /* KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,          KC_UP,   KC_PGDN, \ */
         _______, KC_WH_L, _______, KC_WH_R, _______, _______, _______, _______, _______, _______, _______, _______,          _______, _______, \
-     /* KC_LCTL, KC_LALT, KC_LGUI,                            KC_SPC,                             KC_RALT, MO(15),  KC_LEFT, KC_DOWN, KC_RGHT  \ */
+     /* KC_LCTL, KC_LALT, KC_LGUI,                            KC_SPC,                             KC_UNDS, MO(15),  KC_LEFT, KC_DOWN, KC_RGHT  \ */
         _______, _______, _______,                            _______,                            _______, _______, _______, _______, _______  \
     ),
     [15] = LAYOUT_65_ansi_blocker( // ALT swaps ALT with CMD, CMD resets it
-     /* KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_MINS, KC_EQL,  KC_BSPC, TO(0),   \ */
-        TG(1),   KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  _______, _______, \
-     /* KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC, KC_BSLS, TO(1),   \ */
-        _______, RGB_SPD, RGB_VAI, RGB_SPI, RGB_HUI, RGB_SAI, _______, U_T_AUTO,U_T_AGCR,_______, KC_PSCR, KC_SLCK, KC_PAUS, _______, _______, \
-     /* KC_ESC,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,          KC_ENT,  TO(0),   \ */
-        _______, RGB_RMOD,RGB_VAD, RGB_MOD, RGB_HUD, RGB_SAD, _______, _______, _______, _______, _______, _______,          _______, _______, \
-     /* KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,          KC_UP,   TO(0),   \ */
-        _______, RGB_TOG, _______, _______, _______, MD_BOOT, NK_TOGG, DBG_TOG, RGB_RMOD,RGB_MOD, _______, _______,          KC_PGUP, _______, \
-     /* KC_LCTL, KC_LALT, KC_LGUI,                            KC_SPC,                             KC_RALT, MO(15),  KC_LEFT, KC_DOWN, KC_RGHT  \ */
-        _______, LAG_SWP, LAG_NRM,                            _______,                            _______, _______, KC_HOME, KC_PGDN, KC_END  \
+     /* KC_GRV,      KC_1,      KC_2,      KC_3,      KC_4,      KC_5,      KC_6,        KC_7,      KC_8,         KC_9,        KC_0,         KC_MINS,      KC_EQL,       KC_BSPC,      KC_HOME, \ */
+        HYPR(KC_GRV),KC_F1,     KC_F2,     KC_F3,     KC_F4,     KC_F5,     KC_F6,       KC_F7,     KC_F8,        KC_F9,       KC_F10,       KC_F11,       KC_F12,       HYPR(KC_BSPC),MD_BOOT, \
+     /* KC_TAB,      KC_Q,      KC_W,      KC_E,      KC_R,      KC_T,      KC_Y,        KC_U,      KC_I,         KC_O,        KC_P,         KC_LBRC,      KC_RBRC,      KC_BSLS,      KC_END,  \ */
+        HYPR(KC_TAB),HYPR(KC_Q),HYPR(KC_W),HYPR(KC_E),HYPR(KC_R),HYPR(KC_T),HYPR(KC_Y),  HYPR(KC_U),HYPR(KC_I),   HYPR(KC_O),  HYPR(KC_P),   HYPR(KC_LBRC),HYPR(KC_RBRC),HYPR(KC_BSLS),_______, \
+     /* KC_ESC,      KC_A,      KC_S,      KC_D,      KC_F,      KC_G,      KC_H,        KC_J,      KC_K,         KC_L,        KC_SCLN,      KC_QUOT,                    KC_ENT,       KC_PGUP, \ */
+        TG(1),       HYPR(KC_A),HYPR(KC_S),HYPR(KC_D),HYPR(KC_F),HYPR(KC_G),HYPR(KC_H),  HYPR(KC_J),HYPR(KC_K),   HYPR(KC_L),  HYPR(KC_SCLN),HYPR(KC_QUOT),              HYPR(KC_ENT), RGB_RMOD,\
+     /* KC_LSFT,     KC_Z,      KC_X,      KC_C,      KC_V,      KC_B,      KC_N,        KC_M,      KC_COMM,      KC_DOT,      KC_SLSH,      KC_RSFT,                    KC_UP,        KC_PGDN, \ */
+        _______,     HYPR(KC_Z),HYPR(KC_X),HYPR(KC_C),HYPR(KC_V),HYPR(KC_B),HYPR(KC_N),  HYPR(KC_M),HYPR(KC_COMM),HYPR(KC_DOT),HYPR(KC_SLSH),_______,                    KC_PGUP,      RGB_MOD, \
+     /* KC_LCTL,     KC_LALT,   KC_LGUI,                                    KC_SPC,                                            KC_UNDS,      MO(15),       KC_LEFT,      KC_DOWN,      KC_RGHT  \ */
+        _______,     LAG_SWP,   LAG_NRM,                                    HYPR(KC_SPC),                                      HYPR(KC_UNDS),_______,      KC_HOME,      KC_PGDN,      KC_END   \
     ),
     /*
     [X] = LAYOUT_65_ansi_blocker(
