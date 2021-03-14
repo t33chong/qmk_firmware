@@ -14,18 +14,13 @@ enum alt_keycodes {
 
 enum my_keycodes {
     MY_UNDS = NEW_SAFE_RANGE, //Use instead of KC_UNDS to avoid shift applying to next keypress
-    /* MY_ALBS, */
+    MY_SFBS,                  //Hold for shift, tap for alt+backspace
 };
 
-#define MY_CTES LCTL_T(KC_ESC)
-#define MY_SFBS LSFT_T(KC_BSPC)
-#define MY_HYSP HYPR_T(KC_SPC)
-#define MY_SFCA RSFT_T(KC_CAPS)
-#define MY_ESLT LT(4, KC_ESC)
-/* #define MY_SFBS LSFT_T(LALT(KC_BSPC)) */
-/* #define MY_ALBS LALT(KC_BSPC) */
-/* #define MY_ALBS (QK_LALT | KC_BSPC) */
-/* #define MY_SFBS LSFT_T(MY_ALBS) */
+#define MY_CTES LCTL_T(KC_ESC)  //Hold for control, tap for escape
+#define MY_HYSP HYPR_T(KC_SPC)  //Hold for hyper, tap for space
+#define MY_SFCA RSFT_T(KC_CAPS) //Hold for shift, tap for caps lock
+#define MY_ESLT LT(4, KC_ESC)   //Hold for gaming arrows layer, tap for escape
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [0] = LAYOUT_65_ansi_blocker(
@@ -33,8 +28,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC, KC_BSLS, KC_DEL,  \
         MY_CTES, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,          KC_ENT,  KC_PGUP, \
         MY_SFBS, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, MY_SFCA,          KC_UP,   KC_PGDN, \
-        /* KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, MY_SFCA,          KC_UP,   KC_PGDN, \ */
-        /* MO(2),   KC_LALT, KC_LGUI,                            MY_HYSP,                            MY_UNDS, MO(15),  KC_LEFT, KC_DOWN, KC_RGHT  \ */
         MO(2),   KC_LALT, KC_LGUI,                            MY_HYSP,                            MY_UNDS, MO(15),  KC_LEFT, KC_DOWN, KC_RGHT  \
     ),
     [1] = LAYOUT_65_ansi_blocker( // Mouse keys
@@ -48,7 +41,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,_______,  _______, _______, _______, \
         _______, _______, _______, _______, _______, _______, _______, KC_KP_7, KC_KP_8, KC_KP_9, KC_PMNS, _______, _______, _______, _______, \
         _______, _______, _______, _______, _______, _______, KC_BSPC, KC_KP_4, KC_KP_5, KC_KP_6, KC_PPLS, _______,          _______, _______, \
-        KC_NLCK, _______, _______, _______, _______, _______, _______, KC_KP_1, KC_KP_2, KC_KP_3, KC_PAST, _______,          _______, _______, \
+        _______, _______, _______, _______, _______, _______, _______, KC_KP_1, KC_KP_2, KC_KP_3, KC_PAST, _______,          _______, _______, \
         _______, _______, _______,                            KC_KP_0,                            _______, _______, _______, _______, _______  \
     ),
     [3] = LAYOUT_65_ansi_blocker( // Gaming
@@ -119,7 +112,8 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 #define MODS_ALT  (get_mods() & MOD_BIT(KC_LALT) || get_mods() & MOD_BIT(KC_RALT))
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    static uint32_t key_timer;
+    static uint32_t boot_key_timer;
+    static uint32_t sfbs_key_timer;
 
     switch (keycode) {
         case U_T_AUTO:
@@ -154,9 +148,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             return false;
         case MD_BOOT:
             if (record->event.pressed) {
-                key_timer = timer_read32();
+                boot_key_timer = timer_read32();
             } else {
-                if (timer_elapsed32(key_timer) >= 500) {
+                if (timer_elapsed32(boot_key_timer) >= 500) {
                     reset_keyboard();
                 }
             }
@@ -192,21 +186,17 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 SEND_STRING("_");
             }
             return false;
-        /* case MY_ALBS: */
-        /*     if (record->event.pressed) { */
-        /*         SEND_STRING(SS_DOWN(X_LALT) SS_TAP(X_BSPC) SS_UP(X_LALT)); */
-        /*         /1* SS_DOWN(KC_LALT); *1/ */
-        /*         /1* SS_TAP(KC_BSPC); *1/ */
-        /*         /1* SS_UP(KC_LALT); *1/ */
-        /*     } */
-        /*     /1* if (record->event.pressed) { *1/ */
-        /*     /1*     /2* register_code16(LALT(KC_BSPC)); *2/ *1/ */
-        /*     /1*     register_code16((QK_LALT | KC_BSPC)); *1/ */
-        /*     /1* } else { *1/ */
-        /*     /1*     /2* unregister_code16(LALT(KC_BSPC)); *2/ *1/ */
-        /*     /1*     unregister_code16((QK_LALT | KC_BSPC)); *1/ */
-        /*     /1* } *1/ */
-        /*     return false; */
+        case MY_SFBS: // https://www.reddit.com/r/olkb/comments/afm9ii/qmk_macro_in_modtap_keys/ee0152e/
+            if (record->event.pressed) {
+                sfbs_key_timer = timer_read();
+                register_code(KC_LSFT);
+            } else {
+                unregister_code(KC_LSFT);
+                if (timer_elapsed(sfbs_key_timer) < TAPPING_TERM) {
+                    SEND_STRING(SS_LALT(SS_TAP(X_BSPC)));
+                }
+            }
+            return false;
         default:
             return true; //Process all other keycodes normally
     }
