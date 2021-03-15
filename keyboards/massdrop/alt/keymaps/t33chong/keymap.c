@@ -198,6 +198,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
             return false;
         default:
+            if (record->event.pressed && keycode != MY_SFBS) {
+              sfbs_key_timer = 0;
+            }
             return true; //Process all other keycodes normally
     }
 }
