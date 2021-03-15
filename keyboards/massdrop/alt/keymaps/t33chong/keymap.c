@@ -13,55 +13,70 @@ enum alt_keycodes {
 };
 
 enum my_keycodes {
-    MY_UNDS = NEW_SAFE_RANGE, //Use instead of KC_UNDS to avoid shift applying to next keypress
-    MY_SFBS,                  //Hold for shift, tap for alt+backspace
+    MY_UNDS = NEW_SAFE_RANGE, // Use instead of KC_UNDS to avoid shift applying to next keypress
+    MY_SFBS,                  // Hold for shift, tap for alt+backspace
 };
 
-#define MY_CTES LCTL_T(KC_ESC)  //Hold for control, tap for escape
-#define MY_HYSP HYPR_T(KC_SPC)  //Hold for hyper, tap for space
-#define MY_SFCA RSFT_T(KC_CAPS) //Hold for shift, tap for caps lock
-#define MY_ESLT LT(4, KC_ESC)   //Hold for gaming arrows layer, tap for escape
+enum my_layers {
+    _DEFAULT = 0,
+    _MOUSE_KEYS,
+    _NUMPAD,
+    _GAMING,
+    _GAMING2,
+    _FUNCTION,
+};
+
+#define MY_GUEQ LGUI_T(KC_EQL)       // Hold for command, tap for equal sign
+#define MY_CTES LCTL_T(KC_ESC)       // Hold for control, tap for escape
+#define MY_HYSP HYPR_T(KC_SPC)       // Hold for hyper, tap for space
+#define MY_SFCA RSFT_T(KC_CAPS)      // Hold for shift, tap for caps lock
+#define MY_ESG2 LT(_GAMING2, KC_ESC) // Hold for gaming arrows layer, tap for escape
+#define MY_HYBS HYPR(KC_BSLS)        // Hold for push to talk with Shush
+#define MY_TGMK TG(_MOUSE_KEYS)      // Press to toggle mouse keys layer
+#define MY_MONP MO(_NUMPAD)          // Hold to toggle numpad layer
+#define MY_TGGM TG(_GAMING)          // Press to toggle gaming layer
+#define MY_MOFN MO(_FUNCTION)        // Hold to toggle numpad layer
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-    [0] = LAYOUT_65_ansi_blocker(
-        KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_MINS, KC_EQL,  KC_BSPC, TG(3),   \
-        KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC, KC_BSLS, KC_DEL,  \
+    [_DEFAULT] = LAYOUT_65_ansi_blocker(
+        KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_MINS, KC_EQL,  KC_BSPC, MY_HYBS, \
+        KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC, KC_BSLS, MY_TGGM, \
         MY_CTES, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,          KC_ENT,  KC_PGUP, \
         MY_SFBS, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, MY_SFCA,          KC_UP,   KC_PGDN, \
-        MO(2),   KC_LALT, KC_LGUI,                            MY_HYSP,                            MY_UNDS, MO(15),  KC_LEFT, KC_DOWN, KC_RGHT  \
+        MY_MONP, KC_LALT, MY_GUEQ,                            MY_HYSP,                            MY_UNDS, MY_MOFN, KC_LEFT, KC_DOWN, KC_RGHT  \
     ),
-    [1] = LAYOUT_65_ansi_blocker( // Mouse keys
+    [_MOUSE_KEYS] = LAYOUT_65_ansi_blocker(
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
         _______, KC_WH_U, KC_MS_U, KC_WH_D, KC_HOME, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
         _______, KC_MS_L, KC_MS_D, KC_MS_R, KC_END,  _______, _______, KC_BTN1, KC_BTN2, KC_BTN3, KC_BTN4, KC_BTN5,          _______, _______, \
         _______, KC_WH_L, _______, KC_WH_R, _______, _______, _______, _______, _______, _______, _______, _______,          _______, _______, \
         _______, _______, _______,                            _______,                            _______, _______, _______, _______, _______  \
     ),
-    [2] = LAYOUT_65_ansi_blocker( // Numpad
+    [_NUMPAD] = LAYOUT_65_ansi_blocker(
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,_______,  _______, _______, _______, \
         _______, _______, _______, _______, _______, _______, _______, KC_KP_7, KC_KP_8, KC_KP_9, KC_PMNS, _______, _______, _______, _______, \
         _______, _______, _______, _______, _______, _______, KC_BSPC, KC_KP_4, KC_KP_5, KC_KP_6, KC_PPLS, _______,          _______, _______, \
         _______, _______, _______, _______, _______, _______, _______, KC_KP_1, KC_KP_2, KC_KP_3, KC_PAST, _______,          _______, _______, \
         _______, _______, _______,                            KC_KP_0,                            _______, _______, _______, _______, _______  \
     ),
-    [3] = LAYOUT_65_ansi_blocker( // Gaming
+    [_GAMING] = LAYOUT_65_ansi_blocker(
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
-        MY_ESLT, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______, _______, \
+        MY_ESG2, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______, _______, \
         KC_LSFT, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______, _______, \
         KC_LCTL, KC_EQL,  KC_LALT,                            _______,                            _______, KC_LGUI, _______, _______, _______  \
     ),
-    [4] = LAYOUT_65_ansi_blocker( // Gaming arrows/mirror image
+    [_GAMING2] = LAYOUT_65_ansi_blocker( // WASD arrows/mirror image
         _______, KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    _______, _______, _______, _______, _______, _______, _______, _______, _______, \
         _______, KC_P,    KC_UP,   KC_I,    KC_U,    KC_Y,    _______, _______, _______, _______, _______, _______, _______, _______, _______, \
         _______, KC_LEFT, KC_DOWN, KC_RGHT, KC_J,    KC_H,    _______, _______, _______, _______, _______, _______,          _______, _______, \
         _______, KC_SLSH, KC_DOT,  KC_COMM, KC_M,    KC_N,    _______, _______, _______, _______, _______, _______,          _______, _______, \
         _______, _______, _______,                            KC_ENT,                             _______, _______, _______, _______, _______  \
     ),
-    [15] = LAYOUT_65_ansi_blocker( // Function; ALT swaps ALT with CMD, CMD resets it
+    [_FUNCTION] = LAYOUT_65_ansi_blocker(
         _______, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  _______, MD_BOOT, \
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
-        TG(1),   _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______, _______, \
+        MY_TGMK, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______, _______, \
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          KC_PGUP, _______, \
         _______, _______, _______,                            _______,                            _______, _______, KC_HOME, KC_PGDN, KC_END   \
     ),
@@ -80,7 +95,7 @@ bool get_ignore_mod_tap_interrupt(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case MY_CTES:
         case MY_HYSP:
-        case MY_ESLT:
+        case MY_ESG2:
             return true;
         default:
             return false;
@@ -91,13 +106,13 @@ bool get_ignore_mod_tap_interrupt(uint16_t keycode, keyrecord_t *record) {
 // https://docs.qmk.fm/#/custom_quantum_functions?id=layer-change-code
 layer_state_t layer_state_set_user(layer_state_t state) {
     switch (get_highest_layer(state)) {
-    case 1: // Mouse keys
+    case _MOUSE_KEYS:
         rgb_matrix_mode(RGB_MATRIX_GRADIENT_UP_DOWN);
         break;
-    case 2: // Numpad
-    case 3: // Gaming
-    case 4: // Gaming arrows/mirror image
-    case 15: // Function
+    case _NUMPAD:
+    case _GAMING:
+    case _GAMING2:
+    case _FUNCTION:
         rgb_matrix_mode(RGB_MATRIX_SOLID_COLOR);
         break;
     default:
