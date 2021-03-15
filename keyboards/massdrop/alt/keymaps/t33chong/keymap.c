@@ -117,7 +117,8 @@ layer_state_t layer_state_set_user(layer_state_t state) {
         rgb_matrix_mode(RGB_MATRIX_SOLID_COLOR);
         break;
     default:
-        rgb_matrix_mode(RGB_MATRIX_GRADIENT_LEFT_RIGHT);
+        /* rgb_matrix_mode(RGB_MATRIX_GRADIENT_LEFT_RIGHT); */
+        rgb_matrix_mode(RGB_MATRIX_CUSTOM_RETRO_APPLE);
         break;
     }
   return state;
