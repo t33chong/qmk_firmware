@@ -96,7 +96,6 @@ bool get_ignore_mod_tap_interrupt(uint16_t keycode, keyrecord_t *record) {
         case MY_CTES:
         case MY_HYSP:
         case MY_ESG2:
-        case MY_GUEQ:
             return true;
         default:
             return false;
