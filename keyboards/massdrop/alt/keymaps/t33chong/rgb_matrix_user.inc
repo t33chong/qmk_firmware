@@ -8,7 +8,12 @@
 #define ____RED RGB_RED
 #define _PURPLE RGB_PURPLE
 #define ___BLUE RGB_BLUE
+#define ______X RGB_OFF
 
+RGB_MATRIX_EFFECT(ALL_BLUE)
+RGB_MATRIX_EFFECT(ALL_GREEN)
+RGB_MATRIX_EFFECT(ALL_RED)
+RGB_MATRIX_EFFECT(MOUSE_KEYS)
 RGB_MATRIX_EFFECT(RETRO_APPLE)
 
 #ifdef RGB_MATRIX_CUSTOM_EFFECT_IMPLS
@@ -22,17 +27,58 @@ RGB_MATRIX_EFFECT(RETRO_APPLE)
                81,      80,      79,      78,      77,      76,      75,      74,      73,      72,      71,      70,      69,      68,      67           \
   };
 
-  /*
-  int my_rgb_layout[_NUM_LEDS * 3] = {
-          _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          \
- _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
- _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
-          _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______, _______,          \
- _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______, _______, _______, \
- _______, _______, _______, _______,                            _______,                            _______, _______, _______, _______, _______, _______, \
-          _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______           \
-  };
-  */
+  static bool ALL_BLUE(effect_params_t* params) {
+    RGB_MATRIX_USE_LIMITS(led_min, led_max);
+    rgb_matrix_set_color_all(RGB_BLUE);
+    return led_max < DRIVER_LED_TOTAL;
+  }
+
+  static bool ALL_GREEN(effect_params_t* params) {
+    RGB_MATRIX_USE_LIMITS(led_min, led_max);
+    rgb_matrix_set_color_all(RGB_GREEN);
+    return led_max < DRIVER_LED_TOTAL;
+  }
+
+  static bool ALL_RED(effect_params_t* params) {
+    RGB_MATRIX_USE_LIMITS(led_min, led_max);
+    rgb_matrix_set_color_all(RGB_RED);
+    return led_max < DRIVER_LED_TOTAL;
+  }
+
+  static bool _make_custom_effect(effect_params_t* params, int layout[]) {
+    RGB_MATRIX_USE_LIMITS(led_min, led_max);
+    int i;
+    for (i=0; i<_NUM_LEDS; i++) {
+      rgb_matrix_set_color(_drop_alt_led_layout[i], layout[i*3], layout[i*3+1], layout[i*3+2]);
+    }
+    return led_max < DRIVER_LED_TOTAL;
+  }
+
+  static bool RETRO_APPLE(effect_params_t* params) {
+    int layout[_NUM_LEDS * 3] = {
+          __GREEN, __GREEN, __GREEN, __GREEN, __GREEN, __GREEN, __GREEN, __GREEN, __GREEN, __GREEN, __GREEN, __GREEN, __GREEN, __GREEN, __GREEN,          \
+ _YELLOW, __GREEN, __GREEN, __GREEN, __GREEN, __GREEN, __GREEN, __GREEN, __GREEN, __GREEN, __GREEN, __GREEN, __GREEN, __GREEN, __GREEN, __GREEN, _YELLOW, \
+ _ORANGE, ___GOLD, ___GOLD, ___GOLD, ___GOLD, ___GOLD, ___GOLD, ___GOLD, ___GOLD, ___GOLD, ___GOLD, ___GOLD, ___GOLD, ___GOLD, ___GOLD, ___GOLD, _ORANGE, \
+          ____RED, ____RED, ____RED, ____RED, ____RED, ____RED, ____RED, ____RED, ____RED, ____RED, ____RED, ____RED,          ____RED, ____RED,          \
+ ____RED, _PURPLE, _PURPLE, _PURPLE, _PURPLE, _PURPLE, _PURPLE, _PURPLE, _PURPLE, _PURPLE, _PURPLE, _PURPLE, _PURPLE,          _PURPLE, _PURPLE, ____RED, \
+ _PURPLE, ___BLUE, ___BLUE, ___BLUE,                            ___BLUE,                            ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE, _PURPLE, \
+          ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE           \
+    };
+    return _make_custom_effect(params, layout);
+  }
+
+  static bool MOUSE_KEYS(effect_params_t* params) {
+    int layout[_NUM_LEDS * 3] = {
+          ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X,          \
+ ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, \
+ ______X, ______X, __GREEN, ___BLUE, __GREEN, _YELLOW, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, \
+          ______X, ___BLUE, ___BLUE, ___BLUE, _YELLOW, ______X, ______X, ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE,          ______X, ______X,          \
+ ______X, ______X, __GREEN, ______X, __GREEN, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X,          ______X, ______X, ______X, \
+ ______X, ______X, ______X, ______X,                            ______X,                            ______X, ______X, ______X, ______X, ______X, ______X, \
+          ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X           \
+    };
+    return _make_custom_effect(params, layout);
+  }
 
   /*
           _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          \
@@ -44,24 +90,19 @@ RGB_MATRIX_EFFECT(RETRO_APPLE)
           _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______           \
   */
 
-  static bool RETRO_APPLE(effect_params_t* params) {
-    int _retro_apple_color_layout[_NUM_LEDS * 3] = {
-          __GREEN, __GREEN, __GREEN, __GREEN, __GREEN, __GREEN, __GREEN, __GREEN, __GREEN, __GREEN, __GREEN, __GREEN, __GREEN, __GREEN, __GREEN,          \
- _YELLOW, __GREEN, __GREEN, __GREEN, __GREEN, __GREEN, __GREEN, __GREEN, __GREEN, __GREEN, __GREEN, __GREEN, __GREEN, __GREEN, __GREEN, __GREEN, _YELLOW, \
- _ORANGE, ___GOLD, ___GOLD, ___GOLD, ___GOLD, ___GOLD, ___GOLD, ___GOLD, ___GOLD, ___GOLD, ___GOLD, ___GOLD, ___GOLD, ___GOLD, ___GOLD, ___GOLD, _ORANGE, \
-          ____RED, ____RED, ____RED, ____RED, ____RED, ____RED, ____RED, ____RED, ____RED, ____RED, ____RED, ____RED,          ____RED, ____RED,          \
- ____RED, _PURPLE, _PURPLE, _PURPLE, _PURPLE, _PURPLE, _PURPLE, _PURPLE, _PURPLE, _PURPLE, _PURPLE, _PURPLE, _PURPLE,          _PURPLE, _PURPLE, ____RED, \
- _PURPLE, ___BLUE, ___BLUE, ___BLUE,                            ___BLUE,                            ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE, _PURPLE, \
-          ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE           \
+  /*
+  static bool CUSTOM_EFFECT(effect_params_t* params) {
+    int layout[_NUM_LEDS * 3] = {
+          ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X,          \
+ ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, \
+ ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, \
+          ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X,          ______X, ______X,          \
+ ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X,          ______X, ______X, ______X, \
+ ______X, ______X, ______X, ______X,                            ______X,                            ______X, ______X, ______X, ______X, ______X, ______X, \
+          ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X           \
     };
-
-    RGB_MATRIX_USE_LIMITS(led_min, led_max);
-
-    int i;
-    for (i=0; i<_NUM_LEDS; i++) {
-      rgb_matrix_set_color(_drop_alt_led_layout[i], _retro_apple_color_layout[i*3], _retro_apple_color_layout[i*3+1], _retro_apple_color_layout[i*3+2]);
-    }
-
-    return led_max < DRIVER_LED_TOTAL;
+    return _make_custom_effect(params, layout);
   }
+  */
+
 #endif // RGB_MATRIX_CUSTOM_EFFECT_IMPLS
