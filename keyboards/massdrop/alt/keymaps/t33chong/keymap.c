@@ -106,7 +106,8 @@ bool get_ignore_mod_tap_interrupt(uint16_t keycode, keyrecord_t *record) {
 layer_state_t layer_state_set_user(layer_state_t state) {
   switch (get_highest_layer(state)) {
     case _MOUSE_KEYS:
-      rgb_matrix_mode(RGB_MATRIX_GRADIENT_UP_DOWN);
+      /* rgb_matrix_mode(RGB_MATRIX_GRADIENT_UP_DOWN); */
+      rgb_matrix_mode(RGB_MATRIX_CUSTOM_MOUSE_KEYS);
       break;
     case _NUMPAD:
     case _GAMING:
@@ -116,7 +117,8 @@ layer_state_t layer_state_set_user(layer_state_t state) {
       break;
     default:
       /* rgb_matrix_mode(RGB_MATRIX_GRADIENT_LEFT_RIGHT); */
-      rgb_matrix_mode(RGB_MATRIX_CUSTOM_RETRO_APPLE);
+      /* rgb_matrix_mode(RGB_MATRIX_CUSTOM_RETRO_APPLE); */
+      rgb_matrix_mode(RGB_MATRIX_CUSTOM_ALL_GREEN);
       break;
   }
   return state;
