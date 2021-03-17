@@ -1,51 +1,66 @@
-// From https://github.com/qmk/qmk_firmware/blob/master/quantum/rgblight_list.h
-#define MY_GREEN 0x00, 0xFF, 0x00
-#define MY_YELLOW 0xFF, 0xFF, 0x00
-#define MY_YELLANGE 0xFF, 0xD9, 0x00
-#define MY_ORANGE 0xFF, 0x80, 0x00
-#define MY_RED 0xFF, 0x00, 0x00
-#define MY_PURPLE 0x7A, 0x00, 0xFF
-#define MY_BLUE 0x00, 0x00, 0xFF
+#define _NUM_LEDS 105
+
+// https://github.com/qmk/qmk_firmware/blob/master/quantum/rgblight_list.h
+#define __GREEN RGB_GREEN
+#define _YELLOW RGB_YELLOW
+#define ___GOLD RGB_GOLD
+#define _ORANGE RGB_ORANGE
+#define ____RED RGB_RED
+#define _PURPLE RGB_PURPLE
+#define ___BLUE RGB_BLUE
 
 RGB_MATRIX_EFFECT(RETRO_APPLE)
 
 #ifdef RGB_MATRIX_CUSTOM_EFFECT_IMPLS
+  int _drop_alt_led_layout[_NUM_LEDS] = {
+               86,      87,      88,      89,      90,      91,      92,      93,      94,      95,      96,      97,      98,      99,     100,          \
+      85,       0,       1,       2,       3,       4,       5,       6,       7,       8,       9,      10,      11,      12,      13,      14,     101, \
+      84,      15,      16,      17,      18,      19,      20,      21,      22,      23,      24,      25,      26,      27,      28,      29,     102, \
+               30,      31,      32,      33,      34,      35,      36,      37,      38,      39,      40,      41,               42,      43,          \
+      83,      44,      45,      46,      47,      48,      49,      50,      51,      52,      53,      54,      55,               56,      57,     103, \
+      82,      58,      59,      60,                                 61,                                 62,      63,      64,      65,      66,     104, \
+               81,      80,      79,      78,      77,      76,      75,      74,      73,      72,      71,      70,      69,      68,      67           \
+  };
+
+  /*
+  int my_rgb_layout[_NUM_LEDS * 3] = {
+          _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          \
+ _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
+ _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
+          _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______, _______,          \
+ _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______, _______, _______, \
+ _______, _______, _______, _______,                            _______,                            _______, _______, _______, _______, _______, _______, \
+          _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______           \
+  };
+  */
+
+  /*
+          _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          \
+ _______, KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_MINS, KC_EQL,  KC_BSPC, KC_HOME, _______, \
+ _______, KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC, KC_BSLS, KC_END,  _______, \
+          KC_ESC,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,          KC_ENT,  KC_PGUP,          \
+ _______, KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,          KC_UP,   KC_PGDN, _______, \
+ _______, KC_LCTL, KC_LALT, KC_LGUI,                            KC_SPC,                             KC_UNDS, MO(X),   KC_LEFT, KC_DOWN, KC_RGHT  _______, \
+          _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______           \
+  */
+
   static bool RETRO_APPLE(effect_params_t* params) {
+    int _retro_apple_color_layout[_NUM_LEDS * 3] = {
+          __GREEN, __GREEN, __GREEN, __GREEN, __GREEN, __GREEN, __GREEN, __GREEN, __GREEN, __GREEN, __GREEN, __GREEN, __GREEN, __GREEN, __GREEN,          \
+ _YELLOW, __GREEN, __GREEN, __GREEN, __GREEN, __GREEN, __GREEN, __GREEN, __GREEN, __GREEN, __GREEN, __GREEN, __GREEN, __GREEN, __GREEN, __GREEN, _YELLOW, \
+ _ORANGE, ___GOLD, ___GOLD, ___GOLD, ___GOLD, ___GOLD, ___GOLD, ___GOLD, ___GOLD, ___GOLD, ___GOLD, ___GOLD, ___GOLD, ___GOLD, ___GOLD, ___GOLD, _ORANGE, \
+          ____RED, ____RED, ____RED, ____RED, ____RED, ____RED, ____RED, ____RED, ____RED, ____RED, ____RED, ____RED,          ____RED, ____RED,          \
+ ____RED, _PURPLE, _PURPLE, _PURPLE, _PURPLE, _PURPLE, _PURPLE, _PURPLE, _PURPLE, _PURPLE, _PURPLE, _PURPLE, _PURPLE,          _PURPLE, _PURPLE, ____RED, \
+ _PURPLE, ___BLUE, ___BLUE, ___BLUE,                            ___BLUE,                            ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE, _PURPLE, \
+          ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE           \
+    };
+
     RGB_MATRIX_USE_LIMITS(led_min, led_max);
 
     int i;
-    for (i=0; i<=14; i++) { // Row 1
-      rgb_matrix_set_color(i, MY_GREEN);
+    for (i=0; i<_NUM_LEDS; i++) {
+      rgb_matrix_set_color(_drop_alt_led_layout[i], _retro_apple_color_layout[i*3], _retro_apple_color_layout[i*3+1], _retro_apple_color_layout[i*3+2]);
     }
-    for (i=15; i<=29; i++) { // Row 2
-      rgb_matrix_set_color(i, MY_YELLANGE);
-    }
-    for (i=30; i<=43; i++) { // Row 3
-      rgb_matrix_set_color(i, MY_RED);
-    }
-    for (i=44; i<=57; i++) { // Row 4
-      rgb_matrix_set_color(i, MY_PURPLE);
-    }
-    for (i=58; i<=66; i++) { // Row 5
-      rgb_matrix_set_color(i, MY_BLUE);
-    }
-
-    for (i=67; i<=81; i++) { // Underglow bottom
-      rgb_matrix_set_color(i, MY_BLUE);
-    }
-    // Underglow left
-    rgb_matrix_set_color(82, MY_PURPLE);
-    rgb_matrix_set_color(83, MY_RED);
-    rgb_matrix_set_color(84, MY_ORANGE);
-    rgb_matrix_set_color(85, MY_YELLOW);
-    for (i=86; i<=100; i++) { // Underglow top
-      rgb_matrix_set_color(i, MY_GREEN);
-    }
-    // Underglow right
-    rgb_matrix_set_color(101, MY_YELLOW);
-    rgb_matrix_set_color(102, MY_ORANGE);
-    rgb_matrix_set_color(103, MY_RED);
-    rgb_matrix_set_color(104, MY_PURPLE);
 
     return led_max < DRIVER_LED_TOTAL;
   }
