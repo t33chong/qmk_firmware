@@ -17,7 +17,6 @@ RGB_MATRIX_EFFECT(ALL_RED)
 RGB_MATRIX_EFFECT(IRISH_FLAG)
 RGB_MATRIX_EFFECT(MOUSE_KEYS)
 RGB_MATRIX_EFFECT(RETRO_APPLE)
-/* RGB_MATRIX_EFFECT(TEST) */
 
 #ifdef RGB_MATRIX_CUSTOM_EFFECT_IMPLS
   int _drop_alt_led_layout[_NUM_LEDS] = {
@@ -47,16 +46,6 @@ RGB_MATRIX_EFFECT(RETRO_APPLE)
   static bool ALL_RED(effect_params_t* params) {
     return _set_all_leds(params, RGB_RED);
   }
-
-  /* static bool TEST(effect_params_t* params) { */
-  /*   RGB_MATRIX_USE_LIMITS(led_min, led_max); */
-  /*   rgb_matrix_set_color_all(RGB_OFF); */
-  /*   rgb_matrix_set_color(67, RGB_RED); */
-  /*   rgb_matrix_set_color(82, RGB_ORANGE); */
-  /*   rgb_matrix_set_color(86, RGB_GREEN); */
-  /*   rgb_matrix_set_color(101, RGB_BLUE); */
-  /*   return led_max < DRIVER_LED_TOTAL; */
-  /* } */
 
   // These work, just commented out to avoid compilation error
 
