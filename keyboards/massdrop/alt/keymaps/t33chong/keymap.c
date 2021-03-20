@@ -107,7 +107,6 @@ layer_state_t layer_state_set_user(layer_state_t state) {
   switch (get_highest_layer(state)) {
     case _MOUSE_KEYS:
       rgb_matrix_mode(RGB_MATRIX_GRADIENT_UP_DOWN);
-      /* rgb_matrix_mode(RGB_MATRIX_CUSTOM_MOUSE_KEYS); */
       break;
     case _GAMING:
       rgb_matrix_mode(RGB_MATRIX_CUSTOM_RADIOACTIVE_BARBERSHOP);
@@ -116,13 +115,12 @@ layer_state_t layer_state_set_user(layer_state_t state) {
       rgb_matrix_mode(RGB_MATRIX_CUSTOM_RADIOACTIVE_BARBERSHOP2);
       break;
     case _NUMPAD:
+      rgb_matrix_mode(RGB_MATRIX_GRADIENT_LEFT_RIGHT);
+      break;
     case _FUNCTION:
-      rgb_matrix_mode(RGB_MATRIX_SOLID_COLOR);
+      rgb_matrix_mode(RGB_MATRIX_CUSTOM_RETRO_APPLE);
       break;
     default:
-      /* rgb_matrix_mode(RGB_MATRIX_GRADIENT_LEFT_RIGHT); */
-      /* rgb_matrix_mode(RGB_MATRIX_CUSTOM_RETRO_APPLE); */
-      /* rgb_matrix_mode(RGB_MATRIX_CUSTOM_RCGYB); */
       rgb_matrix_mode(RGB_MATRIX_CUSTOM_ROYGCB);
       break;
   }
