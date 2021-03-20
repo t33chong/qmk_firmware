@@ -8,15 +8,25 @@
 #define ____RED RGB_RED
 #define _PURPLE RGB_PURPLE
 #define ___BLUE RGB_BLUE
+#define ___CYAN RGB_CYAN
+/* #define MAGENTA RGB_MAGENTA */
 #define __WHITE RGB_WHITE
 #define ______X RGB_OFF
 
 RGB_MATRIX_EFFECT(ALL_BLUE)
 RGB_MATRIX_EFFECT(ALL_GREEN)
 RGB_MATRIX_EFFECT(ALL_RED)
+RGB_MATRIX_EFFECT(RYGYB)
+RGB_MATRIX_EFFECT(RCGYB)
+RGB_MATRIX_EFFECT(FOUR_BANDS)
+RGB_MATRIX_EFFECT(THREE_BANDS)
 RGB_MATRIX_EFFECT(IRISH_FLAG)
 RGB_MATRIX_EFFECT(MOUSE_KEYS)
 RGB_MATRIX_EFFECT(RETRO_APPLE)
+RGB_MATRIX_EFFECT(ROYGCB)
+/* RGB_MATRIX_EFFECT(ZIGZAG) */
+RGB_MATRIX_EFFECT(RADIOACTIVE_BARBERSHOP)
+RGB_MATRIX_EFFECT(RADIOACTIVE_BARBERSHOP2)
 
 #ifdef RGB_MATRIX_CUSTOM_EFFECT_IMPLS
   int _drop_alt_led_layout[_NUM_LEDS] = {
@@ -117,6 +127,123 @@ RGB_MATRIX_EFFECT(RETRO_APPLE)
  __GREEN, __GREEN, __GREEN, __GREEN, __GREEN, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, _ORANGE, _ORANGE, _ORANGE,          _ORANGE, _ORANGE, _ORANGE, \
  __GREEN, __GREEN, __GREEN, __GREEN,                            __WHITE,                            _ORANGE, _ORANGE, _ORANGE, _ORANGE, _ORANGE, _ORANGE, \
           __GREEN, __GREEN, __GREEN, __GREEN, __GREEN, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, _ORANGE, _ORANGE, _ORANGE, _ORANGE, _ORANGE           \
+    };
+    return _make_custom_effect(params, layout);
+  }
+
+  static bool FOUR_BANDS(effect_params_t* params) {
+    int layout[_NUM_LEDS * 3] = {
+          ____RED, ____RED, ____RED, _YELLOW, _YELLOW, _YELLOW, _YELLOW, __GREEN, __GREEN, __GREEN, __GREEN, ___BLUE, ___BLUE, ___BLUE, ___BLUE,          \
+ ____RED, ____RED, ____RED, ____RED, ____RED, _YELLOW, _YELLOW, _YELLOW, _YELLOW, __GREEN, __GREEN, __GREEN, __GREEN, ___BLUE, ___BLUE, ___BLUE, ___BLUE, \
+ ____RED, ____RED, ____RED, ____RED, ____RED, _YELLOW, _YELLOW, _YELLOW, _YELLOW, __GREEN, __GREEN, __GREEN, __GREEN, ___BLUE, ___BLUE, ___BLUE, ___BLUE, \
+          ____RED, ____RED, ____RED, ____RED, _YELLOW, _YELLOW, _YELLOW, _YELLOW, __GREEN, __GREEN, __GREEN, __GREEN,          ___BLUE, ___BLUE,          \
+ ____RED, ____RED, ____RED, ____RED, ____RED, _YELLOW, _YELLOW, _YELLOW, _YELLOW, __GREEN, __GREEN, __GREEN, __GREEN,          ___BLUE, ___BLUE, ___BLUE, \
+ ____RED, ____RED, ____RED, ____RED,                            _YELLOW,                            __GREEN, __GREEN, __GREEN, ___BLUE, ___BLUE, ___BLUE, \
+          ____RED, ____RED, ____RED, ____RED, ____RED, _YELLOW, _YELLOW, _YELLOW, _YELLOW, __GREEN, __GREEN, __GREEN, __GREEN, ___BLUE, ___BLUE           \
+    };
+    return _make_custom_effect(params, layout);
+  }
+
+  static bool THREE_BANDS(effect_params_t* params) {
+    int layout[_NUM_LEDS * 3] = {
+          ____RED, ____RED, ____RED, ____RED, __GREEN, __GREEN, __GREEN, __GREEN, __GREEN, ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE,          \
+ ____RED, ____RED, ____RED, ____RED, ____RED, ____RED, __GREEN, __GREEN, __GREEN, __GREEN, __GREEN, ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE, \
+ ____RED, ____RED, ____RED, ____RED, ____RED, ____RED, __GREEN, __GREEN, __GREEN, __GREEN, __GREEN, ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE, \
+          ____RED, ____RED, ____RED, ____RED, ____RED, __GREEN, __GREEN, __GREEN, __GREEN, __GREEN, ___BLUE, ___BLUE,          ___BLUE, ___BLUE,          \
+ ____RED, ____RED, ____RED, ____RED, ____RED, ____RED, __GREEN, __GREEN, __GREEN, __GREEN, __GREEN, ___BLUE, ___BLUE,          ___BLUE, ___BLUE, ___BLUE, \
+ ____RED, ____RED, ____RED, ____RED,                            __GREEN,                            __GREEN, ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE, \
+          ____RED, ____RED, ____RED, ____RED, ____RED, ____RED, __GREEN, __GREEN, __GREEN, __GREEN, __GREEN, ___BLUE, ___BLUE, ___BLUE, ___BLUE           \
+    };
+    return _make_custom_effect(params, layout);
+  }
+
+  static bool RYGYB(effect_params_t* params) {
+    int layout[_NUM_LEDS * 3] = {
+          ____RED, ____RED, ____RED, ____RED, ____RED, ____RED, _YELLOW, _YELLOW, __GREEN, __GREEN, __GREEN, __GREEN, _YELLOW, _YELLOW, ___BLUE,          \
+ ____RED, ____RED, ____RED, ____RED, ____RED, ____RED, ____RED, _YELLOW, _YELLOW, __GREEN, __GREEN, __GREEN, __GREEN, _YELLOW, ___BLUE, ___BLUE, ___BLUE, \
+ ____RED, ____RED, ____RED, ____RED, ____RED, ____RED, _YELLOW, _YELLOW, __GREEN, __GREEN, __GREEN, __GREEN, _YELLOW, _YELLOW, ___BLUE, ___BLUE, ___BLUE, \
+          ____RED, ____RED, ____RED, ____RED, _YELLOW, _YELLOW, __GREEN, __GREEN, __GREEN, __GREEN, _YELLOW, _YELLOW,          ___BLUE, ___BLUE,          \
+ ____RED, ____RED, ____RED, ____RED, _YELLOW, _YELLOW, __GREEN, __GREEN, __GREEN, __GREEN, _YELLOW, _YELLOW, ___BLUE,          ___BLUE, ___BLUE, ___BLUE, \
+ ____RED, ____RED, ____RED, ____RED,                            __GREEN,                            _YELLOW, _YELLOW, ___BLUE, ___BLUE, ___BLUE, ___BLUE, \
+          ____RED, ____RED, ____RED, _YELLOW, _YELLOW, __GREEN, __GREEN, __GREEN, __GREEN, _YELLOW, _YELLOW, ___BLUE, ___BLUE, ___BLUE, ___BLUE           \
+    };
+    return _make_custom_effect(params, layout);
+  }
+
+  static bool RCGYB(effect_params_t* params) {
+    int layout[_NUM_LEDS * 3] = {
+          ____RED, ____RED, ____RED, ____RED, ____RED, ____RED, ___CYAN, ___CYAN, __GREEN, __GREEN, __GREEN, __GREEN, _YELLOW, _YELLOW, ___BLUE,          \
+ ____RED, ____RED, ____RED, ____RED, ____RED, ____RED, ____RED, ___CYAN, ___CYAN, __GREEN, __GREEN, __GREEN, __GREEN, _YELLOW, ___BLUE, ___BLUE, ___BLUE, \
+ ____RED, ____RED, ____RED, ____RED, ____RED, ____RED, ___CYAN, ___CYAN, __GREEN, __GREEN, __GREEN, __GREEN, _YELLOW, _YELLOW, ___BLUE, ___BLUE, ___BLUE, \
+          ____RED, ____RED, ____RED, ____RED, ___CYAN, ___CYAN, __GREEN, __GREEN, __GREEN, __GREEN, _YELLOW, _YELLOW,          ___BLUE, ___BLUE,          \
+ ____RED, ____RED, ____RED, ____RED, ___CYAN, ___CYAN, __GREEN, __GREEN, __GREEN, __GREEN, _YELLOW, _YELLOW, ___BLUE,          ___BLUE, ___BLUE, ___BLUE, \
+ ____RED, ____RED, ____RED, ____RED,                            __GREEN,                            _YELLOW, _YELLOW, ___BLUE, ___BLUE, ___BLUE, ___BLUE, \
+          ____RED, ____RED, ____RED, ___CYAN, ___CYAN, __GREEN, __GREEN, __GREEN, __GREEN, _YELLOW, _YELLOW, ___BLUE, ___BLUE, ___BLUE, ___BLUE           \
+    };
+    return _make_custom_effect(params, layout);
+  }
+
+  static bool ROYGCB(effect_params_t* params) {
+    int layout[_NUM_LEDS * 3] = {
+          ____RED, _ORANGE, _ORANGE, _YELLOW, _YELLOW, _YELLOW, __GREEN, __GREEN, __GREEN, ___CYAN, ___CYAN, ___CYAN, ___CYAN, ___BLUE, ___BLUE,          \
+ ____RED, ____RED, _ORANGE, _ORANGE, _ORANGE, _YELLOW, _YELLOW, _YELLOW, __GREEN, __GREEN, __GREEN, ___CYAN, ___CYAN, ___CYAN, ___BLUE, ___BLUE, ___BLUE, \
+ ____RED, ____RED, _ORANGE, _ORANGE, _ORANGE, _YELLOW, _YELLOW, _YELLOW, __GREEN, __GREEN, __GREEN, ___CYAN, ___CYAN, ___CYAN, ___BLUE, ___BLUE, ___BLUE, \
+          ____RED, _ORANGE, _ORANGE, _ORANGE, _YELLOW, _YELLOW, _YELLOW, __GREEN, __GREEN, __GREEN, ___CYAN, ___CYAN,          ___BLUE, ___BLUE,          \
+ ____RED, ____RED, _ORANGE, _ORANGE, _ORANGE, _YELLOW, _YELLOW, _YELLOW, __GREEN, __GREEN, __GREEN, ___CYAN, ___CYAN,          ___BLUE, ___BLUE, ___BLUE, \
+ ____RED, ____RED, ____RED, ____RED,                            _YELLOW,                            __GREEN, ___CYAN, ___BLUE, ___BLUE, ___BLUE, ___BLUE, \
+          ____RED, ____RED, ____RED, ____RED, _ORANGE, _ORANGE, _YELLOW, _YELLOW, __GREEN, __GREEN, __GREEN, ___CYAN, ___BLUE, ___BLUE, ___BLUE           \
+    };
+    return _make_custom_effect(params, layout);
+  }
+
+  /* static bool ZIGZAG(effect_params_t* params) { */
+  /*   int layout[_NUM_LEDS * 3] = { */
+  /*         ____RED, ____RED, ____RED, ____RED, ____RED, _PURPLE, __GREEN, __GREEN, __GREEN, __GREEN, _PURPLE, ___BLUE, ___BLUE, ___BLUE, ___BLUE,          \ */
+ /* ____RED, ____RED, _PURPLE, ____RED, ____RED, ____RED, _PURPLE, _PURPLE, __GREEN, __GREEN, __GREEN, _PURPLE, _PURPLE, ___BLUE, ___BLUE, ___BLUE, ___BLUE, \ */
+ /* ____RED, ____RED, _PURPLE, ____RED, ____RED, _PURPLE, _YELLOW, _PURPLE, __GREEN, __GREEN, _PURPLE, ___CYAN, _PURPLE, ___BLUE, ___BLUE, ___BLUE, ___BLUE, \ */
+  /*         ____RED, _PURPLE, ____RED, _PURPLE, _YELLOW, _YELLOW, _PURPLE, __GREEN, _PURPLE, ___CYAN, ___CYAN, _PURPLE,          ___BLUE, ___BLUE,          \ */
+ /* ____RED, ____RED, _PURPLE, _PURPLE, _YELLOW, _YELLOW, _YELLOW, _PURPLE, _PURPLE, ___CYAN, ___CYAN, ___CYAN, _PURPLE,          ___BLUE, ___BLUE, ___BLUE, \ */
+ /* ____RED, ____RED, ____RED, _PURPLE,                            _YELLOW,                            ___CYAN, ___CYAN, _PURPLE, ___BLUE, ___BLUE, ___BLUE, \ */
+  /*         ____RED, ____RED, ____RED, _PURPLE, _YELLOW, _YELLOW, _YELLOW, _YELLOW, ___CYAN, ___CYAN, ___CYAN, ___CYAN, _PURPLE, ___BLUE, ___BLUE           \ */
+  /*   }; */
+  /*   return _make_custom_effect(params, layout); */
+  /* } */
+
+  /* static bool ZIGZAG(effect_params_t* params) { */
+  /*   int layout[_NUM_LEDS * 3] = { */
+  /*         ____RED, ____RED, ____RED, ____RED, ____RED, __GREEN, ____RED, ____RED, ____RED, ____RED, __GREEN, ____RED, ____RED, ___BLUE, ___BLUE,          \ */
+ /* ____RED, ____RED, __GREEN, ____RED, ____RED, ____RED, __GREEN, __GREEN, ____RED, ____RED, ____RED, __GREEN, __GREEN, ____RED, ___BLUE, ___BLUE, ___BLUE, \ */
+ /* ____RED, ____RED, __GREEN, ____RED, ____RED, __GREEN, ___BLUE, __GREEN, ____RED, ____RED, __GREEN, ___BLUE, __GREEN, ____RED, ___BLUE, ___BLUE, ___BLUE, \ */
+  /*         ____RED, __GREEN, ____RED, __GREEN, ___BLUE, ___BLUE, __GREEN, ____RED, __GREEN, ___BLUE, ___BLUE, __GREEN,          ___BLUE, ___BLUE,          \ */
+ /* ____RED, ____RED, __GREEN, __GREEN, ___BLUE, ___BLUE, ___BLUE, __GREEN, __GREEN, ___BLUE, ___BLUE, ___BLUE, __GREEN,          ___BLUE, ___BLUE, ___BLUE, \ */
+ /* ____RED, ____RED, ____RED, __GREEN,                            ___BLUE,                            ___BLUE, ___BLUE, __GREEN, ___BLUE, ___BLUE, ___BLUE, \ */
+  /*         ____RED, ____RED, ____RED, __GREEN, ___BLUE, ___BLUE, ___BLUE, __GREEN, ___BLUE, ___BLUE, ___BLUE, ___BLUE, __GREEN, ___BLUE, ___BLUE           \ */
+  /*   }; */
+  /*   return _make_custom_effect(params, layout); */
+  /* } */
+
+  static bool RADIOACTIVE_BARBERSHOP(effect_params_t* params) {
+    int layout[_NUM_LEDS * 3] = {
+          ____RED, __WHITE, ___BLUE, __WHITE, ____RED, __WHITE, ___BLUE, __WHITE, ____RED, __WHITE, ___BLUE, __WHITE, ____RED, ___BLUE, ___BLUE,          \
+ ____RED, ____RED, __WHITE, ___BLUE, __WHITE, ____RED, __WHITE, ___BLUE, __WHITE, ____RED, __WHITE, ___BLUE, __WHITE, ____RED, ___BLUE, ___BLUE, ___BLUE, \
+ ____RED, ____RED, ___BLUE, __GREEN, ____RED, __WHITE, ___BLUE, __WHITE, ____RED, __WHITE, ___BLUE, __WHITE, ____RED, __WHITE, ___BLUE, ___BLUE, ___BLUE, \
+          ____RED, __GREEN, __GREEN, __GREEN, ___BLUE, __WHITE, ____RED, __WHITE, ___BLUE, __WHITE, ____RED, __WHITE,          ___BLUE, ___BLUE,          \
+ ____RED, ____RED, __WHITE, __WHITE, ___BLUE, __WHITE, ____RED, __WHITE, ___BLUE, __WHITE, ____RED, __WHITE, ___BLUE,          ___BLUE, ___BLUE, ___BLUE, \
+ ____RED, ____RED, ____RED, ____RED,                            __WHITE,                            ____RED, ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE, \
+          ____RED, ____RED, ____RED, ___BLUE, __WHITE, ____RED, __WHITE, ___BLUE, __WHITE, ____RED, ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE           \
+    };
+    return _make_custom_effect(params, layout);
+  }
+
+  static bool RADIOACTIVE_BARBERSHOP2(effect_params_t* params) {
+    int layout[_NUM_LEDS * 3] = {
+          ___BLUE, __WHITE, ____RED, __WHITE, ___BLUE, __WHITE, ____RED, __WHITE, ___BLUE, __WHITE, ____RED, __WHITE, ___BLUE, ____RED, ____RED,          \
+ ___BLUE, ___BLUE, __WHITE, ____RED, __WHITE, ___BLUE, __WHITE, ____RED, __WHITE, ___BLUE, __WHITE, ____RED, __WHITE, ___BLUE, ____RED, ____RED, ____RED, \
+ ___BLUE, ___BLUE, ____RED, __GREEN, ___BLUE, __WHITE, ____RED, __WHITE, ___BLUE, __WHITE, ____RED, __WHITE, ___BLUE, __WHITE, ____RED, ____RED, ____RED, \
+          ___BLUE, __GREEN, __GREEN, __GREEN, ____RED, __WHITE, ___BLUE, __WHITE, ____RED, __WHITE, ___BLUE, __WHITE,          ____RED, ____RED,          \
+ ___BLUE, ___BLUE, __WHITE, __WHITE, ____RED, __WHITE, ___BLUE, __WHITE, ____RED, __WHITE, ___BLUE, __WHITE, ____RED,          ____RED, ____RED, ____RED, \
+ ___BLUE, ___BLUE, ___BLUE, ___BLUE,                            __WHITE,                            ___BLUE, ____RED, ____RED, ____RED, ____RED, ____RED, \
+          ___BLUE, ___BLUE, ___BLUE, ____RED, __WHITE, ___BLUE, __WHITE, ____RED, __WHITE, ___BLUE, ____RED, ____RED, ____RED, ____RED, ____RED           \
     };
     return _make_custom_effect(params, layout);
   }
