@@ -18,6 +18,7 @@ RGB_MATRIX_EFFECT(ALL_RED)
 RGB_MATRIX_EFFECT(FOUR_BANDS)
 RGB_MATRIX_EFFECT(IRISH_FLAG)
 /* RGB_MATRIX_EFFECT(MOUSE_KEYS) */
+RGB_MATRIX_EFFECT(NUMPAD)
 RGB_MATRIX_EFFECT(RADIOACTIVE_BARBERSHOP)
 RGB_MATRIX_EFFECT(RADIOACTIVE_BARBERSHOP2)
 RGB_MATRIX_EFFECT(RETRO_APPLE)
@@ -128,6 +129,19 @@ RGB_MATRIX_EFFECT(THREE_BANDS)
   /*   }; */
   /*   return _make_custom_effect(params, layout); */
   /* } */
+
+  static bool NUMPAD(effect_params_t* params) {
+    int layout[_NUM_LEDS * 3] = {
+          __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE,          \
+ __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, _YELLOW, _YELLOW, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, \
+ __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __GREEN, __GREEN, __GREEN, ____RED, ___BLUE, _YELLOW, __WHITE, __WHITE, __WHITE, \
+          __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, ____RED, __GREEN, __GREEN, __GREEN, ____RED, ___BLUE,          __WHITE, __WHITE,          \
+ __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, _YELLOW, __GREEN, __GREEN, __GREEN, _YELLOW, _YELLOW,          __WHITE, __WHITE, __WHITE, \
+ __WHITE, __WHITE, __WHITE, __WHITE,                            __GREEN,                            _YELLOW, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, \
+          __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE           \
+    };
+    return _make_custom_effect(params, layout);
+  }
 
   static bool RADIOACTIVE_BARBERSHOP(effect_params_t* params) {
     int layout[_NUM_LEDS * 3] = {
