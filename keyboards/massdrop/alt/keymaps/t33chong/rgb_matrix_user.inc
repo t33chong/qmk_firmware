@@ -17,7 +17,7 @@ RGB_MATRIX_EFFECT(ALL_GREEN)
 RGB_MATRIX_EFFECT(ALL_RED)
 RGB_MATRIX_EFFECT(FOUR_BANDS)
 RGB_MATRIX_EFFECT(IRISH_FLAG)
-/* RGB_MATRIX_EFFECT(MOUSE_KEYS) */
+RGB_MATRIX_EFFECT(MOUSE_KEYS)
 RGB_MATRIX_EFFECT(NUMPAD)
 RGB_MATRIX_EFFECT(RADIOACTIVE_BARBERSHOP)
 RGB_MATRIX_EFFECT(RADIOACTIVE_BARBERSHOP2)
@@ -117,18 +117,18 @@ RGB_MATRIX_EFFECT(THREE_BANDS)
     return _make_custom_effect(params, layout);
   }
 
-  /* static bool MOUSE_KEYS(effect_params_t* params) { */
-  /*   int layout[_NUM_LEDS * 3] = { */
-  /*         ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X,          \ */
- /* ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, \ */
- /* ______X, ______X, __GREEN, ___BLUE, __GREEN, _YELLOW, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, \ */
-  /*         ______X, ___BLUE, ___BLUE, ___BLUE, _YELLOW, ______X, ______X, ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE,          ______X, ______X,          \ */
- /* ______X, ______X, __GREEN, ______X, __GREEN, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X,          ______X, ______X, ______X, \ */
- /* ______X, ______X, ______X, ______X,                            ______X,                            ______X, ______X, ______X, ______X, ______X, ______X, \ */
-  /*         ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X, ______X           \ */
-  /*   }; */
-  /*   return _make_custom_effect(params, layout); */
-  /* } */
+  static bool MOUSE_KEYS(effect_params_t* params) {
+    int layout[_NUM_LEDS * 3] = {
+          __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE,          \
+ __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, \
+ __WHITE, __WHITE, __GREEN, ___BLUE, __GREEN, _YELLOW, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, \
+          __WHITE, ___BLUE, ___BLUE, ___BLUE, _YELLOW, __WHITE, __WHITE, ____RED, ____RED, ____RED, ____RED, ____RED,          __WHITE, __WHITE,          \
+ __WHITE, __WHITE, __GREEN, __WHITE, __GREEN, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE,          __WHITE, __WHITE, __WHITE, \
+ __WHITE, __WHITE, __WHITE, __WHITE,                            __WHITE,                            __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, \
+          __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE           \
+    };
+    return _make_custom_effect(params, layout);
+  }
 
   static bool NUMPAD(effect_params_t* params) {
     int layout[_NUM_LEDS * 3] = {
