@@ -111,28 +111,39 @@ bool get_ignore_mod_tap_interrupt(uint16_t keycode, keyrecord_t *record) {
 
 // Indicate layer with RGB matrix effect
 // https://docs.qmk.fm/#/custom_quantum_functions?id=layer-change-code
+uint8_t _current_rgb_matrix_mode;
 layer_state_t layer_state_set_user(layer_state_t state) {
   switch (get_highest_layer(state)) {
     case _MOUSE_KEYS:
-      rgb_matrix_mode(RGB_MATRIX_CUSTOM_MOUSE_KEYS);
+      _current_rgb_matrix_mode = RGB_MATRIX_CUSTOM_MOUSE_KEYS;
       break;
     case _GAMING:
-      rgb_matrix_mode(RGB_MATRIX_CUSTOM_RADIOACTIVE_BARBERSHOP);
+      _current_rgb_matrix_mode = RGB_MATRIX_CUSTOM_RADIOACTIVE_BARBERSHOP;
       break;
     case _GAMING2:
-      rgb_matrix_mode(RGB_MATRIX_CUSTOM_RADIOACTIVE_BARBERSHOP2);
+      _current_rgb_matrix_mode = RGB_MATRIX_CUSTOM_RADIOACTIVE_BARBERSHOP2;
       break;
     case _NUMPAD:
-      rgb_matrix_mode(RGB_MATRIX_CUSTOM_NUMPAD);
+      _current_rgb_matrix_mode = RGB_MATRIX_CUSTOM_NUMPAD;
       break;
     case _FUNCTION:
-      rgb_matrix_mode(RGB_MATRIX_CUSTOM_RETRO_APPLE);
+      _current_rgb_matrix_mode = RGB_MATRIX_CUSTOM_RETRO_APPLE;
       break;
     default:
-      rgb_matrix_mode(RGB_MATRIX_CUSTOM_ROYGCB);
+      _current_rgb_matrix_mode = RGB_MATRIX_CUSTOM_ROYGCB;
       break;
   }
+  rgb_matrix_mode(_current_rgb_matrix_mode);
   return state;
+}
+
+bool led_update_user(led_t led_state) {
+  if (led_state.caps_lock) {
+    rgb_matrix_mode(RGB_MATRIX_CUSTOM_ALL_RED);
+  } else {
+    rgb_matrix_mode(_current_rgb_matrix_mode);
+  }
+  return true;
 }
 
 #define MODS_SHIFT  (get_mods() & MOD_BIT(KC_LSHIFT) || get_mods() & MOD_BIT(KC_RSHIFT))
