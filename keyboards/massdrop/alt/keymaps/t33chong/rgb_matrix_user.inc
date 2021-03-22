@@ -137,7 +137,7 @@ RGB_MATRIX_EFFECT(THREE_BANDS)
  __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __GREEN, __GREEN, __GREEN, ____RED, ___BLUE, _YELLOW, __WHITE, __WHITE, __WHITE, \
           __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, ____RED, __GREEN, __GREEN, __GREEN, ____RED, ___BLUE,          __WHITE, __WHITE,          \
  __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, _YELLOW, __GREEN, __GREEN, __GREEN, _YELLOW, _YELLOW,          __WHITE, __WHITE, __WHITE, \
- __WHITE, __WHITE, __WHITE, __WHITE,                            __GREEN,                            _YELLOW, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, \
+ __WHITE, ____RED, ____RED, __WHITE,                            __GREEN,                            _YELLOW, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, \
           __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE, __WHITE           \
     };
     return _make_custom_effect(params, layout);
@@ -200,7 +200,7 @@ RGB_MATRIX_EFFECT(THREE_BANDS)
           ____RED, _ORANGE, _ORANGE, _YELLOW, _YELLOW, _YELLOW, __GREEN, __GREEN, __GREEN, ___CYAN, ___CYAN, ___CYAN, ___CYAN, ___BLUE, ___BLUE,          \
  ____RED, ____RED, _ORANGE, _ORANGE, _ORANGE, _YELLOW, _YELLOW, _YELLOW, __GREEN, __GREEN, __GREEN, ___CYAN, ___CYAN, ___CYAN, ___BLUE, ___BLUE, ___BLUE, \
  ____RED, ____RED, _ORANGE, _ORANGE, _ORANGE, _YELLOW, _YELLOW, _YELLOW, __GREEN, __GREEN, __GREEN, ___CYAN, ___CYAN, ___CYAN, ___BLUE, ___BLUE, ___BLUE, \
-          ____RED, _ORANGE, _ORANGE, _ORANGE, _YELLOW, _YELLOW, _YELLOW, __GREEN, __GREEN, __GREEN, ___CYAN, ___CYAN,          ___BLUE, ___BLUE,          \
+          ____RED, _ORANGE, _ORANGE, _ORANGE, _YELLOW, _YELLOW, __GREEN, __GREEN, __GREEN, __GREEN, ___CYAN, ___CYAN,          ___BLUE, ___BLUE,          \
  ____RED, ____RED, _ORANGE, _ORANGE, _ORANGE, _YELLOW, _YELLOW, _YELLOW, __GREEN, __GREEN, __GREEN, ___CYAN, ___CYAN,          ___BLUE, ___BLUE, ___BLUE, \
  ____RED, ____RED, ____RED, ____RED,                            _YELLOW,                            __GREEN, ___CYAN, ___BLUE, ___BLUE, ___BLUE, ___BLUE, \
           ____RED, ____RED, ____RED, ____RED, _ORANGE, _ORANGE, _YELLOW, _YELLOW, __GREEN, __GREEN, __GREEN, ___CYAN, ___BLUE, ___BLUE, ___BLUE           \
