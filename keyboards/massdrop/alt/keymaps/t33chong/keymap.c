@@ -225,7 +225,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         SEND_STRING("_");
       }
       return false;
-    case MY_SFBS: // https://www.reddit.com/r/olkb/comments/afm9ii/qmk_macro_in_modtap_keys/ee0152e/
+    case MY_SFBS: // https://redd.it/afm9ii
       if (record->event.pressed) {
         sfbs_key_timer = timer_read();
         register_code(KC_LSFT);
