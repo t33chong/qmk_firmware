@@ -9,12 +9,17 @@
 #define _PURPLE RGB_PURPLE
 #define ___BLUE RGB_BLUE
 #define ___CYAN RGB_CYAN
+#define MAGENTA RGB_MAGENTA
 #define __WHITE RGB_WHITE
 #define ______X RGB_OFF
+#define ___SAME -1, -1, -1
 
 RGB_MATRIX_EFFECT(ALL_BLUE)
 RGB_MATRIX_EFFECT(ALL_GREEN)
 RGB_MATRIX_EFFECT(ALL_RED)
+RGB_MATRIX_EFFECT(BURRITO)
+RGB_MATRIX_EFFECT(BURRITO2)
+RGB_MATRIX_EFFECT(BYGYR)
 RGB_MATRIX_EFFECT(FOUR_BANDS)
 RGB_MATRIX_EFFECT(IRISH_FLAG)
 RGB_MATRIX_EFFECT(MOUSE_KEYS)
@@ -56,8 +61,6 @@ RGB_MATRIX_EFFECT(THREE_BANDS)
     return _set_all_leds(params, RGB_RED);
   }
 
-  // These work, just commented out to avoid compilation error
-
   /* static void _set_led_range(effect_params_t* params, int from, int to, int r, int g, int b) { */
   /*   int i; */
   /*   for (i=from; i<=to; i++) { */
@@ -80,15 +83,54 @@ RGB_MATRIX_EFFECT(THREE_BANDS)
   /*   return led_max < DRIVER_LED_TOTAL; */
   /* } */
 
-  // End comment
-
   static bool _make_custom_effect(effect_params_t* params, int layout[]) {
     RGB_MATRIX_USE_LIMITS(led_min, led_max);
     int i;
     for (i=0; i<_NUM_LEDS; i++) {
-      rgb_matrix_set_color(_drop_alt_led_layout[i], layout[i*3], layout[i*3+1], layout[i*3+2]);
+      if (layout[i*3] > -1) {
+        rgb_matrix_set_color(_drop_alt_led_layout[i], layout[i*3], layout[i*3+1], layout[i*3+2]);
+      }
     }
     return led_max < DRIVER_LED_TOTAL;
+  }
+
+  static bool BURRITO(effect_params_t* params) {
+    int layout[_NUM_LEDS * 3] = {
+          ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE,          \
+ ___BLUE, MAGENTA, ____RED, _ORANGE, _YELLOW, __GREEN, ___CYAN, ___BLUE, ___CYAN, __GREEN, _YELLOW, _ORANGE, ____RED, MAGENTA, ____RED, ____RED, ___BLUE, \
+ ___BLUE, ____RED, _ORANGE, _YELLOW, __GREEN, ___CYAN, ___BLUE, ___BLUE, ___CYAN, __GREEN, _YELLOW, _ORANGE, __WHITE, __WHITE, ____RED, ____RED, ___BLUE, \
+          ____RED, _ORANGE, _YELLOW, __GREEN, ___CYAN, ___BLUE, ___BLUE, ___CYAN, __GREEN, _YELLOW, _ORANGE, __WHITE,          ____RED, ____RED,          \
+ ___BLUE, ____RED, _ORANGE, _YELLOW, __GREEN, ___CYAN, ___BLUE, ___BLUE, ___CYAN, __GREEN, _YELLOW, _ORANGE, ____RED,          ____RED, ____RED, ___BLUE, \
+ ___BLUE, ____RED, ____RED, ____RED,                            ___BLUE,                            ____RED, ____RED, ____RED, ____RED, ____RED, ___BLUE, \
+          ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE           \
+    };
+    return _make_custom_effect(params, layout);
+  }
+
+  static bool BURRITO2(effect_params_t* params) {
+    int layout[_NUM_LEDS * 3] = {
+          ____RED, ____RED, ____RED, ____RED, ____RED, ____RED, ____RED, ____RED, ____RED, ____RED, ____RED, ____RED, ____RED, ____RED, ____RED,          \
+ ____RED, ___SAME, ___SAME, ___SAME, ___SAME, ___SAME, ___SAME, ___SAME, ___SAME, ___SAME, ___SAME, ___SAME, ___SAME, ___SAME, ___SAME, ___SAME, ____RED, \
+ ____RED, ___SAME, ___SAME, ___SAME, ___SAME, ___SAME, ___SAME, ___SAME, ___SAME, ___SAME, ___SAME, ___SAME, ___SAME, ___SAME, ___SAME, ___SAME, ____RED, \
+          ___SAME, ___SAME, ___SAME, ___SAME, ___SAME, ___SAME, ___SAME, ___SAME, ___SAME, ___SAME, ___SAME, ___SAME,          ___SAME, ___SAME,          \
+ ____RED, ___SAME, ___SAME, ___SAME, ___SAME, ___SAME, ___SAME, ___SAME, ___SAME, ___SAME, ___SAME, ___SAME, ___SAME,          ___SAME, ___SAME, ____RED, \
+ ____RED, ___SAME, ___SAME, ___SAME,                            ____RED,                            ___SAME, ___SAME, ___SAME, ___SAME, ___SAME, ____RED, \
+          ____RED, ____RED, ____RED, ____RED, ____RED, ____RED, ____RED, ____RED, ____RED, ____RED, ____RED, ____RED, ____RED, ____RED, ____RED           \
+    };
+    return _make_custom_effect(params, layout);
+  }
+
+  static bool BYGYR(effect_params_t* params) {
+    int layout[_NUM_LEDS * 3] = {
+          ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE, _YELLOW, _YELLOW, __GREEN, __GREEN, __GREEN, __GREEN, _YELLOW, _YELLOW, ____RED,          \
+ ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE, _YELLOW, _YELLOW, __GREEN, __GREEN, __GREEN, __GREEN, _YELLOW, ____RED, ____RED, ____RED, \
+ ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE, ___BLUE, _YELLOW, _YELLOW, __GREEN, __GREEN, __GREEN, __GREEN, _YELLOW, _YELLOW, ____RED, ____RED, ____RED, \
+          ___BLUE, ___BLUE, ___BLUE, ___BLUE, _YELLOW, _YELLOW, __GREEN, __GREEN, __GREEN, __GREEN, _YELLOW, _YELLOW,          ____RED, ____RED,          \
+ ___BLUE, ___BLUE, ___BLUE, ___BLUE, _YELLOW, _YELLOW, __GREEN, __GREEN, __GREEN, __GREEN, _YELLOW, _YELLOW, ____RED,          ____RED, ____RED, ____RED, \
+ ___BLUE, ___BLUE, ___BLUE, ___BLUE,                            __GREEN,                            _YELLOW, _YELLOW, ____RED, ____RED, ____RED, ____RED, \
+          ___BLUE, ___BLUE, ___BLUE, _YELLOW, _YELLOW, __GREEN, __GREEN, __GREEN, __GREEN, _YELLOW, _YELLOW, ____RED, ____RED, ____RED, ____RED           \
+    };
+    return _make_custom_effect(params, layout);
   }
 
   static bool FOUR_BANDS(effect_params_t* params) {
