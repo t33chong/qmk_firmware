@@ -41,6 +41,9 @@ enum my_layers {
 #define MY_MOFN MO(_FUNCTION)         // Hold to toggle numpad layer
 #define MY_LTSP LT(_BURRITO2, KC_SPC) // Hold to toggle burrito layer, tap for space
 
+// TODO: Hold tab for yuiohjklnm,. shortcuts like the ones I set up with BTT. Would switch to a new layer where holding space selects text
+// Hold lshift and tap rshift for =
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_DEFAULT] = LAYOUT_65_ansi_blocker(
           KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_MINS, KC_EQL,  KC_BSPC, MY_TGGM, \
@@ -120,8 +123,10 @@ bool get_ignore_mod_tap_interrupt(uint16_t keycode, keyrecord_t *record) {
   }
 }
 
+// If true, don't count a tap and a hold as repetition of the tap action
 bool get_tapping_force_hold(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
+    case MY_CTES:
     case MY_LTSP:
       return true;
     default:
