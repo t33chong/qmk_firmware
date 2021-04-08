@@ -27,7 +27,7 @@ enum my_layers {
   _FUNCTION,
 };
 
-#define MY_GUEQ LGUI_T(KC_EQL)        // Hold for command, tap for equal sign
+#define MY_GUBS LGUI_T(KC_BSPC)       // Hold for command, tap for backspace
 #define MY_CTES LCTL_T(KC_ESC)        // Hold for control, tap for escape
 #define MY_HYSP HYPR_T(KC_SPC)        // Hold for hyper, tap for space
 #define MY_SFBS LSFT_T(KC_BSPC)       // Hold for shift, tap for backspace
@@ -50,7 +50,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
           KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC, KC_BSLS, MY_TGBR, \
           MY_CTES, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,          KC_ENT,  KC_PGUP, \
           MY_SFBS, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, MY_SFCA,          KC_UP,   KC_PGDN, \
-          MY_MONP, KC_LALT, MY_GUEQ,                            MY_HYSP,                            MY_UNDS, MY_MOFN, KC_LEFT, KC_DOWN, KC_RGHT  \
+          MY_MONP, KC_LALT, MY_GUBS,                            MY_HYSP,                            MY_UNDS, MY_MOFN, KC_LEFT, KC_DOWN, KC_RGHT  \
   ),
   [_MOUSE_KEYS] = LAYOUT_65_ansi_blocker(
           _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
@@ -168,7 +168,10 @@ layer_state_t layer_state_set_user(layer_state_t state) {
       autoshift_disable();
       break;
     default:
-      _current_rgb_matrix_mode = RGB_MATRIX_CUSTOM_ROYGCB;
+      /* _current_rgb_matrix_mode = RGB_MATRIX_CUSTOM_ROYGCB; */
+      /* _current_rgb_matrix_mode = RGB_MATRIX_CUSTOM_ALL_CYAN; */
+      /* _current_rgb_matrix_mode = RGB_MATRIX_CUSTOM_CYAN_GREEN; */
+      _current_rgb_matrix_mode = RGB_MATRIX_CUSTOM_CYAN_GREEN_YELLOW;
       autoshift_disable();
       break;
   }
