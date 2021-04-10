@@ -171,7 +171,8 @@ layer_state_t layer_state_set_user(layer_state_t state) {
       /* _current_rgb_matrix_mode = RGB_MATRIX_CUSTOM_ROYGCB; */
       /* _current_rgb_matrix_mode = RGB_MATRIX_CUSTOM_ALL_CYAN; */
       /* _current_rgb_matrix_mode = RGB_MATRIX_CUSTOM_CYAN_GREEN; */
-      _current_rgb_matrix_mode = RGB_MATRIX_CUSTOM_CYAN_GREEN_YELLOW;
+      /* _current_rgb_matrix_mode = RGB_MATRIX_CUSTOM_CYAN_GREEN_YELLOW; */
+      _current_rgb_matrix_mode = RGB_MATRIX_CUSTOM_WHITE_KEYS_CYAN_UNDERGLOW;
       autoshift_disable();
       break;
   }
