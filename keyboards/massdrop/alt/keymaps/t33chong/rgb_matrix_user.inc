@@ -10,7 +10,7 @@
 #define ___BLUE RGB_BLUE
 #define ___CYAN RGB_CYAN
 #define MAGENTA RGB_MAGENTA
-#define __WHITE RGB_WHITE
+#define __WHITE 144, 255, 173
 #define ______X RGB_OFF
 #define ___SAME -1, -1, -1
 
@@ -34,6 +34,7 @@ RGB_MATRIX_EFFECT(RYGYB)
 RGB_MATRIX_EFFECT(THREE_BANDS)
 RGB_MATRIX_EFFECT(CYAN_GREEN)
 RGB_MATRIX_EFFECT(CYAN_GREEN_YELLOW)
+RGB_MATRIX_EFFECT(WHITE_KEYS_CYAN_UNDERGLOW)
 
 #ifdef RGB_MATRIX_CUSTOM_EFFECT_IMPLS
   int _drop_alt_led_layout[_NUM_LEDS] = {
@@ -68,20 +69,20 @@ RGB_MATRIX_EFFECT(CYAN_GREEN_YELLOW)
     return _set_all_leds(params, RGB_RED);
   }
 
-  /* static void _set_led_range(effect_params_t* params, int from, int to, int r, int g, int b) { */
-  /*   int i; */
-  /*   for (i=from; i<=to; i++) { */
-  /*     rgb_matrix_set_color(i, r, g, b); */
-  /*   } */
-  /* } */
+  static void _set_led_range(effect_params_t* params, int from, int to, int r, int g, int b) {
+    int i;
+    for (i=from; i<=to; i++) {
+      rgb_matrix_set_color(i, r, g, b);
+    }
+  }
 
-  /* static void _set_keys_color(effect_params_t* params, int r, int g, int b) { */
-  /*   _set_led_range(params, 0, 66, r, g, b); */
-  /* } */
+  static void _set_keys_color(effect_params_t* params, int r, int g, int b) {
+    _set_led_range(params, 0, 66, r, g, b);
+  }
 
-  /* static void _set_underglow_color(effect_params_t* params, int r, int g, int b) { */
-  /*   _set_led_range(params, 67, 104, r, g, b); */
-  /* } */
+  static void _set_underglow_color(effect_params_t* params, int r, int g, int b) {
+    _set_led_range(params, 67, 104, r, g, b);
+  }
 
   /* static bool KEYS_UNDERGLOW_EXAMPLE(effect_params_t* params) { */
   /*   RGB_MATRIX_USE_LIMITS(led_min, led_max); */
@@ -89,6 +90,13 @@ RGB_MATRIX_EFFECT(CYAN_GREEN_YELLOW)
   /*   _set_underglow_color(params, RGB_ORANGE); */
   /*   return led_max < DRIVER_LED_TOTAL; */
   /* } */
+
+  static bool WHITE_KEYS_CYAN_UNDERGLOW(effect_params_t* params) {
+    RGB_MATRIX_USE_LIMITS(led_min, led_max);
+    _set_keys_color(params, __WHITE);
+    _set_underglow_color(params, ___CYAN);
+    return led_max < DRIVER_LED_TOTAL;
+  }
 
   static bool _make_custom_effect(effect_params_t* params, int layout[]) {
     RGB_MATRIX_USE_LIMITS(led_min, led_max);
