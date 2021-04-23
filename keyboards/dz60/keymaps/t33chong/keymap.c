@@ -69,6 +69,11 @@ void keyboard_post_init_user(void) {
   rgblight_setrgb(RGB_CYAN);
 }
 
+// TODO:
+// Make rshift + lshift toggle caps lock
+// Make ctrl toggle num layer when tapped (and continue activating arrow layer when held)
+// Make right space + backspace send alt + backspace
+
 // If true, given a pressed modifier, pressed key, released modifier, and released key, register both as taps
 // If false, register a held modifier
 bool get_ignore_mod_tap_interrupt(uint16_t keycode, keyrecord_t *record) {
@@ -159,6 +164,57 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         if (timer_elapsed32(_arrnum_key_timer) < TAPPING_TERM) {
           layer_invert(_NUMPAD);
         }
+      }
+      return false;
+    case KC_BSPC:
+      if (MODS_HYPER) {
+        /* if (record->event.pressed) { */
+        /*   /1* register_code(KC_LALT); *1/ */
+        /*   /1* register_code(KC_BSPC); *1/ */
+        /*   register_code16(LALT(KC_BSPC)); */
+        /* } else { */
+        /*   /1* unregister_code(KC_BSPC); *1/ */
+        /*   /1* unregister_code(KC_LALT); *1/ */
+        /*   unregister_code16(LALT(KC_BSPC)); */
+        /* } */
+
+        /* if (record->event.pressed) { */
+        /*   /1* unregister_code16(KC_HYPR); *1/ */
+        /*   unregister_code(KC_LSHIFT); */
+        /*   unregister_code(KC_LCTRL); */
+        /*   unregister_code(KC_LALT); */
+        /*   unregister_code(KC_LGUI); */
+        /*   SEND_STRING(SS_LALT(SS_TAP(X_BSPC))); */
+        /* } else { */
+        /*   register_code(KC_LSHIFT); */
+        /*   register_code(KC_LCTRL); */
+        /*   register_code(KC_LALT); */
+        /*   register_code(KC_LGUI); */
+        /* } */
+
+        /* if (record->event.pressed) { */
+        /*   unregister_code(KC_LSHIFT); */
+        /*   unregister_code(KC_LCTRL); */
+        /*   unregister_code(KC_LGUI); */
+        /*   register_code(KC_BSPC); */
+        /* } else { */
+        /*   unregister_code(KC_BSPC); */
+        /*   register_code(KC_LSHIFT); */
+        /*   register_code(KC_LCTRL); */
+        /*   register_code(KC_LGUI); */
+        /* } */
+
+        if (record->event.pressed) {
+          unregister_code16(KC_HYPR);
+          register_code(KC_LALT);
+          register_code(KC_BSPC);
+        } else {
+          unregister_code(KC_BSPC);
+          unregister_code(KC_LALT);
+          register_code16(KC_HYPR);
+        }
+
+        return false;
       }
       return true;
     default:
