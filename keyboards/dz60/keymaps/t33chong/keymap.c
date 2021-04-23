@@ -1,11 +1,5 @@
 #include QMK_KEYBOARD_H
 
-enum my_keycodes {
-  __RESET = SAFE_RANGE, // Restart into bootloader after hold timeout
-  _UNDSCR,              // Use instead of KC_UNDS to avoid shift applying to next keypress
-  _ARRNUM,              // Hold to activate arrows layer, tap to toggle numpad layer
-};
-
 enum my_layers {
   _DEFAULT = 0,
   _ARROWS,
@@ -13,15 +7,21 @@ enum my_layers {
   _FUNCTION,
 };
 
+enum my_keycodes {
+  __RESET = SAFE_RANGE, // Restart into bootloader after hold timeout
+  _UNDSCR,              // Use instead of KC_UNDS to avoid shift applying to next keypress
+  _ARRNUM,              // Hold to activate arrows layer, tap to toggle numpad layer
+};
+
 // TODO:
 // Make right space + backspace send alt + backspace
 
 #define _CTLESC LCTL_T(KC_ESC)  // Hold for control, tap for escape
 #define _HYPSPC HYPR_T(KC_SPC)  // Hold for hyper, tap for space
-#define _LYRFUN MO(_FUNCTION)   // Hold to toggle function layer
 #define _MEHSPC MEH_T(KC_SPC)   // Hold for meh, tap for space
 #define _SFTMNS LSFT_T(KC_MINS) // Hold for shift, tap for - or caps lock when shifted
 #define _SFTEQL RSFT_T(KC_EQL)  // Hold for shift, tap for = or + when shifted
+#define _LYRFUN MO(_FUNCTION)   // Hold to toggle function layer
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_DEFAULT] = LAYOUT_t33chong(
