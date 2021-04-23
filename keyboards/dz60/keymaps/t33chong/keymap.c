@@ -52,15 +52,21 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   */
 };
 
-// If true, given a pressed modifier, pressed key, released modifier, and released key, register both as taps?
+void keyboard_post_init_user(void) {
+  backlight_enable();
+  rgblight_enable_noeeprom();
+  rgblight_setrgb(RGB_CYAN);
+}
+
+// If true, given a pressed modifier, pressed key, released modifier, and released key, register both as taps
 // If false, register a held modifier
 bool get_ignore_mod_tap_interrupt(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
     case _CTLESC:
     case _HYPSPC:
     case _MEHSPC:
-    /* case _SFTEQL: */
-    /* case _SFTMNS: */
+    case _SFTEQL:
+    case _SFTMNS:
       return true;
     default:
       return false;
@@ -92,17 +98,13 @@ bool get_tapping_force_hold(uint16_t keycode, keyrecord_t *record) {
 // Number of milliseconds before a pressed key is registered as held
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
-    /* case _SFTEQL: */
-    /* case _SFTMNS: */
-    /*   return 300; */
+    case _SFTEQL:
+    case _SFTMNS:
+      return 120;
     default:
       return TAPPING_TERM;
   }
 }
-
-#define MODS_SHIFT  (get_mods() & MOD_BIT(KC_LSHIFT) || get_mods() & MOD_BIT(KC_RSHIFT))
-#define MODS_CTRL  (get_mods() & MOD_BIT(KC_LCTL) || get_mods() & MOD_BIT(KC_RCTRL))
-#define MODS_ALT  (get_mods() & MOD_BIT(KC_LALT) || get_mods() & MOD_BIT(KC_RALT))
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   static uint32_t _reset_key_timer;
@@ -123,6 +125,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
       return false;
     default:
-      return true; //Process all other keycodes normally
+      return true; // Process all other keycodes normally
   }
 }
