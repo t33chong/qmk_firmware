@@ -66,13 +66,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 void keyboard_post_init_user(void) {
   backlight_enable();
   rgblight_enable_noeeprom();
-  rgblight_setrgb(RGB_CYAN);
 }
-
-// TODO:
-// Make rshift + lshift toggle caps lock
-// Make ctrl toggle num layer when tapped (and continue activating arrow layer when held)
-// Make right space + backspace send alt + backspace
 
 // If true, given a pressed modifier, pressed key, released modifier, and released key, register both as taps
 // If false, register a held modifier
@@ -120,6 +114,38 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     default:
       return TAPPING_TERM;
   }
+}
+
+// Indicate layer with RGB underglow lighting effect
+// https://docs.qmk.fm/#/custom_quantum_functions?id=layer-change-code
+// https://github.com/qmk/qmk_firmware/blob/master/quantum/rgblight_list.h
+int _current_hue;
+layer_state_t layer_state_set_user(layer_state_t state) {
+  switch (get_highest_layer(state)) {
+    case _ARROWS:
+      _current_hue = 28; // orange
+      break;
+    case _NUMPAD:
+      _current_hue = 85; // green
+      break;
+    case _FUNCTION:
+      _current_hue = 213; // magenta
+      break;
+    default:
+      _current_hue = 128; // cyan
+      break;
+  }
+  rgblight_sethsv(_current_hue, 255, 255);
+  return state;
+}
+
+bool led_update_user(led_t led_state) {
+  if (led_state.caps_lock) {
+    rgblight_sethsv(HSV_RED);
+  } else {
+    rgblight_sethsv(_current_hue, 255, 255);
+  }
+  return true;
 }
 
 #define MODS_SHIFT (get_mods() & MOD_BIT(KC_LSHIFT) || get_mods() & MOD_BIT(KC_RSHIFT))
