@@ -13,9 +13,6 @@ enum my_keycodes {
   _ARRNUM,              // Hold to activate arrows layer, tap to toggle numpad layer
 };
 
-// TODO:
-// Make right space + backspace send alt + backspace
-
 #define _CTLESC LCTL_T(KC_ESC)  // Hold for control, tap for escape
 #define _HYPSPC HYPR_T(KC_SPC)  // Hold for hyper, tap for space
 #define _MEHSPC MEH_T(KC_SPC)   // Hold for meh, tap for space
@@ -66,6 +63,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 void keyboard_post_init_user(void) {
   backlight_enable();
   rgblight_enable_noeeprom();
+  rgblight_sethsv(HSV_CYAN);
 }
 
 // If true, given a pressed modifier, pressed key, released modifier, and released key, register both as taps
@@ -192,57 +190,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
       }
       return false;
-    case KC_BSPC:
-      if (MODS_HYPER) {
-        /* if (record->event.pressed) { */
-        /*   /1* register_code(KC_LALT); *1/ */
-        /*   /1* register_code(KC_BSPC); *1/ */
-        /*   register_code16(LALT(KC_BSPC)); */
-        /* } else { */
-        /*   /1* unregister_code(KC_BSPC); *1/ */
-        /*   /1* unregister_code(KC_LALT); *1/ */
-        /*   unregister_code16(LALT(KC_BSPC)); */
-        /* } */
-
-        /* if (record->event.pressed) { */
-        /*   /1* unregister_code16(KC_HYPR); *1/ */
-        /*   unregister_code(KC_LSHIFT); */
-        /*   unregister_code(KC_LCTRL); */
-        /*   unregister_code(KC_LALT); */
-        /*   unregister_code(KC_LGUI); */
-        /*   SEND_STRING(SS_LALT(SS_TAP(X_BSPC))); */
-        /* } else { */
-        /*   register_code(KC_LSHIFT); */
-        /*   register_code(KC_LCTRL); */
-        /*   register_code(KC_LALT); */
-        /*   register_code(KC_LGUI); */
-        /* } */
-
-        /* if (record->event.pressed) { */
-        /*   unregister_code(KC_LSHIFT); */
-        /*   unregister_code(KC_LCTRL); */
-        /*   unregister_code(KC_LGUI); */
-        /*   register_code(KC_BSPC); */
-        /* } else { */
-        /*   unregister_code(KC_BSPC); */
-        /*   register_code(KC_LSHIFT); */
-        /*   register_code(KC_LCTRL); */
-        /*   register_code(KC_LGUI); */
-        /* } */
-
-        if (record->event.pressed) {
-          unregister_code16(KC_HYPR);
-          register_code(KC_LALT);
-          register_code(KC_BSPC);
-        } else {
-          unregister_code(KC_BSPC);
-          unregister_code(KC_LALT);
-          register_code16(KC_HYPR);
-        }
-
-        return false;
-      }
-      return true;
     default:
       return true; // Process all other keycodes normally
   }
