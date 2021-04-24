@@ -62,6 +62,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 void keyboard_post_init_user(void) {
   backlight_enable();
+  backlight_level(3);
   rgblight_enable_noeeprom();
   rgblight_sethsv(HSV_CYAN);
 }
