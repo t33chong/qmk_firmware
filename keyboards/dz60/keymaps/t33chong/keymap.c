@@ -19,6 +19,7 @@ enum my_keycodes {
 #define _SFTMNS LSFT_T(KC_MINS) // Hold for shift, tap for - or caps lock when shifted
 #define _SFTEQL RSFT_T(KC_EQL)  // Hold for shift, tap for = or + when shifted
 #define _LYRFUN MO(_FUNCTION)   // Hold to toggle function layer
+#define _HYPBSL HYPR(KC_BSLS)   // Hold for push to talk with Shush
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_DEFAULT] = LAYOUT_t33chong(
@@ -32,7 +33,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______, \
     _______, _______, _______, _______, _______, _______, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, _______, _______,                   _______, \
-    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,          _______, \
+    _______, _HYPBSL, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,          _______, \
     _______, _______, _______,          _______,          _______,          _______,          _______, _______, _______, _______, _______  \
   ),
   [_NUMPAD] = LAYOUT_t33chong(
@@ -62,7 +63,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 void keyboard_post_init_user(void) {
   backlight_enable();
-  backlight_level(3);
+  backlight_level(BACKLIGHT_LEVELS);
   rgblight_enable_noeeprom();
   rgblight_sethsv(HSV_CYAN);
 }
@@ -122,7 +123,7 @@ int _current_hue;
 layer_state_t layer_state_set_user(layer_state_t state) {
   switch (get_highest_layer(state)) {
     case _ARROWS:
-      _current_hue = 28; // orange
+      _current_hue = 43; // yellow
       break;
     case _NUMPAD:
       _current_hue = 85; // green
@@ -151,8 +152,8 @@ bool led_update_user(led_t led_state) {
 #define MODS_CTRL (get_mods() & MOD_BIT(KC_LCTL) || get_mods() & MOD_BIT(KC_RCTRL))
 #define MODS_ALT (get_mods() & MOD_BIT(KC_LALT) || get_mods() & MOD_BIT(KC_RALT))
 #define MODS_GUI (get_mods() & MOD_BIT(KC_LGUI) || get_mods() & MOD_BIT(KC_RGUI))
-#define MODS_MEH MODS_SHIFT && MODS_CTRL && MODS_ALT
-#define MODS_HYPER MODS_MEH && MODS_GUI
+#define MODS_MEH (MODS_SHIFT && MODS_CTRL && MODS_ALT)
+#define MODS_HYPER (MODS_MEH && MODS_GUI)
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   static uint32_t _reset_key_timer;
