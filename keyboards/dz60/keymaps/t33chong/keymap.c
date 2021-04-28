@@ -116,35 +116,42 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
   }
 }
 
-// Indicate layer with RGB underglow lighting effect
+// Indicate layer and caps lock status with RGB underglow lighting effect
 // https://docs.qmk.fm/#/custom_quantum_functions?id=layer-change-code
 // https://github.com/qmk/qmk_firmware/blob/master/quantum/rgblight_list.h
-int _current_hue;
-layer_state_t layer_state_set_user(layer_state_t state) {
-  switch (get_highest_layer(state)) {
-    case _ARROWS:
-      _current_hue = 43; // yellow
-      break;
-    case _NUMPAD:
-      _current_hue = 85; // green
-      break;
-    case _FUNCTION:
-      _current_hue = 213; // magenta
-      break;
-    default:
-      _current_hue = 128; // cyan
-      break;
+int _current_layer = -1;
+bool _is_caps_lock_on = false;
+
+void _set_rgblight_color(int current_layer, bool is_caps_lock_on) {
+  if (is_caps_lock_on) {
+    rgblight_sethsv(HSV_RED);
+  } else {
+    switch (current_layer) {
+      case _ARROWS:
+        rgblight_sethsv(HSV_YELLOW);
+        break;
+      case _NUMPAD:
+        rgblight_sethsv(HSV_GREEN);
+        break;
+      case _FUNCTION:
+        rgblight_sethsv(HSV_MAGENTA);
+        break;
+      default:
+        rgblight_sethsv(HSV_CYAN);
+        break;
+    }
   }
-  rgblight_sethsv(_current_hue, 255, 255);
+}
+
+layer_state_t layer_state_set_user(layer_state_t state) {
+  _current_layer = get_highest_layer(state);
+  _set_rgblight_color(_current_layer, _is_caps_lock_on);
   return state;
 }
 
 bool led_update_user(led_t led_state) {
-  if (led_state.caps_lock) {
-    rgblight_sethsv(HSV_RED);
-  } else {
-    rgblight_sethsv(_current_hue, 255, 255);
-  }
+  _is_caps_lock_on = led_state.caps_lock;
+  _set_rgblight_color(_current_layer, _is_caps_lock_on);
   return true;
 }
 
