@@ -64,7 +64,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 void keyboard_post_init_user(void) {
   backlight_enable();
   backlight_level(BACKLIGHT_LEVELS);
-  writePin(B2, 1);
   rgblight_enable_noeeprom();
   rgblight_sethsv(HSV_CYAN);
 }
@@ -141,9 +140,7 @@ void _set_rgblight_color(int current_layer, bool is_caps_lock_on) {
   if (is_caps_lock_on) {
     rgblight_setrgb_range(RGB_RED, 8, 16);
   }
-  writePin(B2, 1);
 }
-// FIXME: enable caps, change layer, change layer back to default, disable caps => caps lock pin is off
 
 layer_state_t layer_state_set_user(layer_state_t state) {
   _current_layer = get_highest_layer(state);
