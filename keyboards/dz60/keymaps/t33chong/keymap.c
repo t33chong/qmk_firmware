@@ -64,6 +64,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 void keyboard_post_init_user(void) {
   backlight_enable();
   backlight_level(BACKLIGHT_LEVELS);
+  /* writePin(LED_CAPS_LOCK_PIN, 0); */
   rgblight_enable_noeeprom();
   rgblight_sethsv(HSV_CYAN);
 }
@@ -123,25 +124,26 @@ int _current_layer = -1;
 bool _is_caps_lock_on = false;
 
 void _set_rgblight_color(int current_layer, bool is_caps_lock_on) {
-  if (is_caps_lock_on) {
-    rgblight_sethsv(HSV_RED);
-  } else {
-    switch (current_layer) {
-      case _ARROWS:
-        rgblight_sethsv(HSV_YELLOW);
-        break;
-      case _NUMPAD:
-        rgblight_sethsv(HSV_GREEN);
-        break;
-      case _FUNCTION:
-        rgblight_sethsv(HSV_MAGENTA);
-        break;
-      default:
-        rgblight_sethsv(HSV_CYAN);
-        break;
-    }
+  switch (current_layer) {
+    case _ARROWS:
+      rgblight_setrgb(RGB_ORANGE);
+      break;
+    case _NUMPAD:
+      rgblight_setrgb(RGB_GREEN);
+      break;
+    case _FUNCTION:
+      rgblight_setrgb(RGB_PURPLE);
+      break;
+    default:
+      rgblight_setrgb(RGB_CYAN);
+      break;
   }
+  if (is_caps_lock_on) {
+    rgblight_setrgb_range(RGB_RED, 8, 16);
+  }
+  /* writePin(LED_CAPS_LOCK_PIN, 0); */
 }
+// FIXME: enable caps, change layer, change layer back to default, disable caps => caps lock pin is off
 
 layer_state_t layer_state_set_user(layer_state_t state) {
   _current_layer = get_highest_layer(state);
