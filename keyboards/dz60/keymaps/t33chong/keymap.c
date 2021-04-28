@@ -65,7 +65,7 @@ void keyboard_post_init_user(void) {
   backlight_enable();
   backlight_level(BACKLIGHT_LEVELS);
   rgblight_enable_noeeprom();
-  rgblight_sethsv(HSV_CYAN);
+  rgblight_setrgb(RGB_CYAN);
 }
 
 // If true, given a pressed modifier, pressed key, released modifier, and released key, register both as taps
@@ -119,7 +119,7 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
 // Indicate layer and caps lock status with RGB underglow lighting effect
 // https://docs.qmk.fm/#/custom_quantum_functions?id=layer-change-code
 // https://github.com/qmk/qmk_firmware/blob/master/quantum/rgblight_list.h
-int _current_layer = -1;
+int _current_layer = 0;
 bool _is_caps_lock_on = false;
 
 void _set_rgblight_color(int current_layer, bool is_caps_lock_on) {
@@ -138,7 +138,7 @@ void _set_rgblight_color(int current_layer, bool is_caps_lock_on) {
       break;
   }
   if (is_caps_lock_on) {
-    rgblight_setrgb_range(RGB_RED, 8, 16);
+    rgblight_setrgb_range(RGB_RED, 8, 16); // Bottom half
   }
 }
 
@@ -180,8 +180,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         SEND_STRING("_");
       }
       return false;
-    case _SFTMNS:
-      // Toggles caps lock if pressed while shift is held
+    case _SFTMNS: // Toggles caps lock if pressed while shift is held
       if (MODS_SHIFT && record->event.pressed) {
         tap_code(KC_CAPS);
         return false;
