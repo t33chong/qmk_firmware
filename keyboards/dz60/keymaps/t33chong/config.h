@@ -4,6 +4,3 @@
 #define TAPPING_TERM_PER_KEY
 
 #define RGBLIGHT_SLEEP
-#ifdef LED_CAPS_LOCK_PIN
-    #undef LED_CAPS_LOCK_PIN
-#endif
