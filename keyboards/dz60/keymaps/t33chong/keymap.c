@@ -133,16 +133,16 @@ bool _is_caps_lock_on = false;
 void _set_rgblight_color(int current_layer, bool is_caps_lock_on) {
   switch (current_layer) {
     case _ARROWS:
-      rgblight_setrgb(RGB_ORANGE);
+      rgblight_setrgb(RGB_MAGENTA);
       break;
     case _NUMPAD:
       rgblight_setrgb(RGB_GREEN);
       break;
     case _MOUSEKEYS:
-      rgblight_setrgb(RGB_PURPLE);
+      rgblight_setrgb(RGB_YELLOW);
       break;
     case _FUNCTION:
-      rgblight_setrgb(RGB_WHITE);
+      rgblight_setrgb(RGB_BLUE);
       break;
     default:
       rgblight_setrgb(RGB_CYAN);
