@@ -11,12 +11,13 @@ enum my_layers {
 enum my_keycodes {
   _ARRNUM = SAFE_RANGE, // Hold to activate arrows layer, tap to toggle numpad layer
   _FUNMSK,              // Hold to activate function layer, tap to toggle mousekeys layer
+  _MEHUND,              // Hold for meh, tap for underscore
 };
 
-#define _CTLESC LCTL_T(KC_ESC)  // Hold for control, tap for escape
-#define _HYPSPC HYPR_T(KC_SPC)  // Hold for hyper, tap for space
-#define _MEHSPC MEH_T(KC_SPC)   // Hold for meh, tap for space
-#define _HYPBSL HYPR(KC_BSLS)   // Hold for push to talk with Shush
+#define _CTLESC LCTL_T(KC_ESC) // Hold for control, tap for escape
+#define _HYPSPC HYPR_T(KC_SPC) // Hold for hyper, tap for space
+/* #define _MEHUND MEH_T(KC_UNDS) // Hold for meh, tap for underscore */
+#define _HYPBSL HYPR(KC_BSLS)  // Hold for push to talk with Shush
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_DEFAULT] = LAYOUT_t33chong(
@@ -24,7 +25,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC,          KC_BSLS, \
     _CTLESC, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,                   KC_ENT,  \
     KC_BSPC, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH,          KC_EQL,           _FUNMSK, \
-    _ARRNUM, KC_LALT, KC_LGUI,          _MEHSPC,          KC_LSFT,          _HYPSPC,          KC_MINS, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT  \
+    _ARRNUM, KC_LALT, KC_LGUI,          _MEHUND,          KC_LSFT,          _HYPSPC,          KC_MINS, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT  \
   ),
   [_ARROWS] = LAYOUT_t33chong(
     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
@@ -109,8 +110,18 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   static uint32_t _arrnum_key_timer;
   static uint32_t _funmsk_key_timer;
+  static uint32_t _mehund_key_timer;
+  static bool _is_mehund_held;
+
+  /* xprintf("%s", record); */
 
   switch (keycode) {
+    case KC_BSPC:
+      if (record->event.pressed && _is_mehund_held) {
+        SEND_STRING(SS_LALT(SS_TAP(X_BSPC)));
+        return false;
+      }
+      return true;
     case _ARRNUM:
       if (record->event.pressed) {
         _arrnum_key_timer = timer_read32();
@@ -133,7 +144,34 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
       }
       return false;
+    case _MEHUND:
+      /* if (record->event.pressed) { */
+      if (record->event.pressed && !record->tap.interrupted) {
+        _is_mehund_held = true;
+        _mehund_key_timer = timer_read32();
+      } else {
+        _is_mehund_held = false;
+        if (timer_elapsed32(_mehund_key_timer) < TAPPING_TERM) {
+          SEND_STRING("_");
+        }
+      }
+      return false;
     default:
+      /* if (!record->event.pressed && _is_mehund_held && !record->tap.interrupted) { */
+      /* if (record->event.pressed && _is_mehund_held) { */
+      /* if (!record->event.pressed && _is_mehund_held) { */
+      if (_is_mehund_held) {
+        if (!record->event.pressed) {
+          register_code(KC_LCTL);
+          register_code(KC_LSFT);
+          register_code(KC_LALT);
+          tap_code(keycode);
+          unregister_code(KC_LALT);
+          unregister_code(KC_LSFT);
+          unregister_code(KC_LCTL);
+        }
+        return false;
+      }
       return true; // Process all other keycodes normally
   }
 }
