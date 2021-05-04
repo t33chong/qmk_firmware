@@ -4,6 +4,7 @@ enum my_layers {
   _DEFAULT = 0,
   _ARROWS,
   _NUMPAD,
+  _MEH,
   _MOUSEKEYS,
   _FUNCTION,
 };
@@ -11,21 +12,25 @@ enum my_layers {
 enum my_keycodes {
   _ARRNUM = SAFE_RANGE, // Hold to activate arrows layer, tap to toggle numpad layer
   _FUNMSK,              // Hold to activate function layer, tap to toggle mousekeys layer
-  _MEHUND,              // Hold for meh, tap for underscore
+  /* _MEHUND,              // Hold for meh, tap for underscore */
+  _ALTBSP,              // Send alt+backspace
+  _UNDSCR,              // Send underscore
 };
 
 #define _CTLESC LCTL_T(KC_ESC) // Hold for control, tap for escape
 #define _HYPSPC HYPR_T(KC_SPC) // Hold for hyper, tap for space
-/* #define _MEHUND MEH_T(KC_UNDS) // Hold for meh, tap for underscore */
+/* #define _MEHUND MEH_T(_UNDSCR) // Hold for meh, tap for _ */
 #define _HYPBSL HYPR(KC_BSLS)  // Hold for push to talk with Shush
+#define _MEHMIN MEH_T(KC_MINS) // Hold for meh, tap for -
+#define _SFTEQL LSFT_T(KC_EQL) // Hold for shift, tap for =
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_DEFAULT] = LAYOUT_t33chong(
     KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_BRMD, KC_BRMU, KC_VOLD, KC_VOLU, \
     KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC,          KC_BSLS, \
     _CTLESC, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,                   KC_ENT,  \
-    KC_BSPC, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH,          KC_EQL,           _FUNMSK, \
-    _ARRNUM, KC_LALT, KC_LGUI,          _MEHUND,          KC_LSFT,          _HYPSPC,          KC_MINS, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT  \
+    KC_BSPC, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH,          _SFTEQL,          _FUNMSK, \
+    _ARRNUM, KC_LALT, KC_LGUI,          _MEHMIN,          KC_LSFT,          _HYPSPC,          _UNDSCR, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT  \
   ),
   [_ARROWS] = LAYOUT_t33chong(
     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
@@ -40,6 +45,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     _______, _______, _______, _______, _______, _______, KC_BSPC, KC_KP_4, KC_KP_5, KC_KP_6, KC_PMNS, KC_PPLS,                   _______, \
     _______, _______, _______, _______, _______, _______, KC_UNDS, KC_KP_1, KC_KP_2, KC_KP_3, KC_PDOT,          KC_EQL,           _______, \
     _______, _______, _______,          _______,          _______,          KC_KP_0,          _______, _______, _______, _______, _______  \
+  ),
+  [_MEH] = LAYOUT_t33chong(
+    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
+    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______, \
+    KC_ESC,  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,                   _______, \
+    _ALTBSP, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          KC_EQL,           _______, \
+    _______, _______, _______,          _______,          _______,          KC_SPC,           _______, _______, _______, _______, _______  \
   ),
   [_MOUSEKEYS] = LAYOUT_t33chong(
     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
@@ -86,8 +98,10 @@ bool get_tapping_force_hold(uint16_t keycode, keyrecord_t *record) {
 // Indicate layer with RGB underglow lighting effect
 // https://docs.qmk.fm/#/custom_quantum_functions?id=layer-change-code
 // https://github.com/qmk/qmk_firmware/blob/master/quantum/rgblight_list.h
+bool _is_meh_held;
 layer_state_t layer_state_set_user(layer_state_t state) {
-  switch (get_highest_layer(state)) {
+  int _current_layer = get_highest_layer(state);
+  switch (_current_layer) {
     case _ARROWS:
       rgblight_setrgb(RGB_GREEN);
       break;
@@ -104,24 +118,34 @@ layer_state_t layer_state_set_user(layer_state_t state) {
       rgblight_setrgb(RGB_CYAN);
       break;
   }
+  if (_current_layer == _MEH) {
+    _is_meh_held = true;
+  } else {
+    _is_meh_held = false;
+  }
   return state;
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   static uint32_t _arrnum_key_timer;
   static uint32_t _funmsk_key_timer;
-  static uint32_t _mehund_key_timer;
-  static bool _is_mehund_held;
+  /* static uint32_t _mehund_key_timer; */
+  /* static bool _is_mehund_held; */
 
   /* xprintf("%s", record); */
 
   switch (keycode) {
-    case KC_BSPC:
-      if (record->event.pressed && _is_mehund_held) {
+    /* case KC_BSPC: */
+    /*   if (record->event.pressed && _is_mehund_held) { */
+    /*     SEND_STRING(SS_LALT(SS_TAP(X_BSPC))); */
+    /*     return false; */
+    /*   } */
+    /*   return true; */
+    case _ALTBSP:
+      if (record->event.pressed) {
         SEND_STRING(SS_LALT(SS_TAP(X_BSPC)));
-        return false;
       }
-      return true;
+      return false;
     case _ARRNUM:
       if (record->event.pressed) {
         _arrnum_key_timer = timer_read32();
@@ -144,24 +168,29 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
       }
       return false;
-    case _MEHUND:
-      /* if (record->event.pressed) { */
-      if (record->event.pressed && !record->tap.interrupted) {
-        _is_mehund_held = true;
-        _mehund_key_timer = timer_read32();
-      } else {
-        _is_mehund_held = false;
-        if (timer_elapsed32(_mehund_key_timer) < TAPPING_TERM) {
-          SEND_STRING("_");
-        }
+    /* case _MEHUND: */
+    /*   /1* if (record->event.pressed) { *1/ */
+    /*   if (record->event.pressed && !record->tap.interrupted) { */
+    /*     _is_mehund_held = true; */
+    /*     _mehund_key_timer = timer_read32(); */
+    /*   } else { */
+    /*     _is_mehund_held = false; */
+    /*     if (timer_elapsed32(_mehund_key_timer) < TAPPING_TERM) { */
+    /*       SEND_STRING("_"); */
+    /*     } */
+    /*   } */
+    /*   return false; */
+    case _UNDSCR:
+      if (record->event.pressed) {
+        SEND_STRING("_");
       }
       return false;
     default:
       /* if (!record->event.pressed && _is_mehund_held && !record->tap.interrupted) { */
       /* if (record->event.pressed && _is_mehund_held) { */
       /* if (!record->event.pressed && _is_mehund_held) { */
-      if (_is_mehund_held) {
-        if (!record->event.pressed) {
+      if (_is_meh_held) {
+        if (record->event.pressed) {
           register_code(KC_LCTL);
           register_code(KC_LSFT);
           register_code(KC_LALT);
