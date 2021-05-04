@@ -12,19 +12,15 @@ enum my_layers {
 enum my_keycodes {
   _ARRNUM = SAFE_RANGE, // Hold to activate arrows layer, tap to toggle numpad layer
   _FUNMSK,              // Hold to activate function layer, tap to toggle mousekeys layer
-  /* _MEHUND,              // Hold for meh, tap for underscore */
   _ALTBSP,              // Send alt+backspace
   _UNDSCR,              // Send underscore
 };
 
-#define _CTLESC LCTL_T(KC_ESC) // Hold for control, tap for escape
-#define _HYPSPC HYPR_T(KC_SPC) // Hold for hyper, tap for space
-/* #define _MEHUND MEH_T(_UNDSCR) // Hold for meh, tap for _ */
-#define _HYPBSL HYPR(KC_BSLS)  // Hold for push to talk with Shush
-/* #define _MEHMIN MEH_T(KC_MINS) // Hold for meh, tap for - */
+#define _CTLESC LCTL_T(KC_ESC)    // Hold for control, tap for escape
 #define _MEHMIN LT(_MEH, KC_MINS) // Hold for meh, tap for -
-#define _SFTEQL LSFT_T(KC_EQL) // Hold for shift, tap for =
-/* #define _ALTBSP LALT_T(KC_BSPC) // Send alt+backspace */
+#define _HYPSPC HYPR_T(KC_SPC)    // Hold for hyper, tap for space
+#define _SFTEQL LSFT_T(KC_EQL)    // Hold for shift, tap for =
+#define _HYPBSL HYPR(KC_BSLS)     // Hold for push to talk with Shush
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_DEFAULT] = LAYOUT_t33chong(
@@ -116,9 +112,6 @@ layer_state_t layer_state_set_user(layer_state_t state) {
     case _FUNCTION:
       rgblight_setrgb(RGB_MAGENTA);
       break;
-    case _MEH: // temporary
-      rgblight_setrgb(RGB_BLUE);
-      break;
     default:
       rgblight_setrgb(RGB_CYAN);
       break;
@@ -134,25 +127,12 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   static uint32_t _arrnum_key_timer;
   static uint32_t _funmsk_key_timer;
-  /* static uint32_t _mehund_key_timer; */
-  /* static bool _is_mehund_held; */
-
-  /* xprintf("%s", record); */
-
   switch (keycode) {
-    /* case KC_BSPC: */
-    /*   if (record->event.pressed && _is_mehund_held) { */
-    /*     SEND_STRING(SS_LALT(SS_TAP(X_BSPC))); */
-    /*     return false; */
-    /*   } */
-    /*   return true; */
     case _ALTBSP:
       if (record->event.pressed) {
         SEND_STRING(SS_LALT(SS_TAP(X_BSPC)));
       }
       return false;
-    /* case _ALTBSP: */
-    /*   return false; */
     case _ARRNUM:
       if (record->event.pressed) {
         _arrnum_key_timer = timer_read32();
@@ -175,29 +155,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
       }
       return false;
-    /* case _MEHUND: */
-    /*   /1* if (record->event.pressed) { *1/ */
-    /*   if (record->event.pressed && !record->tap.interrupted) { */
-    /*     _is_mehund_held = true; */
-    /*     _mehund_key_timer = timer_read32(); */
-    /*   } else { */
-    /*     _is_mehund_held = false; */
-    /*     if (timer_elapsed32(_mehund_key_timer) < TAPPING_TERM) { */
-    /*       SEND_STRING("_"); */
-    /*     } */
-    /*   } */
-    /*   return false; */
     case _UNDSCR:
       if (record->event.pressed) {
         SEND_STRING("_");
       }
       return false;
     default:
-      /* if (!record->event.pressed && _is_mehund_held && !record->tap.interrupted) { */
-      /* if (record->event.pressed && _is_mehund_held) { */
-      /* if (!record->event.pressed && _is_mehund_held) { */
-      /* if (_is_meh_held && keycode != _ALTBSP) { */
-
       if (_is_meh_held) {
         if (keycode == _MEHMIN) {
           return true;
@@ -213,7 +176,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
         return false;
       }
-
       return true; // Process all other keycodes normally
   }
 }
