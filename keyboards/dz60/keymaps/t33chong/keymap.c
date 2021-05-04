@@ -21,8 +21,10 @@ enum my_keycodes {
 #define _HYPSPC HYPR_T(KC_SPC) // Hold for hyper, tap for space
 /* #define _MEHUND MEH_T(_UNDSCR) // Hold for meh, tap for _ */
 #define _HYPBSL HYPR(KC_BSLS)  // Hold for push to talk with Shush
-#define _MEHMIN MEH_T(KC_MINS) // Hold for meh, tap for -
+/* #define _MEHMIN MEH_T(KC_MINS) // Hold for meh, tap for - */
+#define _MEHMIN LT(_MEH, KC_MINS) // Hold for meh, tap for -
 #define _SFTEQL LSFT_T(KC_EQL) // Hold for shift, tap for =
+/* #define _ALTBSP LALT_T(KC_BSPC) // Send alt+backspace */
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_DEFAULT] = LAYOUT_t33chong(
@@ -114,6 +116,9 @@ layer_state_t layer_state_set_user(layer_state_t state) {
     case _FUNCTION:
       rgblight_setrgb(RGB_MAGENTA);
       break;
+    case _MEH: // temporary
+      rgblight_setrgb(RGB_BLUE);
+      break;
     default:
       rgblight_setrgb(RGB_CYAN);
       break;
@@ -146,6 +151,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         SEND_STRING(SS_LALT(SS_TAP(X_BSPC)));
       }
       return false;
+    /* case _ALTBSP: */
+    /*   return false; */
     case _ARRNUM:
       if (record->event.pressed) {
         _arrnum_key_timer = timer_read32();
@@ -189,7 +196,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       /* if (!record->event.pressed && _is_mehund_held && !record->tap.interrupted) { */
       /* if (record->event.pressed && _is_mehund_held) { */
       /* if (!record->event.pressed && _is_mehund_held) { */
+      /* if (_is_meh_held && keycode != _ALTBSP) { */
+
       if (_is_meh_held) {
+        if (keycode == _MEHMIN) {
+          return true;
+        }
         if (record->event.pressed) {
           register_code(KC_LCTL);
           register_code(KC_LSFT);
@@ -201,6 +213,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
         return false;
       }
+
       return true; // Process all other keycodes normally
   }
 }
