@@ -124,6 +124,8 @@ layer_state_t layer_state_set_user(layer_state_t state) {
   return state;
 }
 
+#define MODS_SHIFT (get_mods() & MOD_BIT(KC_LSHIFT) || get_mods() & MOD_BIT(KC_RSHIFT))
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   static uint32_t _arrnum_key_timer;
   static uint32_t _funmsk_key_timer;
@@ -157,7 +159,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       return false;
     case _UNDSCR:
       if (record->event.pressed) {
-        SEND_STRING("_");
+        if (MODS_SHIFT) {
+          tap_code(KC_MINS);
+        } else {
+          SEND_STRING("_");
+        }
       }
       return false;
     default:
@@ -169,7 +175,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
           register_code(KC_LCTL);
           register_code(KC_LSFT);
           register_code(KC_LALT);
-          tap_code(keycode);
+          register_code(keycode);
+        } else {
+          unregister_code(keycode);
           unregister_code(KC_LALT);
           unregister_code(KC_LSFT);
           unregister_code(KC_LCTL);
