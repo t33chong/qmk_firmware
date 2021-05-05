@@ -5,6 +5,7 @@ enum my_layers {
   _ARROWS,
   _NUMPAD,
   _MEH,
+  _HYPER,
   _MOUSEKEYS,
   _FUNCTION,
 };
@@ -16,11 +17,11 @@ enum my_keycodes {
   _UNDSCR,              // Send underscore
 };
 
-#define _CTLESC LCTL_T(KC_ESC)    // Hold for control, tap for escape
-#define _MEHMIN LT(_MEH, KC_MINS) // Hold for meh, tap for -
-#define _HYPSPC HYPR_T(KC_SPC)    // Hold for hyper, tap for space
-#define _SFTEQL LSFT_T(KC_EQL)    // Hold for shift, tap for =
-#define _HYPBSL HYPR(KC_BSLS)     // Hold for push to talk with Shush
+#define _CTLESC LCTL_T(KC_ESC)     // Hold for control, tap for escape
+#define _MEHMIN LT(_MEH, KC_MINS)  // Hold for meh, tap for -
+#define _HYPSPC LT(_HYPER, KC_SPC) // Hold for hyper, tap for space
+#define _SFTEQL LSFT_T(KC_EQL)     // Hold for shift, tap for =
+#define _PUSHTT HYPR(KC_BSLS)      // Hold for push to talk with Shush
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_DEFAULT] = LAYOUT_t33chong(
@@ -34,7 +35,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______, \
     _______, _______, _______, _______, _______, _______, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, _______, _______,                   _______, \
-    KC_LSFT, _HYPBSL, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,          _______, \
+    KC_LSFT, _PUSHTT, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,          _______, \
     _______, _______, _______,          _______,          _______,          _______,          _______, _______, _______, _______, _______  \
   ),
   [_NUMPAD] = LAYOUT_t33chong(
@@ -49,7 +50,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______, \
     KC_ESC,  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,                   _______, \
     _ALTBSP, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          KC_EQL,           _______, \
-    _______, _______, _______,          _______,          _______,          KC_SPC,           _______, _______, _______, _______, _______  \
+    _______, _______, _______,          _______,          _PUSHTT,          KC_SPC,           KC_MINS, _______, _______, _______, _______  \
+  ),
+  [_HYPER] = LAYOUT_t33chong(
+    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
+    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______, \
+    KC_ESC,  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,                   _______, \
+    _ALTBSP, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          KC_EQL,           _______, \
+    _______, _______, _______,          _______,          _______,          KC_SPC,           KC_MINS, _______, _______, _______, _______  \
   ),
   [_MOUSEKEYS] = LAYOUT_t33chong(
     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
@@ -96,7 +104,8 @@ bool get_tapping_force_hold(uint16_t keycode, keyrecord_t *record) {
 // Indicate layer with RGB underglow lighting effect
 // https://docs.qmk.fm/#/custom_quantum_functions?id=layer-change-code
 // https://github.com/qmk/qmk_firmware/blob/master/quantum/rgblight_list.h
-bool _is_meh_held;
+bool _is_meh_active;
+bool _is_hyper_active;
 layer_state_t layer_state_set_user(layer_state_t state) {
   int _current_layer = get_highest_layer(state);
   switch (_current_layer) {
@@ -112,14 +121,26 @@ layer_state_t layer_state_set_user(layer_state_t state) {
     case _FUNCTION:
       rgblight_setrgb(RGB_MAGENTA);
       break;
+    case _HYPER:
+      rgblight_setrgb(RGB_BLUE);
+      break;
     default:
       rgblight_setrgb(RGB_CYAN);
       break;
   }
-  if (_current_layer == _MEH) {
-    _is_meh_held = true;
-  } else {
-    _is_meh_held = false;
+  switch (_current_layer) {
+    case _MEH:
+      _is_meh_active = true;
+      _is_hyper_active = false;
+      break;
+    case _HYPER:
+      _is_meh_active = false;
+      _is_hyper_active = true;
+      break;
+    default:
+      _is_meh_active = false;
+      _is_hyper_active = false;
+      break;
   }
   return state;
 }
@@ -167,20 +188,24 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
       return false;
     default:
-      if (_is_meh_held) {
+      if (_is_meh_active) {
         if (keycode == _MEHMIN) {
           return true;
         }
         if (record->event.pressed) {
-          register_code(KC_LCTL);
-          register_code(KC_LSFT);
-          register_code(KC_LALT);
-          register_code(keycode);
+          register_code16(MEH(keycode));
         } else {
-          unregister_code(keycode);
-          unregister_code(KC_LALT);
-          unregister_code(KC_LSFT);
-          unregister_code(KC_LCTL);
+          unregister_code16(MEH(keycode));
+        }
+        return false;
+      } else if (_is_hyper_active) {
+        if (keycode == _HYPSPC) {
+          return true;
+        }
+        if (record->event.pressed) {
+          register_code16(HYPR(keycode));
+        } else {
+          unregister_code16(HYPR(keycode));
         }
         return false;
       }
