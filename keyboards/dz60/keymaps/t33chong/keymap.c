@@ -153,22 +153,22 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 
 #define MODS_SHIFT (get_mods() & MOD_BIT(KC_LSHIFT) || get_mods() & MOD_BIT(KC_RSHIFT))
 
-void _send_underscore(void) {
-  if (MODS_SHIFT) {
-    tap_code(KC_MINS);
-  } else {
-    SEND_STRING("_");
-  }
-}
+/* void _send_underscore(void) { */
+/*   if (MODS_SHIFT) { */
+/*     tap_code(KC_MINS); */
+/*   } else { */
+/*     SEND_STRING("_"); */
+/*   } */
+/* } */
 
-uint32_t _undscr_repeat_timer;
-bool _is_undscr_held;
+/* uint32_t _undscr_repeat_timer; */
+/* bool _is_undscr_held; */
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   static uint32_t _arrnum_hold_timer;
   static uint32_t _funmsk_hold_timer;
   static uint32_t _reset_hold_timer;
-  static uint32_t _undscr_hold_timer;
+  /* static uint32_t _undscr_hold_timer; */
   switch (keycode) {
     case _ALTBSP:
       if (record->event.pressed) {
@@ -210,14 +210,30 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       return false;
     case _UNDSCR:
       if (record->event.pressed) {
-        if (timer_elapsed32(_undscr_hold_timer) < TAPPING_TERM) {
-          _is_undscr_held = true;
-          _undscr_repeat_timer = timer_read32();
-        }
-        _undscr_hold_timer = timer_read32();
-        _send_underscore();
+        register_code16(LSFT(KC_MINS));
+
+        /* if (MODS_SHIFT) { */
+        /*   register_code(KC_MINS); */
+        /* } else { */
+        /*   register_code16(LSFT(KC_MINS)); */
+        /* } */
+
+        /* if (timer_elapsed32(_undscr_hold_timer) < TAPPING_TERM) { */
+        /*   _is_undscr_held = true; */
+        /*   _undscr_repeat_timer = timer_read32(); */
+        /* } */
+        /* _undscr_hold_timer = timer_read32(); */
+        /* _send_underscore(); */
       } else {
-        _is_undscr_held = false;
+        unregister_code16(LSFT(KC_MINS));
+
+        /* if (MODS_SHIFT) { */
+        /*   unregister_code(KC_MINS); */
+        /* } else { */
+        /*   unregister_code16(LSFT(KC_MINS)); */
+        /* } */
+
+        /* _is_undscr_held = false; */
       }
       return false;
     default:
@@ -246,12 +262,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   }
 }
 
-void matrix_scan_user(void) {
-  // Repeat underscore when tapped and then held
-  if (_is_undscr_held) {
-    if (timer_elapsed32(_undscr_repeat_timer) >= 100) {
-      _undscr_repeat_timer = timer_read32();
-      _send_underscore();
-    }
-  }
-}
+/* void matrix_scan_user(void) { */
+/*   // Repeat underscore when tapped and then held */
+/*   if (_is_undscr_held) { */
+/*     if (timer_elapsed32(_undscr_repeat_timer) >= 100) { */
+/*       _undscr_repeat_timer = timer_read32(); */
+/*       _send_underscore(); */
+/*     } */
+/*   } */
+/* } */
