@@ -172,7 +172,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
     case _ALTBSP:
       if (record->event.pressed) {
-        SEND_STRING(SS_LALT(SS_TAP(X_BSPC)));
+        register_code16(LALT(KC_BSPC));
+      } else {
+        unregister_code16(LALT(KC_BSPC));
       }
       return false;
     case _ARRNUM:
