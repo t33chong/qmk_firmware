@@ -101,13 +101,15 @@ bool get_tapping_force_hold(uint16_t keycode, keyrecord_t *record) {
   }
 }
 
-// Indicate layer with RGB underglow lighting effect
-// https://docs.qmk.fm/#/custom_quantum_functions?id=layer-change-code
-// https://github.com/qmk/qmk_firmware/blob/master/quantum/rgblight_list.h
 bool _is_meh_active;
 bool _is_hyper_active;
+
 layer_state_t layer_state_set_user(layer_state_t state) {
   int _current_layer = get_highest_layer(state);
+
+  // Indicate layer with RGB underglow lighting effect
+  // https://docs.qmk.fm/#/custom_quantum_functions?id=layer-change-code
+  // https://github.com/qmk/qmk_firmware/blob/master/quantum/rgblight_list.h
   switch (_current_layer) {
     case _ARROWS:
       rgblight_setrgb(RGB_GREEN);
@@ -128,6 +130,8 @@ layer_state_t layer_state_set_user(layer_state_t state) {
       rgblight_setrgb(RGB_CYAN);
       break;
   }
+
+  // Set layer booleans
   switch (_current_layer) {
     case _MEH:
       _is_meh_active = true;
@@ -147,8 +151,17 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 
 #define MODS_SHIFT (get_mods() & MOD_BIT(KC_LSHIFT) || get_mods() & MOD_BIT(KC_RSHIFT))
 
+void _send_underscore(void) {
+  if (MODS_SHIFT) {
+    tap_code(KC_MINS);
+  } else {
+    SEND_STRING("_");
+  }
+}
+
 uint32_t _undscr_repeat_timer;
 bool _is_undscr_held;
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   static uint32_t _arrnum_key_timer;
   static uint32_t _funmsk_key_timer;
@@ -188,11 +201,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
           _undscr_repeat_timer = timer_read32();
         }
         _undscr_key_timer = timer_read32();
-        if (MODS_SHIFT) {
-          tap_code(KC_MINS);
-        } else {
-          SEND_STRING("_");
-        }
+        _send_underscore();
       } else {
         _is_undscr_held = false;
       }
@@ -224,14 +233,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 }
 
 void matrix_scan_user(void) {
-  if (_is_undscr_held) { // Repeat when tapped and then held
+  // Repeat underscore when tapped and then held
+  if (_is_undscr_held) {
     if (timer_elapsed32(_undscr_repeat_timer) >= 100) {
       _undscr_repeat_timer = timer_read32();
-      if (MODS_SHIFT) {
-        tap_code(KC_MINS);
-      } else {
-        SEND_STRING("_");
-      }
+      _send_underscore();
     }
   }
 }
