@@ -147,9 +147,12 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 
 #define MODS_SHIFT (get_mods() & MOD_BIT(KC_LSHIFT) || get_mods() & MOD_BIT(KC_RSHIFT))
 
+uint32_t _undscr_repeat_timer;
+bool _is_undscr_held;
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   static uint32_t _arrnum_key_timer;
   static uint32_t _funmsk_key_timer;
+  static uint32_t _undscr_key_timer;
   switch (keycode) {
     case _ALTBSP:
       if (record->event.pressed) {
@@ -180,11 +183,18 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       return false;
     case _UNDSCR:
       if (record->event.pressed) {
+        if (timer_elapsed32(_undscr_key_timer) < TAPPING_TERM) {
+          _is_undscr_held = true;
+          _undscr_repeat_timer = timer_read32();
+        }
+        _undscr_key_timer = timer_read32();
         if (MODS_SHIFT) {
           tap_code(KC_MINS);
         } else {
           SEND_STRING("_");
         }
+      } else {
+        _is_undscr_held = false;
       }
       return false;
     default:
@@ -210,5 +220,18 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         return false;
       }
       return true; // Process all other keycodes normally
+  }
+}
+
+void matrix_scan_user(void) {
+  if (_is_undscr_held) { // Repeat when tapped and then held
+    if (timer_elapsed32(_undscr_repeat_timer) >= 100) {
+      _undscr_repeat_timer = timer_read32();
+      if (MODS_SHIFT) {
+        tap_code(KC_MINS);
+      } else {
+        SEND_STRING("_");
+      }
+    }
   }
 }
