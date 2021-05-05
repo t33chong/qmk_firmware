@@ -11,7 +11,8 @@ enum my_layers {
 };
 
 enum my_keycodes {
-  _ARRNUM = SAFE_RANGE, // Hold to activate arrows layer, tap to toggle numpad layer
+  __RESET = SAFE_RANGE, // Restart into bootloader after hold timeout
+  _ARRNUM,              // Hold to activate arrows layer, tap to toggle numpad layer
   _FUNMSK,              // Hold to activate function layer, tap to toggle mousekeys layer
   _ALTBSP,              // Send alt+backspace
   _UNDSCR,              // Send underscore
@@ -67,7 +68,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     _______, _______, _______,          KC_BTN2,          KC_BTN3,          KC_BTN1,          _______, _______, _______, _______, _______  \
   ),
   [_FUNCTION] = LAYOUT_t33chong(
-    _______, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  _______, RESET,   \
+    _______, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  BL_TOGG, RESET,   \
     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______, \
     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,                   _______, \
     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,          _______, \
@@ -85,8 +86,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 
 void keyboard_post_init_user(void) {
-  backlight_enable();
-  backlight_level(BACKLIGHT_LEVELS);
+  backlight_disable();
   rgblight_enable_noeeprom();
   rgblight_setrgb(RGB_CYAN);
 }
@@ -123,6 +123,7 @@ layer_state_t layer_state_set_user(layer_state_t state) {
     case _FUNCTION:
       rgblight_setrgb(RGB_MAGENTA);
       break;
+    case _MEH:
     case _HYPER:
       rgblight_setrgb(RGB_BLUE);
       break;
@@ -146,6 +147,7 @@ layer_state_t layer_state_set_user(layer_state_t state) {
       _is_hyper_active = false;
       break;
   }
+
   return state;
 }
 
@@ -163,9 +165,10 @@ uint32_t _undscr_repeat_timer;
 bool _is_undscr_held;
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-  static uint32_t _arrnum_key_timer;
-  static uint32_t _funmsk_key_timer;
-  static uint32_t _undscr_key_timer;
+  static uint32_t _arrnum_hold_timer;
+  static uint32_t _funmsk_hold_timer;
+  static uint32_t _reset_hold_timer;
+  static uint32_t _undscr_hold_timer;
   switch (keycode) {
     case _ALTBSP:
       if (record->event.pressed) {
@@ -174,33 +177,42 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       return false;
     case _ARRNUM:
       if (record->event.pressed) {
-        _arrnum_key_timer = timer_read32();
+        _arrnum_hold_timer = timer_read32();
         layer_on(_ARROWS);
       } else {
         layer_off(_ARROWS);
-        if (timer_elapsed32(_arrnum_key_timer) < TAPPING_TERM) {
+        if (timer_elapsed32(_arrnum_hold_timer) < TAPPING_TERM) {
           layer_invert(_NUMPAD);
         }
       }
       return false;
     case _FUNMSK:
       if (record->event.pressed) {
-        _funmsk_key_timer = timer_read32();
+        _funmsk_hold_timer = timer_read32();
         layer_on(_FUNCTION);
       } else {
         layer_off(_FUNCTION);
-        if (timer_elapsed32(_funmsk_key_timer) < TAPPING_TERM) {
+        if (timer_elapsed32(_funmsk_hold_timer) < TAPPING_TERM) {
           layer_invert(_MOUSEKEYS);
+        }
+      }
+      return false;
+    case __RESET:
+      if (record->event.pressed) {
+          _reset_hold_timer = timer_read32();
+      } else {
+        if (timer_elapsed32(_reset_hold_timer) >= 500) {
+          reset_keyboard();
         }
       }
       return false;
     case _UNDSCR:
       if (record->event.pressed) {
-        if (timer_elapsed32(_undscr_key_timer) < TAPPING_TERM) {
+        if (timer_elapsed32(_undscr_hold_timer) < TAPPING_TERM) {
           _is_undscr_held = true;
           _undscr_repeat_timer = timer_read32();
         }
-        _undscr_key_timer = timer_read32();
+        _undscr_hold_timer = timer_read32();
         _send_underscore();
       } else {
         _is_undscr_held = false;
