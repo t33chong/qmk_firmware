@@ -3,14 +3,7 @@
 // TODO
 // backspace sends alt+backspace when shift is held
 // backspace sends forward delete when minus is held
-// revamp the way arrow keys work; apply both to arrow layer (hjkl) and bottom-right arrow cluster:
-//   tap followed by hold sends home, end, ctrl+a, or ctrl+e
-//   make arrow layer hjkl set timer and counter, e.g. when holding h it sends left every interval the first 5 times, then starts sending alt+left every interval, then eventually beginning of line with home, like iOS backspacing
 // cmd and alt recognize left shift as shift
-// function key: hold for meh, tap for function
-// send cmd+numeral when minus is held and numeral in top row is pressed
-// change app switcher shortcuts to hyper+numerals
-// minus layer makes ' \ and [ |'
 
 enum my_layers {
   _DEFAULT = 0,
@@ -138,7 +131,7 @@ layer_state_t layer_state_set_user(layer_state_t state) {
       rgblight_setrgb(RGB_GREEN);
       break;
     case _NUMERALS:
-      rgblight_setrgb(RGB_RED);
+      rgblight_setrgb(RGB_WHITE);
       break;
     case _MOUSEKEYS:
       rgblight_setrgb(RGB_YELLOW);
@@ -147,8 +140,10 @@ layer_state_t layer_state_set_user(layer_state_t state) {
       rgblight_setrgb(RGB_MAGENTA);
       break;
     case _MEH:
-    case _HYPER:
       rgblight_setrgb(RGB_BLUE);
+      break;
+    case _HYPER:
+      rgblight_setrgb(RGB_RED);
       break;
     default:
       rgblight_setrgb(RGB_CYAN);
@@ -190,7 +185,6 @@ static bool _was_left_tapped;
 static uint32_t _right_hold_timer;
 static bool _is_right_held;
 static bool _was_right_tapped;
-/* static bool _did_arrow_macro_enable_alt; */
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   static uint32_t _arrmsk_hold_timer;
   static uint32_t _hypfun_hold_timer;
@@ -232,9 +226,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         } else {
           _was_left_tapped = false;
         }
-        /* if (_did_arrow_macro_enable_alt) { */
-        /*   unregister_code16(KC_LALT); */
-        /* } */
         _is_left_held = false;
       }
       return true;
