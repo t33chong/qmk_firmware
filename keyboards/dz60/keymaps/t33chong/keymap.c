@@ -1,7 +1,6 @@
 #include QMK_KEYBOARD_H
 
 // TODO
-// holding minus key switches to layer where numerals are on row 3 (home) and symbols are on row 2
 // backspace sends alt+backspace when shift is held
 // backspace sends forward delete when minus is held
 // revamp the way arrow keys work; apply both to arrow layer (hjkl) and bottom-right arrow cluster:
@@ -12,11 +11,6 @@
 // send cmd+numeral when minus is held and numeral in top row is pressed
 // change app switcher shortcuts to hyper+numerals
 // minus layer makes ' \ and [ |'
-
-// TODO
-// make space activate numerals layer
-// move meh back to -
-// hold function key for hyper
 
 enum my_layers {
   _DEFAULT = 0,
@@ -34,6 +28,10 @@ enum my_keycodes {
   _HYPFUN,              // Hold to activate hyper layer, tap to toggle function layer
   _ALTBSP,              // Send alt+backspace
   _UNDSCR,              // Send underscore (used instead of KC_UNDS to avoid shift applying to next keypress)
+  /* _____UP,              // Dynamic up */
+  /* ___DOWN,              // Dynamic down */
+  /* ___LEFT,              // Dynamic left */
+  /* __RIGHT,              // Dynamic right */
 };
 
 #define _CTLESC CTL_T(KC_ESC)         // Hold for control, tap for escape
@@ -41,6 +39,16 @@ enum my_keycodes {
 #define _NUMSPC LT(_NUMERALS, KC_SPC) // Hold for numerals layer, tap for space
 #define _SFTEQL SFT_T(KC_EQL)         // Hold for shift, tap for =
 #define _PUSHTT HYPR(KC_BSLS)         // Hold for push to talk with Shush
+#define _HYPR_1 HYPR(KC_1)            // Hyper+1
+#define _HYPR_2 HYPR(KC_2)            // Hyper+2
+#define _HYPR_3 HYPR(KC_3)            // Hyper+3
+#define _HYPR_4 HYPR(KC_4)            // Hyper+4
+#define _HYPR_5 HYPR(KC_5)            // Hyper+5
+#define _HYPR_6 HYPR(KC_6)            // Hyper+6
+#define _HYPR_7 HYPR(KC_7)            // Hyper+7
+#define _HYPR_8 HYPR(KC_8)            // Hyper+8
+#define _HYPR_9 HYPR(KC_9)            // Hyper+9
+#define _HYPR_0 HYPR(KC_0)            // Hyper+0
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_DEFAULT] = LAYOUT_t33chong(
@@ -54,7 +62,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     _______, G(KC_1), G(KC_2), G(KC_3), G(KC_4), G(KC_5), G(KC_6), G(KC_7), G(KC_8), G(KC_9), G(KC_0), _______, _______, _______, _______, \
     _______, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC, KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_PIPE, _______,          _______, \
     _______, KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_BSLS,                   _______, \
-    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,          _______, \
+    _ALTBSP, _HYPR_1, _HYPR_2, _HYPR_3, _HYPR_4, _HYPR_5, _HYPR_6, _HYPR_7, _HYPR_8, _HYPR_9, _HYPR_0,          _______,          _______, \
     _______, _______, _______,          _______,          _______,          _______,          _______, _______, _______, _______, _______  \
   ),
   [_ARROWS] = LAYOUT_t33chong(
@@ -75,7 +83,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______, \
     KC_ESC,  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,                   _______, \
-    _ALTBSP, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          KC_EQL,           _______, \
+    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          KC_EQL,           _______, \
     _______, _______, _______,          _______,          _______,          KC_SPC,           KC_MINS, _______, _______, _______, _______  \
   ),
   [_MOUSEKEYS] = LAYOUT_t33chong(
@@ -113,6 +121,7 @@ void keyboard_post_init_user(void) {
 bool get_tapping_force_hold(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
     case _CTLESC:
+    case _NUMSPC:
       return true;
     default:
       return false;
@@ -170,12 +179,24 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 }
 
 #define MODS_SHIFT (get_mods() & MOD_BIT(KC_LSHIFT) || get_mods() & MOD_BIT(KC_RSHIFT))
+#define MODS_CTRL (get_mods() & MOD_BIT(KC_LCTL) || get_mods() & MOD_BIT(KC_RCTRL))
+#define MODS_ALT (get_mods() & MOD_BIT(KC_LALT) || get_mods() & MOD_BIT(KC_RALT))
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   static uint32_t _arrmsk_hold_timer;
   static uint32_t _hypfun_hold_timer;
   static uint32_t _reset_hold_timer;
+  /* static uint32_t _up_hold_timer; */
+  /* static bool _is_up_held; */
   switch (keycode) {
+    /* case _____UP: */
+    /*   if (record->event.pressed) { */
+    /*     _is_up_held = true; */
+    /*     _up_hold_timer = timer_read32(); */
+    /*   } else { */
+    /*     _is_up_held = false; */
+    /*   } */
+    /*   return false; */
     case _ALTBSP:
       if (record->event.pressed) {
         register_code16(A(KC_BSPC));
