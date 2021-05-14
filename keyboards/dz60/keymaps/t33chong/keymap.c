@@ -23,21 +23,12 @@ enum my_keycodes {
   _UNDSCR,              // Send underscore (used instead of KC_UNDS to avoid shift applying to next keypress)
 };
 
+#define H HYPR
 #define _CTLESC CTL_T(KC_ESC)         // Hold for control, tap for escape
 #define _MEHMIN LT(_MEH, KC_MINS)     // Hold for meh layer, tap for -
 #define _NUMSPC LT(_NUMERALS, KC_SPC) // Hold for numerals layer, tap for space
 #define _SFTEQL SFT_T(KC_EQL)         // Hold for shift, tap for =
 #define _PUSHTT HYPR(KC_BSLS)         // Hold for push to talk with Shush
-#define _HYPR_1 HYPR(KC_1)            // Hyper+1
-#define _HYPR_2 HYPR(KC_2)            // Hyper+2
-#define _HYPR_3 HYPR(KC_3)            // Hyper+3
-#define _HYPR_4 HYPR(KC_4)            // Hyper+4
-#define _HYPR_5 HYPR(KC_5)            // Hyper+5
-#define _HYPR_6 HYPR(KC_6)            // Hyper+6
-#define _HYPR_7 HYPR(KC_7)            // Hyper+7
-#define _HYPR_8 HYPR(KC_8)            // Hyper+8
-#define _HYPR_9 HYPR(KC_9)            // Hyper+9
-#define _HYPR_0 HYPR(KC_0)            // Hyper+0
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_DEFAULT] = LAYOUT_t33chong(
@@ -51,7 +42,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     _______, G(KC_1), G(KC_2), G(KC_3), G(KC_4), G(KC_5), G(KC_6), G(KC_7), G(KC_8), G(KC_9), G(KC_0), _______, _______, _______, _______, \
     _______, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC, KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_PIPE, _______,          _______, \
     _______, KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_BSLS,                   _______, \
-    _ALTBSP, _HYPR_1, _HYPR_2, _HYPR_3, _HYPR_4, _HYPR_5, _HYPR_6, _HYPR_7, _HYPR_8, _HYPR_9, _HYPR_0,          _______,          _______, \
+    _ALTBSP, H(KC_1), H(KC_2), H(KC_3), H(KC_4), H(KC_5), H(KC_6), H(KC_7), H(KC_8), H(KC_9), H(KC_0),          _______,          _______, \
     _______, _______, _______,          _______,          _______,          _______,          _______, _______, _______, _______, _______  \
   ),
   [_ARROWS] = LAYOUT_t33chong(
@@ -313,7 +304,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   }
 }
 
-// FIXME: tap down, hold down, hold up -> end, home (shouldn't send home)
 #define ARROW_BOOST_THRESHOLD 1000 
 #define ARROW_BOOST_INTERVAL 200
 static uint32_t _arrow_boost_interval_timer;
