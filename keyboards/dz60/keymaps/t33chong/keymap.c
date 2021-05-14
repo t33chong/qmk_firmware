@@ -28,10 +28,6 @@ enum my_keycodes {
   _HYPFUN,              // Hold to activate hyper layer, tap to toggle function layer
   _ALTBSP,              // Send alt+backspace
   _UNDSCR,              // Send underscore (used instead of KC_UNDS to avoid shift applying to next keypress)
-  /* _____UP,              // Dynamic up */
-  /* ___DOWN,              // Dynamic down */
-  /* ___LEFT,              // Dynamic left */
-  /* __RIGHT,              // Dynamic right */
 };
 
 #define _CTLESC CTL_T(KC_ESC)         // Hold for control, tap for escape
@@ -182,21 +178,43 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 #define MODS_CTRL (get_mods() & MOD_BIT(KC_LCTL) || get_mods() & MOD_BIT(KC_RCTRL))
 #define MODS_ALT (get_mods() & MOD_BIT(KC_LALT) || get_mods() & MOD_BIT(KC_RALT))
 
+static uint32_t _down_hold_timer;
+static bool _is_down_held;
+static bool _was_down_tapped;
+static uint32_t _up_hold_timer;
+static bool _is_up_held;
+static bool _was_up_tapped;
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   static uint32_t _arrmsk_hold_timer;
   static uint32_t _hypfun_hold_timer;
   static uint32_t _reset_hold_timer;
-  /* static uint32_t _up_hold_timer; */
-  /* static bool _is_up_held; */
   switch (keycode) {
-    /* case _____UP: */
-    /*   if (record->event.pressed) { */
-    /*     _is_up_held = true; */
-    /*     _up_hold_timer = timer_read32(); */
-    /*   } else { */
-    /*     _is_up_held = false; */
-    /*   } */
-    /*   return false; */
+    case KC_DOWN:
+      if (record->event.pressed) {
+        _down_hold_timer = timer_read32();
+        _is_down_held = true;
+      } else {
+        if (timer_elapsed32(_down_hold_timer) < TAPPING_TERM) {
+          _was_down_tapped = true;
+        } else {
+          _was_down_tapped = false;
+        }
+        _is_down_held = false;
+      }
+      return true;
+    case KC_UP:
+      if (record->event.pressed) {
+        _up_hold_timer = timer_read32();
+        _is_up_held = true;
+      } else {
+        if (timer_elapsed32(_up_hold_timer) < TAPPING_TERM) {
+          _was_up_tapped = true;
+        } else {
+          _was_up_tapped = false;
+        }
+        _is_up_held = false;
+      }
+      return true;
     case _ALTBSP:
       if (record->event.pressed) {
         register_code16(A(KC_BSPC));
@@ -265,5 +283,20 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         return false;
       }
       return true; // Process all other keycodes normally
+  }
+}
+
+void matrix_scan_user(void) {
+  if (_was_down_tapped && timer_elapsed32(_down_hold_timer) > TAPPING_TERM) {
+    if (_is_down_held) {
+      tap_code(KC_END);
+    }
+    _was_down_tapped = false;
+  }
+  if (_was_up_tapped && timer_elapsed32(_up_hold_timer) > TAPPING_TERM) {
+    if (_is_up_held) {
+      tap_code(KC_HOME);
+    }
+    _was_up_tapped = false;
   }
 }
