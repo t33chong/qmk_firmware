@@ -190,6 +190,7 @@ static bool _was_left_tapped;
 static uint32_t _right_hold_timer;
 static bool _is_right_held;
 static bool _was_right_tapped;
+/* static bool _did_arrow_macro_enable_alt; */
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   static uint32_t _arrmsk_hold_timer;
   static uint32_t _hypfun_hold_timer;
@@ -231,6 +232,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         } else {
           _was_left_tapped = false;
         }
+        /* if (_did_arrow_macro_enable_alt) { */
+        /*   unregister_code16(KC_LALT); */
+        /* } */
         _is_left_held = false;
       }
       return true;
@@ -318,6 +322,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   }
 }
 
+// FIXME: tap down, hold down, hold up -> end, home (shouldn't send home)
+#define ARROW_BOOST_THRESHOLD 1000 
+#define ARROW_BOOST_INTERVAL 200
+static uint32_t _arrow_boost_interval_timer;
 void matrix_scan_user(void) {
   if (_was_up_tapped && timer_elapsed32(_up_hold_timer) > TAPPING_TERM) {
     if (_is_up_held) {
@@ -336,11 +344,23 @@ void matrix_scan_user(void) {
       tap_code16(C(KC_A));
     }
     _was_left_tapped = false;
+  } else if (_is_left_held && timer_elapsed32(_left_hold_timer) > ARROW_BOOST_THRESHOLD) {
+    unregister_code(KC_LEFT);
+    if (timer_elapsed32(_arrow_boost_interval_timer) > ARROW_BOOST_INTERVAL) {
+      tap_code16(A(KC_LEFT));
+      _arrow_boost_interval_timer = timer_read32();
+    }
   }
   if (_was_right_tapped && timer_elapsed32(_right_hold_timer) > TAPPING_TERM) {
     if (_is_right_held) {
       tap_code16(C(KC_E));
     }
     _was_right_tapped = false;
+  } else if (_is_right_held && timer_elapsed32(_right_hold_timer) > ARROW_BOOST_THRESHOLD) {
+    unregister_code(KC_RIGHT);
+    if (timer_elapsed32(_arrow_boost_interval_timer) > ARROW_BOOST_INTERVAL) {
+      tap_code16(A(KC_RIGHT));
+      _arrow_boost_interval_timer = timer_read32();
+    }
   }
 }
