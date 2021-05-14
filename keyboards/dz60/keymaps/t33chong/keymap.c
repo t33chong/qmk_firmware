@@ -2,7 +2,6 @@
 
 // TODO
 // holding minus key switches to layer where numerals are on row 3 (home) and symbols are on row 2
-// scrap existing numpad layer
 // backspace sends alt+backspace when shift is held
 // backspace sends forward delete when minus is held
 // revamp the way arrow keys work; apply both to arrow layer (hjkl) and bottom-right arrow cluster:
@@ -13,6 +12,11 @@
 // send cmd+numeral when minus is held and numeral in top row is pressed
 // change app switcher shortcuts to hyper+numerals
 // minus layer makes ' \ and [ |'
+
+// TODO
+// make space activate numerals layer
+// move meh back to -
+// hold function key for hyper
 
 enum my_layers {
   _DEFAULT = 0,
@@ -27,16 +31,17 @@ enum my_layers {
 enum my_keycodes {
   __RESET = SAFE_RANGE, // Restart into bootloader after hold timeout
   _ARRMSK,              // Hold to activate arrows layer, tap to toggle mousekeys layer
-  _MEHFUN,              // Hold to activate meh layer, tap to toggle function layer
+  _HYPFUN,              // Hold to activate hyper layer, tap to toggle function layer
   _ALTBSP,              // Send alt+backspace
   _UNDSCR,              // Send underscore (used instead of KC_UNDS to avoid shift applying to next keypress)
 };
 
-#define _CTLESC CTL_T(KC_ESC)          // Hold for control, tap for escape
-#define _NUMMIN LT(_NUMERALS, KC_MINS) // Hold for numerals layer, tap for -
-#define _HYPSPC LT(_HYPER, KC_SPC)     // Hold for hyper, tap for space
-#define _SFTEQL SFT_T(KC_EQL)          // Hold for shift, tap for =
-#define _PUSHTT HYPR(KC_BSLS)          // Hold for push to talk with Shush
+#define _CTLESC CTL_T(KC_ESC)         // Hold for control, tap for escape
+#define _SFTCAP SFT_T(KC_CAPS)        // Hold for shift, tap for caps lock
+#define _MEHMIN LT(_MEH, KC_MINS)     // Hold for meh layer, tap for -
+#define _NUMSPC LT(_NUMERALS, KC_SPC) // Hold for numerals layer, tap for space
+#define _SFTEQL SFT_T(KC_EQL)         // Hold for shift, tap for =
+#define _PUSHTT HYPR(KC_BSLS)         // Hold for push to talk with Shush
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_DEFAULT] = LAYOUT_t33chong(
@@ -44,7 +49,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC,          KC_BSLS, \
     _CTLESC, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,                   KC_ENT,  \
     KC_BSPC, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH,          _SFTEQL,          KC_UP,   \
-    _ARRMSK, KC_LALT, KC_LGUI,          KC_LSFT,          _NUMMIN,          _HYPSPC,          _UNDSCR, _MEHFUN, KC_LEFT, KC_RGHT, KC_DOWN  \
+    _ARRMSK, KC_LALT, KC_LGUI,          _SFTCAP,          _MEHMIN,          _NUMSPC,          _UNDSCR, _HYPFUN, KC_LEFT, KC_RGHT, KC_DOWN  \
   ),
   [_NUMERALS] = LAYOUT_t33chong(
     _______, G(KC_1), G(KC_2), G(KC_3), G(KC_4), G(KC_5), G(KC_6), G(KC_7), G(KC_8), G(KC_9), G(KC_0), _______, _______, _______, _______, \
@@ -169,7 +174,7 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   static uint32_t _arrmsk_hold_timer;
-  static uint32_t _mehfun_hold_timer;
+  static uint32_t _hypfun_hold_timer;
   static uint32_t _reset_hold_timer;
   switch (keycode) {
     case _ALTBSP:
@@ -190,13 +195,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
       }
       return false;
-    case _MEHFUN:
+    case _HYPFUN:
       if (record->event.pressed) {
-        _mehfun_hold_timer = timer_read32();
-        layer_on(_MEH);
+        _hypfun_hold_timer = timer_read32();
+        layer_on(_HYPER);
       } else {
-        layer_off(_MEH);
-        if (timer_elapsed32(_mehfun_hold_timer) < TAPPING_TERM) {
+        layer_off(_HYPER);
+        if (timer_elapsed32(_hypfun_hold_timer) < TAPPING_TERM) {
           layer_invert(_FUNCTION);
         }
       }
@@ -219,7 +224,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       return false;
     default:
       if (_is_meh_active) {
-        if (keycode == _MEHFUN) {
+        if (keycode == _MEHMIN) {
           return true;
         }
         if (record->event.pressed) {
@@ -229,7 +234,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
         return false;
       } else if (_is_hyper_active) {
-        if (keycode == _HYPSPC) {
+        if (keycode == _HYPFUN) {
           return true;
         }
         if (record->event.pressed) {
