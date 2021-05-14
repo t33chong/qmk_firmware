@@ -1,9 +1,23 @@
 #include QMK_KEYBOARD_H
 
+// TODO
+// holding minus key switches to layer where numerals are on row 3 (home) and symbols are on row 2
+// scrap existing numpad layer
+// backspace sends alt+backspace when shift is held
+// backspace sends forward delete when minus is held
+// revamp the way arrow keys work; apply both to arrow layer (hjkl) and bottom-right arrow cluster:
+//   tap followed by hold sends home, end, ctrl+a, or ctrl+e
+//   make arrow layer hjkl set timer and counter, e.g. when holding h it sends left every interval the first 5 times, then starts sending alt+left every interval, then eventually beginning of line with home, like iOS backspacing
+// cmd and alt recognize left shift as shift
+// function key: hold for meh, tap for function
+// send cmd+numeral when minus is held and numeral in top row is pressed
+// change app switcher shortcuts to hyper+numerals
+// minus layer makes ' \ and [ |'
+
 enum my_layers {
   _DEFAULT = 0,
+  _NUMERALS,
   _ARROWS,
-  _NUMPAD,
   _MEH,
   _HYPER,
   _MOUSEKEYS,
@@ -12,17 +26,19 @@ enum my_layers {
 
 enum my_keycodes {
   __RESET = SAFE_RANGE, // Restart into bootloader after hold timeout
-  _ARRNUM,              // Hold to activate arrows layer, tap to toggle numpad layer
-  _FUNMSK,              // Hold to activate function layer, tap to toggle mousekeys layer
+  _ARRMSK,              // Hold to activate arrows layer, tap to toggle mousekeys layer
   _ALTBSP,              // Send alt+backspace
-  _UNDSCR,              // Send underscore (used instead of KC_UNDS to avoid shift applying to next keypress)
+  _MEHUND,              // Send underscore (used instead of KC_UNDS to avoid shift applying to next keypress)
 };
 
-#define _CTLESC LCTL_T(KC_ESC)     // Hold for control, tap for escape
-#define _MEHMIN LT(_MEH, KC_MINS)  // Hold for meh, tap for -
-#define _HYPSPC LT(_HYPER, KC_SPC) // Hold for hyper, tap for space
-#define _SFTEQL LSFT_T(KC_EQL)     // Hold for shift, tap for =
-#define _PUSHTT HYPR(KC_BSLS)      // Hold for push to talk with Shush
+#define _CTLESC CTL_T(KC_ESC)        // Hold for control, tap for escape
+#define _NUMMIN LT(_NUMERALS, KC_MINS) // Hold for numerals layer, tap for -
+#define _HYPSPC LT(_HYPER, KC_SPC)   // Hold for hyper, tap for space
+/* #define _MEHUND LT(_MEH, KC_UNDS)    // Hold for meh, tap for _ */
+#define _SFTEQL SFT_T(KC_EQL)        // Hold for shift, tap for =
+#define _LYRFUN MO(_FUNCTION)        // Hold to activate function layer
+#define _PUSHTT HYPR(KC_BSLS)        // Hold for push to talk with Shush
+#define _UNDSCR S(KC_MINS)           // _
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_DEFAULT] = LAYOUT_t33chong(
@@ -30,7 +46,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC,          KC_BSLS, \
     _CTLESC, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,                   KC_ENT,  \
     KC_BSPC, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH,          _SFTEQL,          KC_UP,   \
-    _ARRNUM, KC_LALT, KC_LGUI,          KC_LSFT,          _MEHMIN,          _HYPSPC,          _UNDSCR, _FUNMSK, KC_LEFT, KC_RGHT, KC_DOWN  \
+    _ARRMSK, KC_LALT, KC_LGUI,          KC_LSFT,          _NUMMIN,          _HYPSPC,          _MEHUND, _LYRFUN, KC_LEFT, KC_RGHT, KC_DOWN  \
+  ),
+  [_NUMERALS] = LAYOUT_t33chong(
+    _______, G(KC_1), G(KC_2), G(KC_3), G(KC_4), G(KC_5), G(KC_6), G(KC_7), G(KC_8), G(KC_9), G(KC_0), _______, _______, _______, _______, \
+    _______, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC, KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_PIPE, _______,          _______, \
+    _______, KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_BSLS,                   _______, \
+    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,          _______, \
+    _______, _______, _______,          _______,          _______,          _______,          _______, _______, _______, _______, _______  \
   ),
   [_ARROWS] = LAYOUT_t33chong(
     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
@@ -38,13 +61,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     _______, _______, _______, _______, _______, _______, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, _______, _______,                   _______, \
     KC_LSFT, _PUSHTT, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,          _______, \
     _______, _______, _______,          _______,          _______,          _______,          _______, _______, _______, _______, _______  \
-  ),
-  [_NUMPAD] = LAYOUT_t33chong(
-    _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_LPRN, KC_RPRN, _______, _______, _______, _______, \
-    _______, _______, _______, _______, _______, _______, KC_COLN, KC_KP_7, KC_KP_8, KC_KP_9, KC_PSLS, KC_PAST, KC_PERC,          _______, \
-    _______, _______, _______, _______, _______, _______, KC_BSPC, KC_KP_4, KC_KP_5, KC_KP_6, KC_PMNS, KC_PPLS,                   _______, \
-    _______, _______, _______, _______, _______, _______, KC_UNDS, KC_KP_1, KC_KP_2, KC_KP_3, KC_PDOT,          KC_EQL,           _______, \
-    _______, _______, _______,          _______,          _______,          KC_KP_0,          _______, _______, _______, _______, _______  \
   ),
   [_MEH] = LAYOUT_t33chong(
     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
@@ -114,7 +130,7 @@ layer_state_t layer_state_set_user(layer_state_t state) {
     case _ARROWS:
       rgblight_setrgb(RGB_GREEN);
       break;
-    case _NUMPAD:
+    case _NUMERALS:
       rgblight_setrgb(RGB_RED);
       break;
     case _MOUSEKEYS:
@@ -154,8 +170,10 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 #define MODS_SHIFT (get_mods() & MOD_BIT(KC_LSHIFT) || get_mods() & MOD_BIT(KC_RSHIFT))
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-  static uint32_t _arrnum_hold_timer;
-  static uint32_t _funmsk_hold_timer;
+  static uint32_t _arrmsk_hold_timer;
+  static bool _is_underscore_repeating;
+  static uint32_t _mehund_hold_timer;
+  static uint32_t _mehund_repeat_timer;
   static uint32_t _reset_hold_timer;
   switch (keycode) {
     case _ALTBSP:
@@ -165,24 +183,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         unregister_code16(LALT(KC_BSPC));
       }
       return false;
-    case _ARRNUM:
+    case _ARRMSK:
       if (record->event.pressed) {
-        _arrnum_hold_timer = timer_read32();
+        _arrmsk_hold_timer = timer_read32();
         layer_on(_ARROWS);
       } else {
         layer_off(_ARROWS);
-        if (timer_elapsed32(_arrnum_hold_timer) < TAPPING_TERM) {
-          layer_invert(_NUMPAD);
-        }
-      }
-      return false;
-    case _FUNMSK:
-      if (record->event.pressed) {
-        _funmsk_hold_timer = timer_read32();
-        layer_on(_FUNCTION);
-      } else {
-        layer_off(_FUNCTION);
-        if (timer_elapsed32(_funmsk_hold_timer) < TAPPING_TERM) {
+        if (timer_elapsed32(_arrmsk_hold_timer) < TAPPING_TERM) {
           layer_invert(_MOUSEKEYS);
         }
       }
@@ -196,16 +203,31 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
       }
       return false;
-    case _UNDSCR:
+    case _MEHUND: // TODO: make underscore repeat when tapped and held; only activate meh layer if another key is tapped
+      // actually revert to _UNDSCR and use _MEHFUN
       if (record->event.pressed) {
-        register_code16(LSFT(KC_MINS));
+        if (timer_elapsed32(_mehund_repeat_timer) < TAPPING_TERM) {
+          register_code16(S(KC_MINS));
+          _is_underscore_repeating = true;
+        } else {
+          /* _is_meh_active = true; */
+          layer_on(_MEH);
+        }
+        _mehund_hold_timer = timer_read32();
       } else {
-        unregister_code16(LSFT(KC_MINS));
+        layer_off(_MEH);
+        /* _is_meh_active = false; */
+        if (!_is_underscore_repeating && timer_elapsed32(_mehund_hold_timer) < TAPPING_TERM) {
+          register_code16(S(KC_MINS));
+        }
+        unregister_code16(S(KC_MINS));
+        _is_underscore_repeating = false;
+        _mehund_repeat_timer = timer_read32();
       }
       return false;
     default:
       if (_is_meh_active) {
-        if (keycode == _MEHMIN) {
+        if (keycode == _MEHUND) {
           return true;
         }
         if (record->event.pressed) {
