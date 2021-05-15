@@ -1,9 +1,7 @@
 #include QMK_KEYBOARD_H
 
 // TODO
-// backspace sends alt+backspace when shift is held
 // backspace sends forward delete when minus is held
-// cmd and alt recognize left shift as shift
 
 enum my_layers {
   _DEFAULT = 0,
@@ -21,6 +19,7 @@ enum my_keycodes {
   _HYPFUN,              // Hold to activate hyper layer, tap to toggle function layer
   _ALTBSP,              // Send alt+backspace
   _UNDSCR,              // Send underscore (used instead of KC_UNDS to avoid shift applying to next keypress)
+  _MODGUI,              // Send command and set boolean flag
 };
 
 #define H HYPR
@@ -38,7 +37,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC,          KC_BSLS, \
     _CTLESC, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,                   KC_ENT,  \
     KC_BSPC, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH,          _SFTEQL,          KC_UP,   \
-    _ARRMSK, KC_LALT, KC_LGUI,          KC_LSFT,          _MEHMIN,          _NUMSPC,          _UNDSCR, _HYPFUN, KC_LEFT, KC_RGHT, KC_DOWN  \
+    _ARRMSK, KC_LALT, _MODGUI,          KC_LSFT,          _MEHMIN,          _NUMSPC,          _UNDSCR, _HYPFUN, KC_LEFT, KC_RGHT, KC_DOWN  \
   ),
   [_NUMERALS] = LAYOUT_t33chong(
     _______, G(KC_1), G(KC_2), G(KC_3), G(KC_4), G(KC_5), G(KC_6), G(KC_7), G(KC_8), G(KC_9), G(KC_0), _______, _______, _______, _______, \
@@ -173,6 +172,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   static uint32_t _arrmsk_hold_timer;
   static uint32_t _hypfun_hold_timer;
   static uint32_t _reset_hold_timer;
+  static bool _is_gui_held;
   switch (keycode) {
     case _ALTBSP:
       if (record->event.pressed) {
@@ -190,6 +190,15 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         if (timer_elapsed32(_arrmsk_hold_timer) < TAPPING_TERM) {
           layer_invert(_MOUSEKEYS);
         }
+      }
+      return false;
+    case _MODGUI:
+      if (record->event.pressed) {
+        register_code(KC_LGUI);
+        _is_gui_held = true;
+      } else {
+        unregister_code(KC_LGUI);
+        _is_gui_held = false;
       }
       return false;
     case _HYPFUN:
@@ -219,6 +228,16 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         unregister_code16(S(KC_MINS));
       }
       return false;
+    case KC_BSPC:
+      if (_is_gui_held) {
+        if (record->event.pressed) {
+          register_code(KC_LSFT);
+        } else {
+          unregister_code(KC_LSFT);
+        }
+        return false;
+      }
+      return true;
     default:
       if (_is_meh_active) {
         if (keycode == _MEHMIN) {
