@@ -29,6 +29,10 @@ enum my_keycodes {
 #define _NUMSPC LT(_NUMERALS, KC_SPC) // Hold for numerals layer, tap for space
 #define _SFTEQL SFT_T(KC_EQL)         // Hold for shift, tap for =
 #define _PUSHTT HYPR(KC_BSLS)         // Hold for push to talk with Shush
+#define _ALTLFT A(KC_LEFT)            // Send alt+left
+#define _ALTRGT A(KC_RGHT)            // Send alt+right
+#define _CTRL_A C(KC_A)               // Send ctrl+a
+#define _CTRL_E C(KC_E)               // Send ctrl+e
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_DEFAULT] = LAYOUT_t33chong(
@@ -46,10 +50,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     _______, _______, _______,          _______,          _______,          _______,          _______, _______, _______, _______, _______  \
   ),
   [_ARROWS] = LAYOUT_t33chong(
-    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
-    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______, \
-    _______, _______, _______, _______, _______, _______, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, _______, _______,                   _______, \
-    KC_LSFT, _PUSHTT, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,          _______, \
+    _______, _______, _______, _______, _______, _______, _______, _______, KC_HOME, _______, _______, _______, _______, _______, _______, \
+    _______, _______, _______, _______, _______, _______, _______, _ALTLFT, KC_UP,   _ALTRGT, _______, _______, _______,          _______, \
+    _______, _______, _______, _______, _______, _______, _CTRL_A, KC_LEFT, KC_DOWN, KC_RGHT, _CTRL_E, _______,                   _______, \
+    KC_LSFT, _PUSHTT, _______, _______, _______, _______, _______, _______, KC_END,  _______, _______,          _______,          _______, \
     _______, _______, _______,          _______,          _______,          _______,          _______, _______, _______, _______, _______  \
   ),
   [_MEH] = LAYOUT_t33chong(
@@ -164,75 +168,11 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 #define MODS_CTRL (get_mods() & MOD_BIT(KC_LCTL) || get_mods() & MOD_BIT(KC_RCTRL))
 #define MODS_ALT (get_mods() & MOD_BIT(KC_LALT) || get_mods() & MOD_BIT(KC_RALT))
 
-static uint32_t _up_hold_timer;
-static bool _is_up_held;
-static bool _was_up_tapped;
-static uint32_t _down_hold_timer;
-static bool _is_down_held;
-static bool _was_down_tapped;
-static uint32_t _left_hold_timer;
-static bool _is_left_held;
-static bool _was_left_tapped;
-static uint32_t _right_hold_timer;
-static bool _is_right_held;
-static bool _was_right_tapped;
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   static uint32_t _arrmsk_hold_timer;
   static uint32_t _hypfun_hold_timer;
   static uint32_t _reset_hold_timer;
   switch (keycode) {
-    case KC_UP:
-      if (record->event.pressed) {
-        _up_hold_timer = timer_read32();
-        _is_up_held = true;
-      } else {
-        if (timer_elapsed32(_up_hold_timer) < TAPPING_TERM) {
-          _was_up_tapped = true;
-        } else {
-          _was_up_tapped = false;
-        }
-        _is_up_held = false;
-      }
-      return true;
-    case KC_DOWN:
-      if (record->event.pressed) {
-        _down_hold_timer = timer_read32();
-        _is_down_held = true;
-      } else {
-        if (timer_elapsed32(_down_hold_timer) < TAPPING_TERM) {
-          _was_down_tapped = true;
-        } else {
-          _was_down_tapped = false;
-        }
-        _is_down_held = false;
-      }
-      return true;
-    case KC_LEFT:
-      if (record->event.pressed) {
-        _left_hold_timer = timer_read32();
-        _is_left_held = true;
-      } else {
-        if (timer_elapsed32(_left_hold_timer) < TAPPING_TERM) {
-          _was_left_tapped = true;
-        } else {
-          _was_left_tapped = false;
-        }
-        _is_left_held = false;
-      }
-      return true;
-    case KC_RIGHT:
-      if (record->event.pressed) {
-        _right_hold_timer = timer_read32();
-        _is_right_held = true;
-      } else {
-        if (timer_elapsed32(_right_hold_timer) < TAPPING_TERM) {
-          _was_right_tapped = true;
-        } else {
-          _was_right_tapped = false;
-        }
-        _is_right_held = false;
-      }
-      return true;
     case _ALTBSP:
       if (record->event.pressed) {
         register_code16(A(KC_BSPC));
@@ -301,47 +241,5 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         return false;
       }
       return true; // Process all other keycodes normally
-  }
-}
-
-#define ARROW_BOOST_THRESHOLD 1000 
-#define ARROW_BOOST_INTERVAL 200
-static uint32_t _arrow_boost_interval_timer;
-void matrix_scan_user(void) {
-  if (_was_up_tapped && timer_elapsed32(_up_hold_timer) > TAPPING_TERM) {
-    if (_is_up_held) {
-      tap_code(KC_HOME);
-    }
-    _was_up_tapped = false;
-  }
-  if (_was_down_tapped && timer_elapsed32(_down_hold_timer) > TAPPING_TERM) {
-    if (_is_down_held) {
-      tap_code(KC_END);
-    }
-    _was_down_tapped = false;
-  }
-  if (_was_left_tapped && timer_elapsed32(_left_hold_timer) > TAPPING_TERM) {
-    if (_is_left_held) {
-      tap_code16(C(KC_A));
-    }
-    _was_left_tapped = false;
-  } else if (_is_left_held && timer_elapsed32(_left_hold_timer) > ARROW_BOOST_THRESHOLD) {
-    unregister_code(KC_LEFT);
-    if (timer_elapsed32(_arrow_boost_interval_timer) > ARROW_BOOST_INTERVAL) {
-      tap_code16(A(KC_LEFT));
-      _arrow_boost_interval_timer = timer_read32();
-    }
-  }
-  if (_was_right_tapped && timer_elapsed32(_right_hold_timer) > TAPPING_TERM) {
-    if (_is_right_held) {
-      tap_code16(C(KC_E));
-    }
-    _was_right_tapped = false;
-  } else if (_is_right_held && timer_elapsed32(_right_hold_timer) > ARROW_BOOST_THRESHOLD) {
-    unregister_code(KC_RIGHT);
-    if (timer_elapsed32(_arrow_boost_interval_timer) > ARROW_BOOST_INTERVAL) {
-      tap_code16(A(KC_RIGHT));
-      _arrow_boost_interval_timer = timer_read32();
-    }
   }
 }
