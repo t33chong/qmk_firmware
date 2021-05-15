@@ -119,9 +119,6 @@ layer_state_t layer_state_set_user(layer_state_t state) {
     case _ARROWS:
       rgblight_setrgb(RGB_GREEN);
       break;
-    case _NUMERALS:
-      rgblight_setrgb(RGB_WHITE);
-      break;
     case _MOUSEKEYS:
       rgblight_setrgb(RGB_YELLOW);
       break;
@@ -134,6 +131,7 @@ layer_state_t layer_state_set_user(layer_state_t state) {
     case _HYPER:
       rgblight_setrgb(RGB_RED);
       break;
+    case _NUMERALS:
     default:
       rgblight_setrgb(RGB_CYAN);
       break;
