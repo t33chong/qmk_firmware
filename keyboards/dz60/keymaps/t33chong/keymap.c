@@ -14,7 +14,6 @@ enum my_keycodes {
   __RESET = SAFE_RANGE, // Restart into bootloader after hold timeout
   _ARRMSK,              // Hold to activate arrows layer, tap to toggle mousekeys layer
   _HYPFUN,              // Hold to activate hyper layer, tap to toggle function layer
-  /* _ALTBSP,              // Send alt+backspace */
   _UNDSCR,              // Send underscore (used instead of KC_UNDS to avoid shift applying to next keypress)
   _MODGUI,              // Send command and set boolean flag
   _MODSFT,              // Send shift and set boolean flag
@@ -99,6 +98,7 @@ void keyboard_post_init_user(void) {
 bool get_tapping_force_hold(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
     case _CTLESC:
+    case _NUMMIN:
     case _MEHSPC:
       return true;
     default:
@@ -172,13 +172,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   static bool _is_gui_held;
   static bool _is_shift_held;
   switch (keycode) {
-    /* case _ALTBSP: */
-    /*   if (record->event.pressed) { */
-    /*     register_code16(A(KC_BSPC)); */
-    /*   } else { */
-    /*     unregister_code16(A(KC_BSPC)); */
-    /*   } */
-    /*   return false; */
     case _ARRMSK:
       if (record->event.pressed) {
         _arrmsk_hold_timer = timer_read32();
