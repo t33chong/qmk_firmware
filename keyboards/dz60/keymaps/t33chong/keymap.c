@@ -21,8 +21,8 @@ enum my_keycodes {
 
 #define H HYPR
 #define _CTLESC CTL_T(KC_ESC)         // Hold for control, tap for escape
-#define _MEHMIN LT(_MEH, KC_MINS)     // Hold for meh layer, tap for -
-#define _NUMSPC LT(_NUMERALS, KC_SPC) // Hold for numerals layer, tap for space
+#define _NUMMIN LT(_NUMERALS, KC_MINS)// Hold for numerals layer, tap for -
+#define _MEHSPC LT(_MEH, KC_SPC)      // Hold for meh layer, tap for space
 #define _PUSHTT HYPR(KC_BSLS)         // Hold for push to talk with Shush
 #define _ALTLFT A(KC_LEFT)            // Send alt+left
 #define _ALTRGT A(KC_RGHT)            // Send alt+right
@@ -33,7 +33,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC,          KC_BSLS, \
     _CTLESC, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,                   KC_ENT,  \
     KC_BSPC, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH,          KC_EQL,           KC_UP,   \
-    _ARRMSK, KC_LALT, _MODGUI,          KC_LSFT,          _MEHMIN,          _NUMSPC,          _UNDSCR, _HYPFUN, KC_LEFT, KC_RGHT, KC_DOWN  \
+    _ARRMSK, KC_LALT, _MODGUI,          KC_LSFT,          _NUMMIN,          _MEHSPC,          _UNDSCR, _HYPFUN, KC_LEFT, KC_RGHT, KC_DOWN  \
   ),
   [_NUMERALS] = LAYOUT_t33chong(
     _______, G(KC_1), G(KC_2), G(KC_3), G(KC_4), G(KC_5), G(KC_6), G(KC_7), G(KC_8), G(KC_9), G(KC_0), _______, _______, _______, _______, \
@@ -98,7 +98,7 @@ void keyboard_post_init_user(void) {
 bool get_tapping_force_hold(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
     case _CTLESC:
-    case _NUMSPC:
+    case _MEHSPC:
       return true;
     default:
       return false;
@@ -243,7 +243,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       return true;
     default:
       if (_is_meh_active) {
-        if (keycode == _MEHMIN) {
+        if (keycode == _MEHSPC) {
           return true;
         }
         if (record->event.pressed) {
