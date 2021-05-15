@@ -1,8 +1,5 @@
 #include QMK_KEYBOARD_H
 
-// TODO
-// backspace sends forward delete when minus is held
-
 enum my_layers {
   _DEFAULT = 0,
   _NUMERALS,
@@ -229,11 +226,18 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
       return false;
     case KC_BSPC:
-      if (_is_gui_held) {
+      if (_is_gui_held) { // Restore left shift key to original function when gui is held
         if (record->event.pressed) {
           register_code(KC_LSFT);
         } else {
           unregister_code(KC_LSFT);
+        }
+        return false;
+      } else if (_is_meh_active) { // Make backspace send forward delete when meh is held
+        if (record->event.pressed) {
+          register_code(KC_DEL);
+        } else {
+          unregister_code(KC_DEL);
         }
         return false;
       }
