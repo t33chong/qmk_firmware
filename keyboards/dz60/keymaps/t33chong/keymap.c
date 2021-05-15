@@ -31,8 +31,6 @@ enum my_keycodes {
 #define _PUSHTT HYPR(KC_BSLS)         // Hold for push to talk with Shush
 #define _ALTLFT A(KC_LEFT)            // Send alt+left
 #define _ALTRGT A(KC_RGHT)            // Send alt+right
-#define _CTRL_A C(KC_A)               // Send ctrl+a
-#define _CTRL_E C(KC_E)               // Send ctrl+e
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_DEFAULT] = LAYOUT_t33chong(
@@ -52,7 +50,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_ARROWS] = LAYOUT_t33chong(
     _______, _______, _______, _______, _______, _______, _______, _______, KC_HOME, _______, _______, _______, _______, _______, _______, \
     _______, _______, _______, _______, _______, _______, _______, _ALTLFT, KC_UP,   _ALTRGT, _______, _______, _______,          _______, \
-    _______, _______, _______, _______, _______, _______, _CTRL_A, KC_LEFT, KC_DOWN, KC_RGHT, _CTRL_E, _______,                   _______, \
+    _______, _______, _______, _______, _______, _______, C(KC_A), KC_LEFT, KC_DOWN, KC_RGHT, C(KC_E), _______,                   _______, \
     KC_LSFT, _PUSHTT, _______, _______, _______, _______, _______, _______, KC_END,  _______, _______,          _______,          _______, \
     _______, _______, _______,          _______,          _______,          _______,          _______, _______, _______, _______, _______  \
   ),
@@ -164,9 +162,12 @@ layer_state_t layer_state_set_user(layer_state_t state) {
   return state;
 }
 
-#define MODS_SHIFT (get_mods() & MOD_BIT(KC_LSHIFT) || get_mods() & MOD_BIT(KC_RSHIFT))
-#define MODS_CTRL (get_mods() & MOD_BIT(KC_LCTL) || get_mods() & MOD_BIT(KC_RCTRL))
+#define MODS_SHIFT (get_mods() & MOD_BIT(KC_LSFT) || get_mods() & MOD_BIT(KC_RSFT))
+#define MODS_CTRL (get_mods() & MOD_BIT(KC_LCTL) || get_mods() & MOD_BIT(KC_RCTL))
 #define MODS_ALT (get_mods() & MOD_BIT(KC_LALT) || get_mods() & MOD_BIT(KC_RALT))
+#define MODS_GUI (get_mods() & MOD_BIT(KC_LGUI) || get_mods() & MOD_BIT(KC_RGUI))
+#define MODS_MEH (get_mods() & MOD_BIT(KC_LCTL) && get_mods() & MOD_BIT(KC_LSFT) && get_mods() & MOD_BIT(KC_LALT))
+#define MODS_HYPER (get_mods() & MOD_BIT(KC_LCTL) && get_mods() & MOD_BIT(KC_LSFT) && get_mods() & MOD_BIT(KC_LALT) && get_mods() & MOD_BIT(KC_LGUI))
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   static uint32_t _arrmsk_hold_timer;
