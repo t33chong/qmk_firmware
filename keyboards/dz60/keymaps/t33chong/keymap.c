@@ -87,10 +87,28 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   */
 };
 
+const rgblight_segment_t PROGMEM _default_rgb[] = RGBLIGHT_LAYER_SEGMENTS({0, 16, HSV_CYAN});
+const rgblight_segment_t PROGMEM _numerals_rgb[] = RGBLIGHT_LAYER_SEGMENTS({0, 16, HSV_CYAN});
+const rgblight_segment_t PROGMEM _arrows_rgb[] = RGBLIGHT_LAYER_SEGMENTS({0, 16, HSV_GREEN});
+const rgblight_segment_t PROGMEM _meh_rgb[] = RGBLIGHT_LAYER_SEGMENTS({0, 16, HSV_BLUE});
+const rgblight_segment_t PROGMEM _hyper_rgb[] = RGBLIGHT_LAYER_SEGMENTS({0, 16, HSV_RED});
+const rgblight_segment_t PROGMEM _mousekeys_rgb[] = RGBLIGHT_LAYER_SEGMENTS({0, 16, HSV_YELLOW});
+const rgblight_segment_t PROGMEM _function_rgb[] = RGBLIGHT_LAYER_SEGMENTS({0, 16, HSV_MAGENTA});
+
+const rgblight_segment_t* const PROGMEM _rgblight_layers[] = RGBLIGHT_LAYERS_LIST(
+  _default_rgb,
+  _numerals_rgb,
+  _arrows_rgb,
+  _meh_rgb,
+  _hyper_rgb,
+  _mousekeys_rgb,
+  _function_rgb
+);
+
 void keyboard_post_init_user(void) {
   backlight_disable();
   rgblight_enable_noeeprom();
-  rgblight_setrgb(RGB_CYAN);
+  rgblight_layers = _rgblight_layers;
 }
 
 // If true, don't count a tap and a hold as repetition of the tap action
@@ -111,30 +129,13 @@ bool _is_hyper_active;
 layer_state_t layer_state_set_user(layer_state_t state) {
   int _current_layer = get_highest_layer(state);
 
-  // Indicate layer with RGB underglow lighting effect
-  // https://docs.qmk.fm/#/custom_quantum_functions?id=layer-change-code
-  // https://github.com/qmk/qmk_firmware/blob/master/quantum/rgblight_list.h
-  switch (_current_layer) {
-    case _ARROWS:
-      rgblight_setrgb(RGB_GREEN);
-      break;
-    case _MOUSEKEYS:
-      rgblight_setrgb(RGB_YELLOW);
-      break;
-    case _FUNCTION:
-      rgblight_setrgb(RGB_MAGENTA);
-      break;
-    case _MEH:
-      rgblight_setrgb(RGB_BLUE);
-      break;
-    case _HYPER:
-      rgblight_setrgb(RGB_RED);
-      break;
-    case _NUMERALS:
-    default:
-      rgblight_setrgb(RGB_CYAN);
-      break;
-  }
+  rgblight_set_layer_state(_DEFAULT, layer_state_cmp(state, _DEFAULT));
+  rgblight_set_layer_state(_NUMERALS, layer_state_cmp(state, _NUMERALS));
+  rgblight_set_layer_state(_ARROWS, layer_state_cmp(state, _ARROWS));
+  rgblight_set_layer_state(_MEH, layer_state_cmp(state, _MEH));
+  rgblight_set_layer_state(_HYPER, layer_state_cmp(state, _HYPER));
+  rgblight_set_layer_state(_MOUSEKEYS, layer_state_cmp(state, _MOUSEKEYS));
+  rgblight_set_layer_state(_FUNCTION, layer_state_cmp(state, _FUNCTION));
 
   // Set layer booleans
   switch (_current_layer) {
