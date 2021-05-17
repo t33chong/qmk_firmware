@@ -12,8 +12,6 @@ enum my_layers {
 
 enum my_keycodes {
   __RESET = SAFE_RANGE, // Restart into bootloader after hold timeout
-  _ARRMSK,              // Hold to activate arrows layer, tap to toggle mousekeys layer
-  _HYPFUN,              // Hold to activate hyper layer, tap to toggle function layer
   _UNDSCR,              // Send underscore (used instead of KC_UNDS to avoid shift applying to next keypress)
   _MODGUI,              // Send command and set boolean flag
 };
@@ -22,17 +20,19 @@ enum my_keycodes {
 #define _CTLESC CTL_T(KC_ESC)         // Hold for control, tap for escape
 #define _NUMMIN LT(_NUMERALS, KC_MINS)// Hold for numerals layer, tap for -
 #define _MEHSPC LT(_MEH, KC_SPC)      // Hold for meh layer, tap for space
+#define _HYPEQL HYPR_T(KC_EQL)        // Hold for hyper layer, tap for =
 #define _PUSHTT HYPR(KC_BSLS)         // Hold for push to talk with Shush
-#define _ALTLFT A(KC_LEFT)            // Send alt+left
-#define _ALTRGT A(KC_RGHT)            // Send alt+right
+#define _TTARRO TT(_ARROWS)           // Tap-toggle arrows layer
+#define _MOFUNC MO(_FUNCTION)         // Activate function layer
+#define _TGMOUS TG(_MOUSEKEYS)        // Toggle mousekeys layer
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_DEFAULT] = LAYOUT_t33chong(
     KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_BRMD, KC_BRMU, KC_VOLD, KC_VOLU, \
-    KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC,          KC_BSLS, \
+    KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC,          _TGMOUS, \
     _CTLESC, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,                   KC_ENT,  \
-    KC_BSPC, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH,          KC_EQL,           KC_UP,   \
-    _ARRMSK, KC_LALT, _MODGUI,          KC_LSFT,          _NUMMIN,          _MEHSPC,          _UNDSCR, _HYPFUN, KC_LEFT, KC_RGHT, KC_DOWN  \
+    KC_BSPC, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH,          _HYPEQL,          _MOFUNC, \
+    _TTARRO, KC_LALT, _MODGUI,          KC_LSFT,          _NUMMIN,          _MEHSPC,          _UNDSCR, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT  \
   ),
   [_NUMERALS] = LAYOUT_t33chong(
     _______, G(KC_1), G(KC_2), G(KC_3), G(KC_4), G(KC_5), G(KC_6), G(KC_7), G(KC_8), G(KC_9), G(KC_0), _______, _______, _______, _______, \
@@ -70,7 +70,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     _______, _______, _______,          KC_BTN2,          KC_BTN3,          KC_BTN1,          _______, _______, _______, _______, _______  \
   ),
   [_FUNCTION] = LAYOUT_t33chong(
-    _______, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  BL_TOGG, RESET,   \
+    KC_CLR,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  BL_TOGG, RESET,   \
     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______, \
     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,                   _______, \
     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,          _______, \
@@ -164,22 +164,9 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 #define MODS_HYPER (get_mods() & MOD_BIT(KC_LCTL) && get_mods() & MOD_BIT(KC_LSFT) && get_mods() & MOD_BIT(KC_LALT) && get_mods() & MOD_BIT(KC_LGUI))
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-  static uint32_t _arrmsk_hold_timer;
-  static uint32_t _hypfun_hold_timer;
   static uint32_t _reset_hold_timer;
   static bool _is_gui_held;
   switch (keycode) {
-    case _ARRMSK:
-      if (record->event.pressed) {
-        _arrmsk_hold_timer = timer_read32();
-        layer_on(_ARROWS);
-      } else {
-        layer_off(_ARROWS);
-        if (timer_elapsed32(_arrmsk_hold_timer) < TAPPING_TERM) {
-          layer_invert(_MOUSEKEYS);
-        }
-      }
-      return false;
     case _MODGUI:
       if (record->event.pressed) {
         register_code(KC_LGUI);
@@ -187,17 +174,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       } else {
         unregister_code(KC_LGUI);
         _is_gui_held = false;
-      }
-      return false;
-    case _HYPFUN:
-      if (record->event.pressed) {
-        _hypfun_hold_timer = timer_read32();
-        layer_on(_HYPER);
-      } else {
-        layer_off(_HYPER);
-        if (timer_elapsed32(_hypfun_hold_timer) < TAPPING_TERM) {
-          layer_invert(_FUNCTION);
-        }
       }
       return false;
     case __RESET:
@@ -224,14 +200,14 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
           unregister_code(KC_LSFT);
         }
         return false;
-      } else if (_is_meh_active) { // Send alt+backspace when meh is held
+      } else if (_is_meh_active) { // Send alt+backspace when meh is held FIXME
         if (record->event.pressed) {
           register_code16(A(KC_BSPC));
         } else {
           unregister_code16(A(KC_BSPC));
         }
         return false;
-      } else if (_is_hyper_active) { // Send forward delete when hyper is held
+      } else if (_is_hyper_active) { // Send forward delete when hyper is held FIXME
         if (record->event.pressed) {
           register_code(KC_DEL);
         } else {
@@ -252,7 +228,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
         return false;
       } else if (_is_hyper_active) {
-        if (keycode == _HYPFUN) {
+        if (keycode == _HYPEQL) {
           return true;
         }
         if (record->event.pressed) {
