@@ -16,7 +16,6 @@ enum my_keycodes {
   _HYPFUN,              // Hold to activate hyper layer, tap to toggle function layer
   _UNDSCR,              // Send underscore (used instead of KC_UNDS to avoid shift applying to next keypress)
   _MODGUI,              // Send command and set boolean flag
-  _MODSFT,              // Send shift and set boolean flag
 };
 
 #define H HYPR
@@ -33,7 +32,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC,          KC_BSLS, \
     _CTLESC, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,                   KC_ENT,  \
     KC_BSPC, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH,          KC_EQL,           KC_UP,   \
-    _ARRMSK, KC_LALT, _MODGUI,          _MODSFT,          _NUMMIN,          _MEHSPC,          _UNDSCR, _HYPFUN, KC_LEFT, KC_RGHT, KC_DOWN  \
+    _ARRMSK, KC_LALT, _MODGUI,          KC_LSFT,          _NUMMIN,          _MEHSPC,          _UNDSCR, _HYPFUN, KC_LEFT, KC_RGHT, KC_DOWN  \
   ),
   [_NUMERALS] = LAYOUT_t33chong(
     _______, G(KC_1), G(KC_2), G(KC_3), G(KC_4), G(KC_5), G(KC_6), G(KC_7), G(KC_8), G(KC_9), G(KC_0), _______, _______, _______, _______, \
@@ -168,7 +167,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   static uint32_t _hypfun_hold_timer;
   static uint32_t _reset_hold_timer;
   static bool _is_gui_held;
-  static bool _is_shift_held;
   switch (keycode) {
     case _ARRMSK:
       if (record->event.pressed) {
@@ -188,15 +186,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       } else {
         unregister_code(KC_LGUI);
         _is_gui_held = false;
-      }
-      return false;
-    case _MODSFT:
-      if (record->event.pressed) {
-        register_code(KC_LSFT);
-        _is_shift_held = true;
-      } else {
-        unregister_code(KC_LSFT);
-        _is_shift_held = false;
       }
       return false;
     case _HYPFUN:
@@ -234,16 +223,14 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
           unregister_code(KC_LSFT);
         }
         return false;
-      } else if (_is_shift_held) { // Send alt+backspace when shift is held
+      } else if (_is_meh_active) { // Send alt+backspace when meh is held
         if (record->event.pressed) {
-          unregister_code(KC_LSFT);
           register_code16(A(KC_BSPC));
         } else {
           unregister_code16(A(KC_BSPC));
-          register_code(KC_LSFT);
         }
         return false;
-      } else if (_is_meh_active) { // Send forward delete when meh is held
+      } else if (_is_hyper_active) { // Send forward delete when hyper is held
         if (record->event.pressed) {
           register_code(KC_DEL);
         } else {
