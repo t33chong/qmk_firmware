@@ -50,17 +50,17 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
   [_MEH] = LAYOUT_t33chong(
     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
-    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______, \
+    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          KC_BSLS, \
     KC_ESC,  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,                   _______, \
     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          KC_EQL,           _______, \
-    _______, _______, _______,          _______,          _______,          KC_SPC,           KC_MINS, _______, _______, _______, _______  \
+    _______, _______, _______,          _______,          KC_MINS,          _______,          KC_MINS, _______, _______, _______, _______  \
   ),
   [_HYPER] = LAYOUT_t33chong(
     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
-    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______, \
+    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          KC_BSLS, \
     KC_ESC,  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,                   _______, \
-    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          KC_EQL,           _______, \
-    _______, _______, _______,          _______,          _______,          KC_SPC,           KC_MINS, _______, _______, _______, _______  \
+    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,          _______, \
+    _______, _______, _______,          _______,          KC_MINS,          KC_SPC,           KC_MINS, _______, _______, _______, _______  \
   ),
   [_MOUSEKEYS] = LAYOUT_t33chong(
     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
@@ -91,7 +91,7 @@ const rgblight_segment_t PROGMEM _default_rgb[] = RGBLIGHT_LAYER_SEGMENTS({0, 16
 const rgblight_segment_t PROGMEM _numerals_rgb[] = RGBLIGHT_LAYER_SEGMENTS({0, 16, HSV_CYAN});
 const rgblight_segment_t PROGMEM _arrows_rgb[] = RGBLIGHT_LAYER_SEGMENTS({0, 16, HSV_GREEN});
 const rgblight_segment_t PROGMEM _meh_rgb[] = RGBLIGHT_LAYER_SEGMENTS({0, 16, HSV_BLUE});
-const rgblight_segment_t PROGMEM _hyper_rgb[] = RGBLIGHT_LAYER_SEGMENTS({0, 16, HSV_RED});
+const rgblight_segment_t PROGMEM _hyper_rgb[] = RGBLIGHT_LAYER_SEGMENTS({0, 16, HSV_RED}); // FIXME
 const rgblight_segment_t PROGMEM _mousekeys_rgb[] = RGBLIGHT_LAYER_SEGMENTS({0, 16, HSV_YELLOW});
 const rgblight_segment_t PROGMEM _function_rgb[] = RGBLIGHT_LAYER_SEGMENTS({0, 16, HSV_MAGENTA});
 
@@ -123,11 +123,9 @@ bool get_tapping_force_hold(uint16_t keycode, keyrecord_t *record) {
   }
 }
 
-bool _is_meh_active;
-bool _is_hyper_active;
-
+int _current_layer;
 layer_state_t layer_state_set_user(layer_state_t state) {
-  int _current_layer = get_highest_layer(state);
+  _current_layer = get_highest_layer(state);
 
   rgblight_set_layer_state(_DEFAULT, layer_state_cmp(state, _DEFAULT));
   rgblight_set_layer_state(_NUMERALS, layer_state_cmp(state, _NUMERALS));
@@ -136,22 +134,6 @@ layer_state_t layer_state_set_user(layer_state_t state) {
   rgblight_set_layer_state(_HYPER, layer_state_cmp(state, _HYPER));
   rgblight_set_layer_state(_MOUSEKEYS, layer_state_cmp(state, _MOUSEKEYS));
   rgblight_set_layer_state(_FUNCTION, layer_state_cmp(state, _FUNCTION));
-
-  // Set layer booleans
-  switch (_current_layer) {
-    case _MEH:
-      _is_meh_active = true;
-      _is_hyper_active = false;
-      break;
-    case _HYPER:
-      _is_meh_active = false;
-      _is_hyper_active = true;
-      break;
-    default:
-      _is_meh_active = false;
-      _is_hyper_active = false;
-      break;
-  }
 
   return state;
 }
@@ -200,14 +182,14 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
           unregister_code(KC_LSFT);
         }
         return false;
-      } else if (_is_meh_active) { // Send alt+backspace when meh is held FIXME
+      } else if (_current_layer == _MEH) { // Send alt+backspace when meh is held
         if (record->event.pressed) {
           register_code16(A(KC_BSPC));
         } else {
           unregister_code16(A(KC_BSPC));
         }
         return false;
-      } else if (_is_hyper_active) { // Send forward delete when hyper is held FIXME
+      } else if (_current_layer == _HYPER) { // Send forward delete when hyper is held FIXME
         if (record->event.pressed) {
           register_code(KC_DEL);
         } else {
@@ -217,7 +199,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
       return true;
     default:
-      if (_is_meh_active) {
+      if (_current_layer == _MEH) {
         if (keycode == _MEHSPC) {
           return true;
         }
@@ -227,7 +209,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
           unregister_code16(MEH(keycode));
         }
         return false;
-      } else if (_is_hyper_active) {
+      } else if (_current_layer == _HYPER) {
         if (keycode == _HYPEQL) {
           return true;
         }
