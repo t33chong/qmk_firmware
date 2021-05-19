@@ -17,14 +17,14 @@ enum my_keycodes {
 };
 
 #define H HYPR
-#define _CTLESC CTL_T(KC_ESC)         // Hold for control, tap for escape
-#define _NUMMIN LT(_NUMERALS, KC_MINS)// Hold for numerals layer, tap for -
-#define _MEHSPC LT(_MEH, KC_SPC)      // Hold for meh layer, tap for space
-#define _HYPEQL HYPR_T(KC_EQL)        // Hold for hyper layer, tap for =
-#define _PUSHTT HYPR(KC_BSLS)         // Hold for push to talk with Shush
-#define _TTARRO TT(_ARROWS)           // Tap-toggle arrows layer
-#define _MOFUNC MO(_FUNCTION)         // Activate function layer
-#define _TGMOUS TG(_MOUSEKEYS)        // Toggle mousekeys layer
+#define _CTLESC CTL_T(KC_ESC)          // Hold for control, tap for escape
+#define _NUMMIN LT(_NUMERALS, KC_MINS) // Hold for numerals layer, tap for -
+#define _MEHSPC LT(_MEH, KC_SPC)       // Hold for meh layer, tap for space
+#define _HYPEQL LT(_HYPER, KC_EQL)     // Hold for hyper layer, tap for =
+#define _PUSHTT HYPR(KC_BSLS)          // Hold for push to talk with Shush
+#define _TTARRO TT(_ARROWS)            // Tap-toggle arrows layer
+#define _MOFUNC MO(_FUNCTION)          // Activate function layer
+#define _TGMOUS TG(_MOUSEKEYS)         // Toggle mousekeys layer
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_DEFAULT] = LAYOUT_t33chong(
@@ -91,7 +91,7 @@ const rgblight_segment_t PROGMEM _default_rgb[] = RGBLIGHT_LAYER_SEGMENTS({0, 16
 const rgblight_segment_t PROGMEM _numerals_rgb[] = RGBLIGHT_LAYER_SEGMENTS({0, 16, HSV_CYAN});
 const rgblight_segment_t PROGMEM _arrows_rgb[] = RGBLIGHT_LAYER_SEGMENTS({0, 16, HSV_GREEN});
 const rgblight_segment_t PROGMEM _meh_rgb[] = RGBLIGHT_LAYER_SEGMENTS({0, 16, HSV_BLUE});
-const rgblight_segment_t PROGMEM _hyper_rgb[] = RGBLIGHT_LAYER_SEGMENTS({0, 16, HSV_RED}); // FIXME
+const rgblight_segment_t PROGMEM _hyper_rgb[] = RGBLIGHT_LAYER_SEGMENTS({0, 16, HSV_RED});
 const rgblight_segment_t PROGMEM _mousekeys_rgb[] = RGBLIGHT_LAYER_SEGMENTS({0, 16, HSV_YELLOW});
 const rgblight_segment_t PROGMEM _function_rgb[] = RGBLIGHT_LAYER_SEGMENTS({0, 16, HSV_MAGENTA});
 
@@ -189,7 +189,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
           unregister_code16(A(KC_BSPC));
         }
         return false;
-      } else if (_current_layer == _HYPER) { // Send forward delete when hyper is held FIXME
+      } else if (_current_layer == _HYPER) { // Send forward delete when hyper is held
         if (record->event.pressed) {
           register_code(KC_DEL);
         } else {
