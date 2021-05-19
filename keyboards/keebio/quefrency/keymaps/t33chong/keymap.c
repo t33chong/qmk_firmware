@@ -174,6 +174,16 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         unregister_code16(S(KC_MINS));
       }
       return false;
+    case _TGMOUS:
+      if (_is_gui_held) { // Restore backslash key to original function when gui is held
+        if (record->event.pressed) {
+          register_code(KC_BSLS);
+        } else {
+          unregister_code(KC_BSLS);
+        }
+        return false;
+      }
+      return true;
     case KC_BSPC:
       if (_is_gui_held) { // Restore left shift key to original function when gui is held
         if (record->event.pressed) {
