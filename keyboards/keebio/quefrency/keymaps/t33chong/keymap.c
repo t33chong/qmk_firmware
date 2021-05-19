@@ -20,10 +20,11 @@ enum my_keycodes {
 #define _NUMMIN LT(_NUMERALS, KC_MINS) // Hold for numerals layer, tap for -
 #define _MEHSPC LT(_MEH, KC_SPC)       // Hold for meh layer, tap for space
 #define _HYPEQL LT(_HYPER, KC_EQL)     // Hold for hyper layer, tap for =
-#define _PUSHTT HYPR(KC_BSLS)          // Hold for push to talk with Shush
 #define _TTARRO TT(_ARROWS)            // Tap-toggle arrows layer
 #define _MOFUNC MO(_FUNCTION)          // Activate function layer
 #define _TGMOUS TG(_MOUSEKEYS)         // Toggle mousekeys layer
+#define _PUSHTT HYPR(KC_BSLS)          // Hold for push to talk with Shush
+#define _ALTBSP A(KC_BSPC)             // Send alt+backspace
 #define _HYP_F1 HYPR(KC_F1)
 #define _HYP_F2 HYPR(KC_F2)
 #define _HYP_F3 HYPR(KC_F3)
@@ -165,6 +166,10 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 #define MODS_MEH (get_mods() & MOD_BIT(KC_LCTL) && get_mods() & MOD_BIT(KC_LSFT) && get_mods() & MOD_BIT(KC_LALT))
 #define MODS_HYPER (get_mods() & MOD_BIT(KC_LCTL) && get_mods() & MOD_BIT(KC_LSFT) && get_mods() & MOD_BIT(KC_LALT) && get_mods() & MOD_BIT(KC_LGUI))
 
+bool _was__TGMOUS_used_as_KC_BSLS;
+bool _was_KC_BSPC_used_as_KC_LSFT;
+bool _was_KC_BSPC_used_as__ALTBSP;
+bool _was_KC_BSPC_used_as_KC_DEL;
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   static uint32_t _reset_hold_timer;
   static bool _is_gui_held;
@@ -195,38 +200,47 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
       return false;
     case _TGMOUS:
-      if (_is_gui_held) { // Restore backslash key to original function when gui is held
-        if (record->event.pressed) {
+      if (record->event.pressed) {
+        if (_is_gui_held) { // Restore backslash key to original function when gui is held
           register_code(KC_BSLS);
-        } else {
-          unregister_code(KC_BSLS);
+          _was__TGMOUS_used_as_KC_BSLS = true;
+          return false;
         }
-        return false;
+      } else {
+        if (_was__TGMOUS_used_as_KC_BSLS) {
+          unregister_code(KC_BSLS);
+          _was__TGMOUS_used_as_KC_BSLS = false;
+        }
       }
       return true;
     case KC_BSPC:
-      // FIXME: Timing can cause shift to remain held down
-      if (_is_gui_held) { // Restore left shift key to original function when gui is held
-        if (record->event.pressed) {
+      if (record->event.pressed) {
+        if (_is_gui_held) { // Restore left shift key to original function when gui is held
           register_code(KC_LSFT);
-        } else {
-          unregister_code(KC_LSFT);
-        }
-        return false;
-      } else if (_current_layer == _MEH) { // Send alt+backspace when meh is held
-        if (record->event.pressed) {
-          register_code16(A(KC_BSPC));
-        } else {
-          unregister_code16(A(KC_BSPC));
-        }
-        return false;
-      } else if (_current_layer == _HYPER) { // Send forward delete when hyper is held
-        if (record->event.pressed) {
+          _was_KC_BSPC_used_as_KC_LSFT = true;
+          return false;
+        } else if (_current_layer == _MEH) { // Send alt+backspace when meh is held
+          register_code16(_ALTBSP);
+          _was_KC_BSPC_used_as__ALTBSP = true;
+          return false;
+        } else if (_current_layer == _HYPER) { // Send forward delete when hyper is held
           register_code(KC_DEL);
-        } else {
-          unregister_code(KC_DEL);
+          _was_KC_BSPC_used_as_KC_DEL = true;
+          return false;
         }
-        return false;
+      } else {
+        if (_was_KC_BSPC_used_as_KC_LSFT) {
+          unregister_code(KC_LSFT);
+          _was_KC_BSPC_used_as_KC_LSFT = false;
+        }
+        if (_was_KC_BSPC_used_as__ALTBSP) {
+          unregister_code16(_ALTBSP);
+          _was_KC_BSPC_used_as__ALTBSP = false;
+        }
+        if (_was_KC_BSPC_used_as_KC_DEL) {
+          unregister_code(KC_DEL);
+          _was_KC_BSPC_used_as_KC_DEL = false;
+        }
       }
       return true;
     default:
