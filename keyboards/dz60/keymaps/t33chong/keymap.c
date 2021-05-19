@@ -16,15 +16,25 @@ enum my_keycodes {
   _MODGUI,              // Send command and set boolean flag
 };
 
-#define H HYPR
 #define _CTLESC CTL_T(KC_ESC)          // Hold for control, tap for escape
 #define _NUMMIN LT(_NUMERALS, KC_MINS) // Hold for numerals layer, tap for -
 #define _MEHSPC LT(_MEH, KC_SPC)       // Hold for meh layer, tap for space
 #define _HYPEQL LT(_HYPER, KC_EQL)     // Hold for hyper layer, tap for =
-#define _PUSHTT HYPR(KC_BSLS)          // Hold for push to talk with Shush
 #define _TTARRO TT(_ARROWS)            // Tap-toggle arrows layer
 #define _MOFUNC MO(_FUNCTION)          // Activate function layer
 #define _TGMOUS TG(_MOUSEKEYS)         // Toggle mousekeys layer
+#define _PUSHTT HYPR(KC_BSLS)          // Hold for push to talk with Shush
+#define _ALTBSP A(KC_BSPC)             // Send alt+backspace
+#define _HYP_F1 HYPR(KC_F1)
+#define _HYP_F2 HYPR(KC_F2)
+#define _HYP_F3 HYPR(KC_F3)
+#define _HYP_F4 HYPR(KC_F4)
+#define _HYP_F5 HYPR(KC_F5)
+#define _HYP_F6 HYPR(KC_F6)
+#define _HYP_F7 HYPR(KC_F7)
+#define _HYP_F8 HYPR(KC_F8)
+#define _HYP_F9 HYPR(KC_F9)
+#define _HYPF10 HYPR(KC_F10)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_DEFAULT] = LAYOUT_t33chong(
@@ -38,7 +48,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     _______, G(KC_1), G(KC_2), G(KC_3), G(KC_4), G(KC_5), G(KC_6), G(KC_7), G(KC_8), G(KC_9), G(KC_0), _______, _______, _______, _______, \
     KC_TILD, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC, KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_PIPE, _______,          _______, \
     KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_BSLS,                   _______, \
-    _______, H(KC_1), H(KC_2), H(KC_3), H(KC_4), H(KC_5), H(KC_6), H(KC_7), H(KC_8), H(KC_9), H(KC_0),          _______,          _______, \
+    _______, _HYP_F1, _HYP_F2, _HYP_F3, _HYP_F4, _HYP_F5, _HYP_F6, _HYP_F7, _HYP_F8, _HYP_F9, _HYPF10,          _______,          _______, \
     _______, _______, _______,          _______,          _______,          _______,          _______, _______, _______, _______, _______  \
   ),
   [_ARROWS] = LAYOUT_t33chong(
@@ -111,6 +121,17 @@ void keyboard_post_init_user(void) {
   rgblight_layers = _rgblight_layers;
 }
 
+// TODO: Turn caps lock LED off
+/* extern backlight_config_t backlight_config; */
+/* bool led_update_user(led_t led_state) { */
+/*   if (!backlight_config.level || !backlight_config.enable) { */
+/*     PORTB |= (1 << 2); */
+/*   } else { */
+/*     PORTB &= ~(1 << 2); */
+/*   } */
+/*   return true; */
+/* } */
+
 // If true, don't count a tap and a hold as repetition of the tap action
 bool get_tapping_force_hold(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
@@ -145,6 +166,10 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 #define MODS_MEH (get_mods() & MOD_BIT(KC_LCTL) && get_mods() & MOD_BIT(KC_LSFT) && get_mods() & MOD_BIT(KC_LALT))
 #define MODS_HYPER (get_mods() & MOD_BIT(KC_LCTL) && get_mods() & MOD_BIT(KC_LSFT) && get_mods() & MOD_BIT(KC_LALT) && get_mods() & MOD_BIT(KC_LGUI))
 
+bool _was__TGMOUS_used_as_KC_BSLS;
+bool _was_KC_BSPC_used_as_KC_LSFT;
+bool _was_KC_BSPC_used_as__ALTBSP;
+bool _was_KC_BSPC_used_as_KC_DEL;
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   static uint32_t _reset_hold_timer;
   static bool _is_gui_held;
@@ -175,37 +200,47 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
       return false;
     case _TGMOUS:
-      if (_is_gui_held) { // Restore backslash key to original function when gui is held
-        if (record->event.pressed) {
+      if (record->event.pressed) {
+        if (_is_gui_held) { // Restore backslash key to original function when gui is held
           register_code(KC_BSLS);
-        } else {
-          unregister_code(KC_BSLS);
+          _was__TGMOUS_used_as_KC_BSLS = true;
+          return false;
         }
-        return false;
+      } else {
+        if (_was__TGMOUS_used_as_KC_BSLS) {
+          unregister_code(KC_BSLS);
+          _was__TGMOUS_used_as_KC_BSLS = false;
+        }
       }
       return true;
     case KC_BSPC:
-      if (_is_gui_held) { // Restore left shift key to original function when gui is held
-        if (record->event.pressed) {
+      if (record->event.pressed) {
+        if (_is_gui_held) { // Restore left shift key to original function when gui is held
           register_code(KC_LSFT);
-        } else {
-          unregister_code(KC_LSFT);
-        }
-        return false;
-      } else if (_current_layer == _MEH) { // Send alt+backspace when meh is held
-        if (record->event.pressed) {
-          register_code16(A(KC_BSPC));
-        } else {
-          unregister_code16(A(KC_BSPC));
-        }
-        return false;
-      } else if (_current_layer == _HYPER) { // Send forward delete when hyper is held
-        if (record->event.pressed) {
+          _was_KC_BSPC_used_as_KC_LSFT = true;
+          return false;
+        } else if (_current_layer == _MEH) { // Send alt+backspace when meh is held
+          register_code16(_ALTBSP);
+          _was_KC_BSPC_used_as__ALTBSP = true;
+          return false;
+        } else if (_current_layer == _HYPER) { // Send forward delete when hyper is held
           register_code(KC_DEL);
-        } else {
-          unregister_code(KC_DEL);
+          _was_KC_BSPC_used_as_KC_DEL = true;
+          return false;
         }
-        return false;
+      } else {
+        if (_was_KC_BSPC_used_as_KC_LSFT) {
+          unregister_code(KC_LSFT);
+          _was_KC_BSPC_used_as_KC_LSFT = false;
+        }
+        if (_was_KC_BSPC_used_as__ALTBSP) {
+          unregister_code16(_ALTBSP);
+          _was_KC_BSPC_used_as__ALTBSP = false;
+        }
+        if (_was_KC_BSPC_used_as_KC_DEL) {
+          unregister_code(KC_DEL);
+          _was_KC_BSPC_used_as_KC_DEL = false;
+        }
       }
       return true;
     default:
