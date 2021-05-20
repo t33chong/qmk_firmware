@@ -201,17 +201,15 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
       return false;
     case _TGMOUS:
-      if (record->event.pressed) {
-        if (_is_gui_held) { // Restore backslash key to original function when gui is held
-          register_code(KC_BSLS);
-          _was__TGMOUS_used_as_KC_BSLS = true;
-          return false;
-        }
-      } else {
-        if (_was__TGMOUS_used_as_KC_BSLS) {
-          unregister_code(KC_BSLS);
-          _was__TGMOUS_used_as_KC_BSLS = false;
-        }
+      if (_is_gui_held && record->event.pressed) { // Restore backslash key to original function when gui is held
+        register_code(KC_BSLS);
+        _was__TGMOUS_used_as_KC_BSLS = true;
+        return false;
+      }
+      if (_was__TGMOUS_used_as_KC_BSLS && !record->event.pressed) {
+        unregister_code(KC_BSLS);
+        _was__TGMOUS_used_as_KC_BSLS = false;
+        return false;
       }
       return true;
     case KC_BSPC:
@@ -220,11 +218,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
           register_code(KC_LSFT);
           _was_KC_BSPC_used_as_KC_LSFT = true;
           return false;
-        } else if (_current_layer == _MEH) { // Send alt+backspace when meh is held
+        }
+        if (_current_layer == _MEH) { // Send alt+backspace when meh is held
           register_code16(_ALTBSP);
           _was_KC_BSPC_used_as__ALTBSP = true;
           return false;
-        } else if (_current_layer == _HYPER) { // Send forward delete when hyper is held
+        }
+        if (_current_layer == _HYPER) { // Send forward delete when hyper is held
           register_code(KC_DEL);
           _was_KC_BSPC_used_as_KC_DEL = true;
           return false;
