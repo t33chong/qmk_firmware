@@ -97,13 +97,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   */
 };
 
-const rgblight_segment_t PROGMEM _default_rgb[] = RGBLIGHT_LAYER_SEGMENTS({0, 16, HSV_CYAN});
-const rgblight_segment_t PROGMEM _numerals_rgb[] = RGBLIGHT_LAYER_SEGMENTS({0, 16, HSV_CYAN});
-const rgblight_segment_t PROGMEM _arrows_rgb[] = RGBLIGHT_LAYER_SEGMENTS({0, 16, HSV_GREEN});
-const rgblight_segment_t PROGMEM _meh_rgb[] = RGBLIGHT_LAYER_SEGMENTS({0, 16, HSV_BLUE});
-const rgblight_segment_t PROGMEM _hyper_rgb[] = RGBLIGHT_LAYER_SEGMENTS({0, 16, HSV_RED});
-const rgblight_segment_t PROGMEM _mousekeys_rgb[] = RGBLIGHT_LAYER_SEGMENTS({0, 16, HSV_YELLOW});
-const rgblight_segment_t PROGMEM _function_rgb[] = RGBLIGHT_LAYER_SEGMENTS({0, 16, HSV_MAGENTA});
+#define _RGB_ALL(color) RGBLIGHT_LAYER_SEGMENTS({0, 16, color})
+const rgblight_segment_t PROGMEM _default_rgb[] = _RGB_ALL(HSV_CYAN);
+const rgblight_segment_t PROGMEM _numerals_rgb[] = _RGB_ALL(HSV_CYAN);
+const rgblight_segment_t PROGMEM _arrows_rgb[] = _RGB_ALL(HSV_GREEN);
+const rgblight_segment_t PROGMEM _meh_rgb[] = _RGB_ALL(HSV_BLUE);
+const rgblight_segment_t PROGMEM _hyper_rgb[] = _RGB_ALL(HSV_RED);
+const rgblight_segment_t PROGMEM _mousekeys_rgb[] = _RGB_ALL(HSV_YELLOW);
+const rgblight_segment_t PROGMEM _function_rgb[] = _RGB_ALL(HSV_MAGENTA);
 
 const rgblight_segment_t* const PROGMEM _rgblight_layers[] = RGBLIGHT_LAYERS_LIST(
   _default_rgb,
