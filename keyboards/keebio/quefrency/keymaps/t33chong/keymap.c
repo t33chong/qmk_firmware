@@ -12,12 +12,10 @@ enum my_layers {
 
 enum my_keycodes {
   __RESET = SAFE_RANGE, // Restart into bootloader after hold timeout
-  /* _UNDSCR,              // Send underscore (used instead of KC_UNDS to avoid shift applying to next keypress) */
   _MODGUI,              // Send command and set boolean flag
 };
 
 #define _CTLESC CTL_T(KC_ESC)          // Hold for control, tap for escape
-/* #define _NUMMIN LT(_NUMERALS, KC_MINS) // Hold for numerals layer, tap for - */
 #define _MEHSPC LT(_MEH, KC_SPC)       // Hold for meh layer, tap for space
 #define _HYPEQL LT(_HYPER, KC_EQL)     // Hold for hyper layer, tap for =
 #define _TTARRO TT(_ARROWS)            // Tap-toggle arrows layer
@@ -140,49 +138,16 @@ bool led_update_user(led_t led_state) {
   return false;
 }
 
-/* // If true, given a pressed modifier, pressed key, released modifier, and released key, register both as taps */
-/* // If false, register a held modifier */
-/* bool get_ignore_mod_tap_interrupt(uint16_t keycode, keyrecord_t *record) { */
-/*   switch (keycode) { */
-/*     case _NUMMIN: */
-/*       return false; */
-/*     default: */
-/*       return true; */
-/*   } */
-/* } */
-
-/* // If true, given a pressed modifier, tapped key, and released modifier all within TAPPING_TERM, register a held modifier */
-/* // If false, count both as taps */
-/* bool get_permissive_hold(uint16_t keycode, keyrecord_t *record) { */
-/*   switch (keycode) { */
-/*     /1* case _NUMMIN: *1/ */
-/*     /1*   return true; *1/ */
-/*     default: */
-/*       return false; */
-/*   } */
-/* } */
-
 // If true, don't count a tap and a hold as repetition of the tap action
 bool get_tapping_force_hold(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
     case _CTLESC:
-    /* case _NUMMIN: */
     case _MEHSPC:
       return true;
     default:
       return false;
   }
 }
-
-/* // Number of milliseconds before a pressed key is registered as held */
-/* uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) { */
-/*   switch (keycode) { */
-/*     case _NUMMIN: */
-/*       return 300; */
-/*     default: */
-/*       return TAPPING_TERM; */
-/*   } */
-/* } */
 
 int _current_layer;
 layer_state_t layer_state_set_user(layer_state_t state) {
@@ -232,13 +197,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
       }
       return false;
-    /* case _UNDSCR: */
-    /*   if (record->event.pressed) { */
-    /*     register_code16(S(KC_MINS)); */
-    /*   } else { */
-    /*     unregister_code16(S(KC_MINS)); */
-    /*   } */
-    /*   return false; */
     case _TGMOUS:
       if (_is_gui_held && record->event.pressed) { // Restore backslash key to original function when gui is held
         register_code(KC_BSLS);
