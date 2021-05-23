@@ -121,52 +121,6 @@ void keyboard_post_init_user(void) {
   rgblight_layers = _rgblight_layers;
 }
 
-/* // TODO: Turn caps lock LED off */
-/* extern backlight_config_t backlight_config; */
-/* void matrix_init_user(void) { */
-/*   DDRB |= (1 << 2); */
-/*   /1* PORTB |= (1 << 2); *1/ */
-/*   PORTB &= ~(1 << 2); */
-/* } */
-/* void led_set_user(uint8_t usb_led) { */
-/*   if (usb_led & (1<<USB_LED_CAPS_LOCK)) { */
-/*     PORTB &= ~(1 << 2); */
-/*   } else { */
-/*     PORTB |= (1 << 2); */
-/*   } */
-/* } */
-
-/* // TODO: Turn caps lock LED off */
-/* extern backlight_config_t backlight_config; */
-/* void led_set_user(uint8_t usb_led) { */
-/*   if (!backlight_config.level || !backlight_config.enable) { */
-/*     PORTB |= (1 << 2); */
-/*   } else { */
-/*     PORTB &= ~(1 << 2); */
-/*   } */
-/*   /1* return true; *1/ */
-/* } */
-
-/* void led_set_user(uint8_t usb_led) { */
-/*   /1* DDRB |= (1 << 2); *1/ */
-/*   /1* PORTB &= ~(1 << 2); *1/ */
-/*   DDRB &= ~(1 << 2); */
-/*   PORTB |= (1 << 2); */
-/* } */
-
-bool led_update_user(led_t led_state) {
-  togglePin(CAPS_LOCK_LED_PIN);
-  return true;
-}
-
-/* bool led_update_user(led_t led_state) { */
-/*   /1* writePin(CAPS_LOCK_LED_PIN, led_state.caps_lock); *1/ */
-/*   writePin(CAPS_LOCK_LED_PIN, !led_state.caps_lock); */
-/*   /1* writePin(CAPS_LOCK_LED_PIN, 1); *1/ */
-/*   /1* led_state.raw = ~led_state.raw; *1/ */
-/*   return false; */
-/* } */
-
 // If true, don't count a tap and a hold as repetition of the tap action
 bool get_tapping_force_hold(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
