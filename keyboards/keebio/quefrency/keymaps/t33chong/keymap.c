@@ -12,16 +12,17 @@ enum my_layers {
 
 enum my_keycodes {
   __RESET = SAFE_RANGE, // Restart into bootloader after hold timeout
-  _UNDSCR,              // Send underscore (used instead of KC_UNDS to avoid shift applying to next keypress)
+  /* _UNDSCR,              // Send underscore (used instead of KC_UNDS to avoid shift applying to next keypress) */
   _MODGUI,              // Send command and set boolean flag
 };
 
 #define _CTLESC CTL_T(KC_ESC)          // Hold for control, tap for escape
-#define _NUMMIN LT(_NUMERALS, KC_MINS) // Hold for numerals layer, tap for -
+/* #define _NUMMIN LT(_NUMERALS, KC_MINS) // Hold for numerals layer, tap for - */
 #define _MEHSPC LT(_MEH, KC_SPC)       // Hold for meh layer, tap for space
 #define _HYPEQL LT(_HYPER, KC_EQL)     // Hold for hyper layer, tap for =
 #define _TTARRO TT(_ARROWS)            // Tap-toggle arrows layer
-#define _MOFUNC MO(_FUNCTION)          // Activate function layer
+#define _MOFUNC MO(_FUNCTION)          // Hold for function layer
+#define _MONUMS MO(_NUMERALS)          // Hold for numerals layer
 #define _TGMOUS TG(_MOUSEKEYS)         // Toggle mousekeys layer
 #define _PUSHTT HYPR(KC_BSLS)          // Hold for push to talk with Shush
 #define _ALTBSP A(KC_BSPC)             // Send alt+backspace
@@ -42,7 +43,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC,          _TGMOUS, \
     _CTLESC, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,                   KC_ENT,  \
     KC_BSPC, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH,          _HYPEQL,          _MOFUNC, \
-    _TTARRO, KC_LALT, _MODGUI,          KC_LSFT,          _NUMMIN,          _MEHSPC,          _UNDSCR, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT  \
+    _TTARRO, KC_LALT, _MODGUI,          KC_LSFT,          _MONUMS,          _MEHSPC,          KC_MINS, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT  \
   ),
   [_NUMERALS] = LAYOUT_t33chong(
     _______, G(KC_1), G(KC_2), G(KC_3), G(KC_4), G(KC_5), G(KC_6), G(KC_7), G(KC_8), G(KC_9), G(KC_0), _______, _______, _______, _______, \
@@ -122,28 +123,66 @@ void keyboard_post_init_user(void) {
   rgblight_layers = _rgblight_layers;
 }
 
-// TODO: Turn caps lock LED off
+/* // TODO: Turn caps lock LED off */
 /* extern backlight_config_t backlight_config; */
-/* bool led_update_user(led_t led_state) { */
+/* void led_set_user(uint8_t usb_led) { */
 /*   if (!backlight_config.level || !backlight_config.enable) { */
 /*     PORTB |= (1 << 2); */
 /*   } else { */
 /*     PORTB &= ~(1 << 2); */
 /*   } */
-/*   return true; */
+/*   /1* return true; *1/ */
+/* } */
+
+bool led_update_user(led_t led_state) {
+  /* writePin(CAPS_LOCK_LED_PIN, led_state.caps_lock); */
+  writePin(CAPS_LOCK_LED_PIN, 0);
+  return false;
+}
+
+/* // If true, given a pressed modifier, pressed key, released modifier, and released key, register both as taps */
+/* // If false, register a held modifier */
+/* bool get_ignore_mod_tap_interrupt(uint16_t keycode, keyrecord_t *record) { */
+/*   switch (keycode) { */
+/*     case _NUMMIN: */
+/*       return false; */
+/*     default: */
+/*       return true; */
+/*   } */
+/* } */
+
+/* // If true, given a pressed modifier, tapped key, and released modifier all within TAPPING_TERM, register a held modifier */
+/* // If false, count both as taps */
+/* bool get_permissive_hold(uint16_t keycode, keyrecord_t *record) { */
+/*   switch (keycode) { */
+/*     /1* case _NUMMIN: *1/ */
+/*     /1*   return true; *1/ */
+/*     default: */
+/*       return false; */
+/*   } */
 /* } */
 
 // If true, don't count a tap and a hold as repetition of the tap action
 bool get_tapping_force_hold(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
     case _CTLESC:
-    case _NUMMIN:
+    /* case _NUMMIN: */
     case _MEHSPC:
       return true;
     default:
       return false;
   }
 }
+
+/* // Number of milliseconds before a pressed key is registered as held */
+/* uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) { */
+/*   switch (keycode) { */
+/*     case _NUMMIN: */
+/*       return 300; */
+/*     default: */
+/*       return TAPPING_TERM; */
+/*   } */
+/* } */
 
 int _current_layer;
 layer_state_t layer_state_set_user(layer_state_t state) {
@@ -193,13 +232,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
       }
       return false;
-    case _UNDSCR:
-      if (record->event.pressed) {
-        register_code16(S(KC_MINS));
-      } else {
-        unregister_code16(S(KC_MINS));
-      }
-      return false;
+    /* case _UNDSCR: */
+    /*   if (record->event.pressed) { */
+    /*     register_code16(S(KC_MINS)); */
+    /*   } else { */
+    /*     unregister_code16(S(KC_MINS)); */
+    /*   } */
+    /*   return false; */
     case _TGMOUS:
       if (_is_gui_held && record->event.pressed) { // Restore backslash key to original function when gui is held
         register_code(KC_BSLS);
