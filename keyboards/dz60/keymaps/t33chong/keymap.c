@@ -12,16 +12,16 @@ enum my_layers {
 
 enum my_keycodes {
   __RESET = SAFE_RANGE, // Restart into bootloader after hold timeout
-  _UNDSCR,              // Send underscore (used instead of KC_UNDS to avoid shift applying to next keypress)
   _MODGUI,              // Send command and set boolean flag
 };
 
 #define _CTLESC CTL_T(KC_ESC)          // Hold for control, tap for escape
-#define _NUMMIN LT(_NUMERALS, KC_MINS) // Hold for numerals layer, tap for -
 #define _MEHSPC LT(_MEH, KC_SPC)       // Hold for meh layer, tap for space
 #define _HYPEQL LT(_HYPER, KC_EQL)     // Hold for hyper layer, tap for =
+#define _TABARR LT(_ARROWS, KC_TAB)    // Hold for arrows layer, tap for tab
 #define _TTARRO TT(_ARROWS)            // Tap-toggle arrows layer
-#define _MOFUNC MO(_FUNCTION)          // Activate function layer
+#define _MOFUNC MO(_FUNCTION)          // Hold for function layer
+#define _MONUMS MO(_NUMERALS)          // Hold for numerals layer
 #define _TGMOUS TG(_MOUSEKEYS)         // Toggle mousekeys layer
 #define _PUSHTT HYPR(KC_BSLS)          // Hold for push to talk with Shush
 #define _ALTBSP A(KC_BSPC)             // Send alt+backspace
@@ -39,10 +39,10 @@ enum my_keycodes {
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_DEFAULT] = LAYOUT_t33chong(
     KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_BRMD, KC_BRMU, KC_VOLD, KC_VOLU, \
-    KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC,          _TGMOUS, \
+    _TABARR, KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC,          _TGMOUS, \
     _CTLESC, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,                   KC_ENT,  \
     KC_BSPC, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH,          _HYPEQL,          _MOFUNC, \
-    _TTARRO, KC_LALT, _MODGUI,          KC_LSFT,          _NUMMIN,          _MEHSPC,          _UNDSCR, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT  \
+    _TTARRO, KC_LALT, _MODGUI,          KC_LSFT,          _MONUMS,          _MEHSPC,          KC_MINS, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT  \
   ),
   [_NUMERALS] = LAYOUT_t33chong(
     _______, G(KC_1), G(KC_2), G(KC_3), G(KC_4), G(KC_5), G(KC_6), G(KC_7), G(KC_8), G(KC_9), G(KC_0), _______, _______, _______, _______, \
@@ -53,24 +53,24 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
   [_ARROWS] = LAYOUT_t33chong(
     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
-    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______, \
-    _______, _______, KC_LSFT, KC_LALT, KC_LGUI, _______, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, _______, _______,                   _______, \
+    _______, _______, KC_LSFT, KC_LALT, KC_LGUI, _______, _______, KC_BSPC, KC_DEL,  _______, _______, _______, _______,          _______, \
+    _______, _______, _______, _______, _______, _______, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, _______, _______,                   _______, \
     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,          _______, \
-    _______, _PUSHTT, _______,          _______,          _______,          _______,          _______, _______, _______, _______, _______  \
+    _______, _PUSHTT, _______,          KC_BSPC,          KC_DEL,           _______,          _______, _______, _______, _______, _______  \
   ),
   [_MEH] = LAYOUT_t33chong(
-    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
-    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          KC_BSLS, \
+    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_MINS, KC_EQL,  KC_BSPC, KC_DEL,  \
+    KC_TAB,  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          KC_BSLS, \
     KC_ESC,  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,                   _______, \
     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          KC_EQL,           _______, \
-    _______, _______, _______,          _______,          KC_MINS,          _______,          KC_MINS, _______, _______, _______, _______  \
+    _______, _______, _______,          _______,          _______,          _______,          _______, _______, _______, _______, _______  \
   ),
   [_HYPER] = LAYOUT_t33chong(
-    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
-    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          KC_BSLS, \
+    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_MINS, KC_EQL,  KC_BSPC, KC_DEL,  \
+    KC_TAB,  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          KC_BSLS, \
     KC_ESC,  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,                   _______, \
     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,          _______, \
-    _______, _______, _______,          _______,          KC_MINS,          KC_SPC,           KC_MINS, _______, _______, _______, _______  \
+    _______, _______, _______,          _______,          _______,          KC_SPC,           _______, _______, _______, _______, _______  \
   ),
   [_MOUSEKEYS] = LAYOUT_t33chong(
     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
@@ -122,22 +122,10 @@ void keyboard_post_init_user(void) {
   rgblight_layers = _rgblight_layers;
 }
 
-// TODO: Turn caps lock LED off
-/* extern backlight_config_t backlight_config; */
-/* bool led_update_user(led_t led_state) { */
-/*   if (!backlight_config.level || !backlight_config.enable) { */
-/*     PORTB |= (1 << 2); */
-/*   } else { */
-/*     PORTB &= ~(1 << 2); */
-/*   } */
-/*   return true; */
-/* } */
-
 // If true, don't count a tap and a hold as repetition of the tap action
 bool get_tapping_force_hold(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
     case _CTLESC:
-    case _NUMMIN:
     case _MEHSPC:
       return true;
     default:
@@ -191,13 +179,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         if (timer_elapsed32(_reset_hold_timer) >= 500) {
           reset_keyboard();
         }
-      }
-      return false;
-    case _UNDSCR:
-      if (record->event.pressed) {
-        register_code16(S(KC_MINS));
-      } else {
-        unregister_code16(S(KC_MINS));
       }
       return false;
     case _TGMOUS:
