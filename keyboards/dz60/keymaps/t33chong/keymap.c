@@ -4,9 +4,9 @@ enum _layers {
   _DEFAULT = 0,
   _NUMERALS,
   _ARROWS,
-  _QUANTUM,
   _MOUSEKEYS,
   _FUNCTION,
+  _QUANTUM,
 };
 
 enum _keycodes {
@@ -64,13 +64,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_LSFT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,          XXXXXXX,          XXXXXXX, \
     XXXXXXX, XXXXXXX, XXXXXXX,          KC_LALT,          KC_LGUI,          XXXXXXX,          XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX  \
   ),
-  [_QUANTUM] = LAYOUT_t33chong(
-    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_MINS, KC_EQL,  KC_BSPC, KC_DEL,  \
-    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          KC_BSLS, \
-    _TO_ARR, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,                   _______, \
-    _ALTBSP, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          KC_EQL,           _______, \
-    _______, _______, _______,          _______,          _TO_MSK,          _______,          _______, _______, _______, _______, _______  \
-  ),
   [_MOUSEKEYS] = LAYOUT_t33chong(
     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, \
     XXXXXXX, XXXXXXX, XXXXXXX, KC_MS_U, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,          XXXXXXX, \
@@ -79,11 +72,18 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_LCTL, KC_LALT, KC_LGUI,          KC_BTN2,          KC_BTN3,          KC_BTN1,          XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX  \
   ),
   [_FUNCTION] = LAYOUT_t33chong(
-    KC_CLR,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  BL_TOGG, _RESETT, \
+    XXXXXXX, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  BL_TOGG, _RESETT, \
+    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,          XXXXXXX, \
+    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                   XXXXXXX, \
+    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,          XXXXXXX,          XXXXXXX, \
+    XXXXXXX, XXXXXXX, XXXXXXX,          XXXXXXX,          XXXXXXX,          XXXXXXX,          XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX  \
+  ),
+  [_QUANTUM] = LAYOUT_t33chong(
+    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______, \
-    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,                   _______, \
-    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,          _______, \
-    _______, _______, _______,          _______,          _______,          _______,          _______, _______, _______, _______, _______  \
+    _TO_ARR, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,                   _______, \
+    _ALTBSP, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,          _______, \
+    _______, _______, _______,          _______,          _TO_MSK,          _______,          _______, _______, _______, _______, _______  \
   ),
   /*
   [X] = LAYOUT_t33chong(
@@ -100,17 +100,17 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 const rgblight_segment_t PROGMEM _default_rgb[] = _RGB_ALL(HSV_CYAN);
 const rgblight_segment_t PROGMEM _numerals_rgb[] = _RGB_ALL(HSV_CYAN);
 const rgblight_segment_t PROGMEM _arrows_rgb[] = _RGB_ALL(HSV_GREEN);
-const rgblight_segment_t PROGMEM _quantum_rgb[] = _RGB_ALL(HSV_BLUE);
 const rgblight_segment_t PROGMEM _mousekeys_rgb[] = _RGB_ALL(HSV_YELLOW);
 const rgblight_segment_t PROGMEM _function_rgb[] = _RGB_ALL(HSV_MAGENTA);
+const rgblight_segment_t PROGMEM _quantum_rgb[] = _RGB_ALL(HSV_RED);
 
 const rgblight_segment_t* const PROGMEM _rgblight_layers[] = RGBLIGHT_LAYERS_LIST(
   _default_rgb,
   _numerals_rgb,
   _arrows_rgb,
-  _quantum_rgb,
   _mousekeys_rgb,
-  _function_rgb
+  _function_rgb,
+  _quantum_rgb
 );
 
 void keyboard_post_init_user(void) {
@@ -137,9 +137,9 @@ layer_state_t layer_state_set_user(layer_state_t state) {
   rgblight_set_layer_state(_DEFAULT, layer_state_cmp(state, _DEFAULT));
   rgblight_set_layer_state(_NUMERALS, layer_state_cmp(state, _NUMERALS));
   rgblight_set_layer_state(_ARROWS, layer_state_cmp(state, _ARROWS));
-  rgblight_set_layer_state(_QUANTUM, layer_state_cmp(state, _QUANTUM));
   rgblight_set_layer_state(_MOUSEKEYS, layer_state_cmp(state, _MOUSEKEYS));
   rgblight_set_layer_state(_FUNCTION, layer_state_cmp(state, _FUNCTION));
+  rgblight_set_layer_state(_QUANTUM, layer_state_cmp(state, _QUANTUM));
 
   return state;
 }
@@ -158,28 +158,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   static uint16_t _held_fmrbsp_keycode;
   static uint16_t _held_fmrdel_keycode;
   static uint16_t _held_quantum_keycode;
+
   switch (keycode) {
-    case _UNDSCR:
-      if (record->event.pressed) {
-        register_code16(S(KC_MINS));
-      } else {
-        unregister_code16(S(KC_MINS));
-      }
-      return false;
-    case _RESETT:
-      if (record->event.pressed) {
-          _reset_hold_timer = timer_read32();
-      } else {
-        if (timer_elapsed32(_reset_hold_timer) >= 500) {
-          reset_keyboard();
-        }
-      }
-      return false;
-    case _TO_ARR:
-    case _TO_MSK:
-    case _QUASPC:
-    case _ALTBSP:
-      return true;
+    // Set modifier held booleans
     case _CTLESC:
       if (record->event.pressed) {
         _is_ctrl_held = true;
@@ -208,6 +189,25 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         _is_shift_held = false;
       }
       return true;
+
+    case _RESETT:
+      if (record->event.pressed) {
+          _reset_hold_timer = timer_read32();
+      } else {
+        if (timer_elapsed32(_reset_hold_timer) >= 500) {
+          reset_keyboard();
+        }
+      }
+      return false;
+    case _UNDSCR:
+      if (record->event.pressed) {
+        register_code16(S(KC_MINS));
+      } else {
+        unregister_code16(S(KC_MINS));
+      }
+      return false;
+
+    // Context-specific remapping of various keys
     case _FMRSFT:
       if (record->event.pressed) {
         if (_is_alt_held || _is_gui_held) { // Restore left shift key to original function when alt or gui is held
@@ -300,9 +300,17 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         } 
       }
       return false;
+
+    // Exempt special keys on quantum layer from meh/hyper passthrough
+    case _ALTBSP:
+    case _TO_ARR:
+    case _TO_MSK:
+    case _QUASPC:
+      return true;
+
     default:
       if (record->event.pressed) {
-        if (_current_layer == _QUANTUM) {
+        if (_current_layer == _QUANTUM) { // Apply meh or hyper to keycode if right or right+left spacebars are held
           if (_is_shift_held) {
             _held_quantum_keycode = HYPR(keycode);
           } else {
