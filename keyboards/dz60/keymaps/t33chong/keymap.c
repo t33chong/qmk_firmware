@@ -3,11 +3,9 @@
 
 enum _layers {
   _DEFAULT = 0,
-  /* _META, */
   _NUMERALS,
   _ARROWS,
   _MEH,
-  /* _HYPER, */
   _MOUSEKEYS,
   _FUNCTION,
 };
@@ -20,12 +18,8 @@ enum _keycodes {
 #define _CTLESC CTL_T(KC_ESC)          // Hold for control, tap for escape
 #define _MEHMIN LT(_MEH, KC_MINS)      // Hold for meh layer, tap for -
 #define _MEHSPC LT(_MEH, KC_SPC)       // Hold for meh layer, tap for space
-/* #define _HYPEQL LT(_HYPER, KC_EQL)     // Hold for hyper layer, tap for = */
 #define _MO_FUN MO(_FUNCTION)          // Hold for function layer
 #define _MO_NUM MO(_NUMERALS)          // Hold for numerals layer
-/* #define _MO_MET MO(_META)              // Hold for meta layer */
-/* #define _MO_MEH MO(_MEH)               // Hold for meh layer */
-/* #define _MO_HYP MO(_HYPER)             // Hold for hyper layer */
 #define _TO_ARR TO(_ARROWS)            // Activate arrows layer
 #define _TO_DEF TO(_DEFAULT)           // Activate default layer
 #define _TO_MSK TO(_MOUSEKEYS)         // Activate mousekeys layer
@@ -48,17 +42,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_BRMD, KC_BRMU, KC_VOLD, KC_VOLU, \
     KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC,          KC_MINS, \
     _CTLESC, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,                   KC_ENT,  \
-    /* KC_BSPC, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH,          _HYPEQL,          _MO_FUN, \ */
     KC_BSPC, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH,          KC_EQL,           _MO_FUN, \
     _PUSHTT, KC_LALT, KC_LGUI,          KC_LSFT,          _MO_NUM,          _MEHSPC,          _UNDSCR, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT  \
   ),
-  /* [_META] = LAYOUT_t33chong( */
-  /*   _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \ */
-  /*   _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______, \ */
-  /*   _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,                   _______, \ */
-  /*   _ALTBSP, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,          _______, \ */
-  /*   _______, _PUSHTT, _______,          _TO_ARR,          _TO_MSK,          _______,          _______, _______, _______, _______, _______  \ */
-  /* ), */
   [_NUMERALS] = LAYOUT_t33chong(
     _GUIGRV, G(KC_1), G(KC_2), G(KC_3), G(KC_4), G(KC_5), G(KC_6), G(KC_7), G(KC_8), G(KC_9), G(KC_0), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, \
     KC_TILD, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC, KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_PIPE, KC_COLN,          KC_MINS, \
@@ -73,7 +59,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_LSFT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,          XXXXXXX,          XXXXXXX, \
     XXXXXXX, XXXXXXX, XXXXXXX,          KC_LALT,          KC_LGUI,          XXXXXXX,          XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX  \
   ),
-  // TODO: Consolidate meh and hyper into quantum layer; meh + gui = hyper
   [_MEH] = LAYOUT_t33chong(
     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_MINS, KC_EQL,  KC_BSPC, KC_DEL,  \
     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          KC_BSLS, \
@@ -81,13 +66,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     _ALTBSP, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          KC_EQL,           _______, \
     _______, _______, _______,          _______,          _TO_MSK,          _______,          _______, _______, _______, _______, _______  \
   ),
-  /* [_HYPER] = LAYOUT_t33chong( */
-  /*   _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_MINS, KC_EQL,  KC_BSPC, KC_DEL,  \ */
-  /*   _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          KC_BSLS, \ */
-  /*   KC_ESC,  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,                   _______, \ */
-  /*   _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,          _______, \ */
-  /*   _______, _______, _______,          _______,          _______,          KC_SPC,           _______, _______, _______, _______, _______  \ */
-  /* ), */
   [_MOUSEKEYS] = LAYOUT_t33chong(
     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, \
     XXXXXXX, XXXXXXX, XXXXXXX, KC_MS_U, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,          XXXXXXX, \
@@ -115,21 +93,17 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 #define _RGB_ALL(color) RGBLIGHT_LAYER_SEGMENTS({0, 16, color})
 const rgblight_segment_t PROGMEM _default_rgb[] = _RGB_ALL(HSV_CYAN);
-/* const rgblight_segment_t PROGMEM _meta_rgb[] = _RGB_ALL(HSV_WHITE); */
 const rgblight_segment_t PROGMEM _numerals_rgb[] = _RGB_ALL(HSV_CYAN);
 const rgblight_segment_t PROGMEM _arrows_rgb[] = _RGB_ALL(HSV_GREEN);
 const rgblight_segment_t PROGMEM _meh_rgb[] = _RGB_ALL(HSV_BLUE);
-/* const rgblight_segment_t PROGMEM _hyper_rgb[] = _RGB_ALL(HSV_RED); */
 const rgblight_segment_t PROGMEM _mousekeys_rgb[] = _RGB_ALL(HSV_YELLOW);
 const rgblight_segment_t PROGMEM _function_rgb[] = _RGB_ALL(HSV_MAGENTA);
 
 const rgblight_segment_t* const PROGMEM _rgblight_layers[] = RGBLIGHT_LAYERS_LIST(
   _default_rgb,
-  /* _meta_rgb, */
   _numerals_rgb,
   _arrows_rgb,
   _meh_rgb,
-  /* _hyper_rgb, */
   _mousekeys_rgb,
   _function_rgb
 );
@@ -156,11 +130,9 @@ layer_state_t layer_state_set_user(layer_state_t state) {
   _current_layer = get_highest_layer(state);
 
   rgblight_set_layer_state(_DEFAULT, layer_state_cmp(state, _DEFAULT));
-  /* rgblight_set_layer_state(_META, layer_state_cmp(state, _META)); */
   rgblight_set_layer_state(_NUMERALS, layer_state_cmp(state, _NUMERALS));
   rgblight_set_layer_state(_ARROWS, layer_state_cmp(state, _ARROWS));
   rgblight_set_layer_state(_MEH, layer_state_cmp(state, _MEH));
-  /* rgblight_set_layer_state(_HYPER, layer_state_cmp(state, _HYPER)); */
   rgblight_set_layer_state(_MOUSEKEYS, layer_state_cmp(state, _MOUSEKEYS));
   rgblight_set_layer_state(_FUNCTION, layer_state_cmp(state, _FUNCTION));
 
@@ -217,7 +189,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     case _TO_ARR:
     case _TO_MSK:
     case _MEHSPC:
-    /* case _HYPEQL: */
+    case _ALTBSP:
       return true;
     case KC_LALT:
       if (record->event.pressed) {
@@ -289,33 +261,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       /*     _held_keycode = -1; */
       /*     return false; */
       /*   } */ 
-      /* } */
-
-      /* if (_current_layer == _MEH) { */
-      /*   /1* if (keycode == _MEHSPC) { *1/ */
-      /*   /1* if (keycode == _MEHMIN) { *1/ */
-
-      /*   /1* if (keycode == _MEHSPC || keycode == _MO_MEH) { *1/ */
-      /*   /1*   return true; *1/ */
-      /*   /1* } *1/ */
-      /*   if (record->event.pressed) { */
-      /*     register_code16(MEH(keycode)); */
-      /*   } else { */
-      /*     unregister_code16(MEH(keycode)); */
-      /*   } */
-      /*   return false; */
-      /* } else if (_current_layer == _HYPER) { */
-      /*   /1* if (keycode == _HYPEQL || keycode == _MO_HYP) { *1/ */
-
-      /*   /1* if (keycode == _HYPEQL) { *1/ */
-      /*   /1*   return true; *1/ */
-      /*   /1* } *1/ */
-      /*   if (record->event.pressed) { */
-      /*     register_code16(HYPR(keycode)); */
-      /*   } else { */
-      /*     unregister_code16(HYPR(keycode)); */
-      /*   } */
-      /*   return false; */
       /* } */
       return true; // Process all other keycodes normally
   }
