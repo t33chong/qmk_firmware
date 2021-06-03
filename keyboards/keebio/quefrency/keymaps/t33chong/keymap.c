@@ -229,7 +229,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         if (_held_fmrsft_keycode != _NULVAL) {
           unregister_code16(_held_fmrsft_keycode);
           _held_fmrsft_keycode = _NULVAL;
-        } 
+        }
       }
       return false;
     case _FMRBSL:
@@ -244,7 +244,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         if (_held_fmrbsl_keycode != _NULVAL) {
           unregister_code16(_held_fmrbsl_keycode);
           _held_fmrbsl_keycode = _NULVAL;
-        } 
+        }
       }
       return false;
     case _FMRMIN:
@@ -259,7 +259,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         if (_held_fmrmin_keycode != _NULVAL) {
           unregister_code16(_held_fmrmin_keycode);
           _held_fmrmin_keycode = _NULVAL;
-        } 
+        }
       }
       return false;
     case _FMREQL:
@@ -274,7 +274,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         if (_held_fmreql_keycode != _NULVAL) {
           unregister_code16(_held_fmreql_keycode);
           _held_fmreql_keycode = _NULVAL;
-        } 
+        }
       }
       return false;
     case _FMRBSP:
@@ -289,7 +289,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         if (_held_fmrbsp_keycode != _NULVAL) {
           unregister_code16(_held_fmrbsp_keycode);
           _held_fmrbsp_keycode = _NULVAL;
-        } 
+        }
       }
       return false;
     case _FMRDEL:
@@ -304,7 +304,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         if (_held_fmrdel_keycode != _NULVAL) {
           unregister_code16(_held_fmrdel_keycode);
           _held_fmrdel_keycode = _NULVAL;
-        } 
+        }
       }
       return false;
 
@@ -331,7 +331,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
           unregister_code16(_held_quantum_keycode);
           _held_quantum_keycode = _NULVAL;
           return false;
-        } 
+        }
       }
       return true; // Process all other keycodes normally
   }
