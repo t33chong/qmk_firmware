@@ -1,0 +1,5 @@
+SRC += t33chong.c
+
+BACKLIGHT_ENABLE = yes
+MOUSEKEY_ENABLE = yes
+RGBLIGHT_ENABLE = yes
