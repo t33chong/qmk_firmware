@@ -9,3 +9,5 @@
 
 #define RGBLIGHT_LAYERS
 #define RGBLIGHT_SLEEP
+
+#define VIM_FOR_MAC
