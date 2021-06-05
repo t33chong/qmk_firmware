@@ -16,6 +16,7 @@ enum _keycodes {
   _RESETT,              // Restart into bootloader after hold timeout
   _CLRKBD,              // Clear all held keycodes
   _UNDSCR,              // Send _
+  _VIMGRV,              // Former ` key: send ` if alt/ctrl/gui held, else enter Vim mode
   _FMRSFT,              // Former left shift key: send forward delete if shift held, or shift if alt/gui held, else backspace
   _FMRBSL,              // Former \ key: send \ if modifier held, else -
   _FMRMIN,              // Former - key: send - if modifier held, else brightness down
@@ -59,7 +60,7 @@ enum _keycodes {
 */
 
 #define _DEFAULT_MAP \
-    KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    _FMRMIN, _FMREQL, _FMRBSP, _FMRDEL, \
+    _VIMGRV, KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    _FMRMIN, _FMREQL, _FMRBSP, _FMRDEL, \
     KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC,          _FMRBSL, \
     _CTLESC, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,                   KC_ENT,  \
     _FMRSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH,          KC_EQL,           _MO_FUN, \
@@ -94,7 +95,7 @@ enum _keycodes {
     XXXXXXX, XXXXXXX, XXXXXXX,          XXXXXXX,          XXXXXXX,          XXXXXXX,          XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
 
 #define _QUANTUM_MAP \
-    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_MINS, KC_EQL,  KC_BSPC, KC_DEL,  \
+    KC_GRV,  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_MINS, KC_EQL,  KC_BSPC, KC_DEL,  \
     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          KC_BSLS, \
     _TO_ARR, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,                   _______, \
     _ALTBSP, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,          _______, \

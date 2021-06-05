@@ -1,4 +1,5 @@
 #include "t33chong.h"
+#include "qmk-vim/src/vim.h"
 
 const rgblight_segment_t PROGMEM _default_rgb[] = _rgb_all(HSV_CYAN);
 const rgblight_segment_t PROGMEM _numerals_rgb[] = _rgb_all(HSV_CYAN);
@@ -58,11 +59,16 @@ bool process_record_keymap(uint16_t keycode, keyrecord_t *record) {
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+  if (!process_vim_mode(keycode, record)) {
+    return false;
+  }
+
   static uint32_t _reset_hold_timer;
   static bool _is_alt_held;
   static bool _is_ctrl_held;
   static bool _is_gui_held;
   static bool _is_shift_held;
+  static bool _was_kc_grv_held;
   static uint16_t _held_fmrsft_keycode;
   static uint16_t _held_fmrbsl_keycode;
   static uint16_t _held_fmrmin_keycode;
@@ -126,6 +132,21 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       return false;
 
     // Context-specific remapping of various keys
+    case _VIMGRV:
+      if (record->event.pressed) {
+        if (_is_alt_held || _is_ctrl_held || _is_gui_held) {
+          register_code(KC_GRV);
+          _was_kc_grv_held = true;
+        } else {
+          toggle_vim_mode();
+        }
+      } else {
+        if (_was_kc_grv_held) {
+          unregister_code(KC_GRV);
+          _was_kc_grv_held = false;
+        }
+      }
+      return false;
     case _FMRSFT:
       if (record->event.pressed) {
         if (_is_alt_held || _is_gui_held) { // Restore left shift key to original function when alt or gui is held
