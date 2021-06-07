@@ -11,3 +11,7 @@
 #define RGBLIGHT_SLEEP
 
 #define VIM_FOR_MAC
+#define BETTER_VISUAL_MODE
+#define VIM_G_MOTIONS
+#define VIM_PASTE_BEFORE
+#define VIM_REPLACE
