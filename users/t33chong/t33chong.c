@@ -3,15 +3,17 @@
 
 const rgblight_segment_t PROGMEM _default_rgb[] = _rgb_all(HSV_CYAN);
 const rgblight_segment_t PROGMEM _numerals_rgb[] = _rgb_all(HSV_CYAN);
-const rgblight_segment_t PROGMEM _arrows_rgb[] = _rgb_all(HSV_GREEN);
+const rgblight_segment_t PROGMEM _arrows_rgb[] = _rgb_all(HSV_RED);
+const rgblight_segment_t PROGMEM _vim_rgb[] = _rgb_all(HSV_GREEN);
 const rgblight_segment_t PROGMEM _mousekeys_rgb[] = _rgb_all(HSV_YELLOW);
 const rgblight_segment_t PROGMEM _function_rgb[] = _rgb_all(HSV_MAGENTA);
-const rgblight_segment_t PROGMEM _quantum_rgb[] = _rgb_all(HSV_RED);
+const rgblight_segment_t PROGMEM _quantum_rgb[] = _rgb_all(HSV_CYAN);
 
 const rgblight_segment_t* const PROGMEM _rgblight_layers[] = RGBLIGHT_LAYERS_LIST(
   _default_rgb,
   _numerals_rgb,
   _arrows_rgb,
+  _vim_rgb,
   _mousekeys_rgb,
   _function_rgb,
   _quantum_rgb
@@ -46,11 +48,29 @@ layer_state_t layer_state_set_user(layer_state_t state) {
   rgblight_set_layer_state(_DEFAULT_LAYER, layer_state_cmp(state, _DEFAULT_LAYER));
   rgblight_set_layer_state(_NUMERALS_LAYER, layer_state_cmp(state, _NUMERALS_LAYER));
   rgblight_set_layer_state(_ARROWS_LAYER, layer_state_cmp(state, _ARROWS_LAYER));
+  rgblight_set_layer_state(_VIM_LAYER, layer_state_cmp(state, _VIM_LAYER));
   rgblight_set_layer_state(_MOUSEKEYS_LAYER, layer_state_cmp(state, _MOUSEKEYS_LAYER));
   rgblight_set_layer_state(_FUNCTION_LAYER, layer_state_cmp(state, _FUNCTION_LAYER));
   rgblight_set_layer_state(_QUANTUM_LAYER, layer_state_cmp(state, _QUANTUM_LAYER));
 
   return layer_state_set_keymap(state);
+}
+
+void insert_mode_user(void) {
+  disable_vim_mode();
+  layer_move(_DEFAULT_LAYER);
+}
+
+void normal_mode_user(void) {
+  layer_move(_VIM_LAYER);
+}
+
+void visual_mode_user(void) {
+  layer_move(_VIM_LAYER);
+}
+
+void visual_line_mode_user(void) {
+  layer_move(_VIM_LAYER);
 }
 
 __attribute__ ((weak))
@@ -138,7 +158,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
           register_code(KC_GRV);
           _was_kc_grv_held = true;
         } else {
-          toggle_vim_mode();
+          enable_vim_mode();
         }
       } else {
         if (_was_kc_grv_held) {
