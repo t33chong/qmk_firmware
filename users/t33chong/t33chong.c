@@ -7,9 +7,7 @@ const rgblight_segment_t PROGMEM _arrows_layer_rgb[] = _rgb_all(HSV_RED);
 const rgblight_segment_t PROGMEM _mousekeys_layer_rgb[] = _rgb_all(HSV_YELLOW);
 const rgblight_segment_t PROGMEM _function_layer_rgb[] = _rgb_all(HSV_MAGENTA);
 const rgblight_segment_t PROGMEM _quantum_layer_rgb[] = _rgb_all(HSV_CYAN);
-const rgblight_segment_t PROGMEM _vim_indicator_rgb[] = RGBLIGHT_LAYER_SEGMENTS({0, 16, HSV_GREEN});
-const rgblight_segment_t PROGMEM _vim_visual_indicator_rgb[] = RGBLIGHT_LAYER_SEGMENTS({3, 5, HSV_BLUE}, {11, 13, HSV_BLUE});
-const rgblight_segment_t PROGMEM _vim_visual_line_indicator_rgb[] = RGBLIGHT_LAYER_SEGMENTS({2, 3, HSV_YELLOW}, {5, 6, HSV_YELLOW}, {10, 11, HSV_YELLOW}, {13, 14, HSV_YELLOW});
+const rgblight_segment_t PROGMEM _vim_indicator_rgb[] = _rgb_all(HSV_GREEN);
 
 const rgblight_segment_t* const PROGMEM _rgblight_layers[] = RGBLIGHT_LAYERS_LIST(
   _default_layer_rgb,
@@ -18,9 +16,7 @@ const rgblight_segment_t* const PROGMEM _rgblight_layers[] = RGBLIGHT_LAYERS_LIS
   _mousekeys_layer_rgb,
   _function_layer_rgb,
   _quantum_layer_rgb,
-  _vim_indicator_rgb,
-  _vim_visual_indicator_rgb,
-  _vim_visual_line_indicator_rgb
+  _vim_indicator_rgb
 );
 
 void keyboard_post_init_user(void) {
@@ -62,26 +58,18 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 void insert_mode_user(void) {
   disable_vim_mode();
   rgblight_set_layer_state(_VIM_INDICATOR, false);
-  rgblight_set_layer_state(_VIM_VISUAL_INDICATOR, false);
-  rgblight_set_layer_state(_VIM_VISUAL_LINE_INDICATOR, false);
 }
 
 void normal_mode_user(void) {
   rgblight_set_layer_state(_VIM_INDICATOR, true);
-  rgblight_set_layer_state(_VIM_VISUAL_INDICATOR, false);
-  rgblight_set_layer_state(_VIM_VISUAL_LINE_INDICATOR, false);
 }
 
 void visual_mode_user(void) {
   rgblight_set_layer_state(_VIM_INDICATOR, true);
-  rgblight_set_layer_state(_VIM_VISUAL_INDICATOR, true);
-  rgblight_set_layer_state(_VIM_VISUAL_LINE_INDICATOR, false);
 }
 
 void visual_line_mode_user(void) {
   rgblight_set_layer_state(_VIM_INDICATOR, true);
-  rgblight_set_layer_state(_VIM_VISUAL_INDICATOR, true);
-  rgblight_set_layer_state(_VIM_VISUAL_LINE_INDICATOR, true);
 }
 
 __attribute__ ((weak))
