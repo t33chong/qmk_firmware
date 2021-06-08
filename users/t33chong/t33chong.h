@@ -6,10 +6,16 @@ enum _layers {
   _DEFAULT_LAYER = 0,
   _NUMERALS_LAYER,
   _ARROWS_LAYER,
-  _VIM_LAYER,
   _MOUSEKEYS_LAYER,
   _FUNCTION_LAYER,
   _QUANTUM_LAYER,
+  _LIGHTING_LAYER_SAFE_RANGE
+};
+
+enum _lighting_layers {
+  _VIM_INDICATOR = _LIGHTING_LAYER_SAFE_RANGE,
+  _VIM_VISUAL_INDICATOR,
+  _VIM_VISUAL_LINE_INDICATOR
 };
 
 enum _keycodes {
@@ -80,13 +86,6 @@ enum _keycodes {
     _TO_DEF, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, XXXXXXX, XXXXXXX,                   XXXXXXX, \
     KC_LSFT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,          XXXXXXX,          _______, \
     XXXXXXX, XXXXXXX, XXXXXXX,          KC_LALT,          KC_LGUI,          XXXXXXX,          XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
-
-#define _VIM_MAP \
-    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
-    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______, \
-    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,                   _______, \
-    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,          _______, \
-    _______, _______, _______,          _______,          _______,          _______,          _______, _______, _______, _______, _______
 
 #define _MOUSEKEYS_MAP \
     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, \
