@@ -154,7 +154,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     // Context-specific remapping of various keys
     case _VIMGRV:
       if (record->event.pressed) {
-        if (_is_alt_held || _is_ctrl_held || _is_gui_held) {
+        if (_is_mod_held) {
           register_code(KC_GRV);
           _was_kc_grv_held = true;
         } else {
@@ -171,8 +171,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       if (record->event.pressed) {
         if (_is_alt_held || _is_gui_held) { // Restore left shift key to original function when alt or gui is held
           _held_fmrsft_keycode = KC_LSFT;
-        } else if (_is_shift_held) { // Send forward delete if shift is held
-          _held_fmrsft_keycode = KC_DEL;
         } else { // Otherwise send backspace
           _held_fmrsft_keycode = KC_BSPC;
         }
