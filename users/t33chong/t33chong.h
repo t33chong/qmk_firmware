@@ -13,9 +13,7 @@ enum _layers {
 };
 
 enum _lighting_layers {
-  _VIM_INDICATOR = _LIGHTING_LAYER_SAFE_RANGE,
-  _VIM_VISUAL_INDICATOR,
-  _VIM_VISUAL_LINE_INDICATOR
+  _VIM_INDICATOR = _LIGHTING_LAYER_SAFE_RANGE
 };
 
 enum _keycodes {
