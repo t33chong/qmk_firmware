@@ -3,16 +3,14 @@
 
 const rgblight_segment_t PROGMEM _default_layer_rgb[] = _rgb_all(HSV_CYAN);
 const rgblight_segment_t PROGMEM _numerals_layer_rgb[] = _rgb_all(HSV_CYAN);
-const rgblight_segment_t PROGMEM _arrows_layer_rgb[] = _rgb_all(HSV_RED);
-const rgblight_segment_t PROGMEM _mousekeys_layer_rgb[] = _rgb_all(HSV_YELLOW);
-const rgblight_segment_t PROGMEM _function_layer_rgb[] = _rgb_all(HSV_MAGENTA);
+const rgblight_segment_t PROGMEM _mousekeys_layer_rgb[] = _rgb_all(HSV_RED);
+const rgblight_segment_t PROGMEM _function_layer_rgb[] = _rgb_all(HSV_YELLOW);
 const rgblight_segment_t PROGMEM _quantum_layer_rgb[] = _rgb_all(HSV_CYAN);
 const rgblight_segment_t PROGMEM _vim_indicator_rgb[] = _rgb_all(HSV_GREEN);
 
 const rgblight_segment_t* const PROGMEM _rgblight_layers[] = RGBLIGHT_LAYERS_LIST(
   _default_layer_rgb,
   _numerals_layer_rgb,
-  _arrows_layer_rgb,
   _mousekeys_layer_rgb,
   _function_layer_rgb,
   _quantum_layer_rgb,
@@ -47,7 +45,6 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 
   rgblight_set_layer_state(_DEFAULT_LAYER, layer_state_cmp(state, _DEFAULT_LAYER));
   rgblight_set_layer_state(_NUMERALS_LAYER, layer_state_cmp(state, _NUMERALS_LAYER));
-  rgblight_set_layer_state(_ARROWS_LAYER, layer_state_cmp(state, _ARROWS_LAYER));
   rgblight_set_layer_state(_MOUSEKEYS_LAYER, layer_state_cmp(state, _MOUSEKEYS_LAYER));
   rgblight_set_layer_state(_FUNCTION_LAYER, layer_state_cmp(state, _FUNCTION_LAYER));
   rgblight_set_layer_state(_QUANTUM_LAYER, layer_state_cmp(state, _QUANTUM_LAYER));
@@ -259,7 +256,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
     // Exempt special keys on quantum layer from meh/hyper passthrough
     case _ALTBSP:
-    case _TO_ARR:
     case _TO_MSK:
     case _QUASPC:
       return true;
