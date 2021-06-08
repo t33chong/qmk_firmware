@@ -5,7 +5,6 @@
 enum _layers {
   _DEFAULT_LAYER = 0,
   _NUMERALS_LAYER,
-  _ARROWS_LAYER,
   _MOUSEKEYS_LAYER,
   _FUNCTION_LAYER,
   _QUANTUM_LAYER,
@@ -34,7 +33,6 @@ enum _keycodes {
 #define _QUASPC LT(_QUANTUM_LAYER, KC_SPC) // Hold for quantum layer, tap for space
 #define _MO_FUN MO(_FUNCTION_LAYER)        // Hold for function layer
 #define _MO_NUM MO(_NUMERALS_LAYER)        // Hold for numerals layer
-#define _TO_ARR TO(_ARROWS_LAYER)          // Activate arrows layer
 #define _TO_DEF TO(_DEFAULT_LAYER)         // Activate default layer
 #define _TO_MSK TO(_MOUSEKEYS_LAYER)       // Activate mousekeys layer
 #define _ALTBSP A(KC_BSPC)                 // Send alt+backspace
@@ -78,13 +76,6 @@ enum _keycodes {
     KC_BSPC, _HYP_F1, _HYP_F2, _HYP_F3, _HYP_F4, _HYP_F5, _HYP_F6, _HYP_F7, _HYP_F8, _HYP_F9, _HYP_F0,          KC_EQL,           _______, \
     XXXXXXX, XXXXXXX, XXXXXXX,          XXXXXXX,          XXXXXXX,          KC_SPC,           _UNDSCR, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
 
-#define _ARROWS_MAP \
-    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, \
-    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,          XXXXXXX, \
-    _TO_DEF, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, XXXXXXX, XXXXXXX,                   XXXXXXX, \
-    KC_LSFT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,          XXXXXXX,          _______, \
-    XXXXXXX, XXXXXXX, XXXXXXX,          KC_LALT,          KC_LGUI,          XXXXXXX,          XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
-
 #define _MOUSEKEYS_MAP \
     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, \
     XXXXXXX, XXXXXXX, KC_WBAK, KC_MS_U, KC_WFWD, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,          XXXXXXX, \
@@ -102,6 +93,6 @@ enum _keycodes {
 #define _QUANTUM_MAP \
     KC_GRV,  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_MINS, KC_EQL,  KC_BSPC, KC_DEL,  \
     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          KC_BSLS, \
-    _TO_ARR, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,                   _______, \
+    KC_ESC,  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,                   _______, \
     _ALTBSP, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,          _______, \
     _______, _______, _______,          _______,          _TO_MSK,          _______,          _______, _______, _______, _______, _______
