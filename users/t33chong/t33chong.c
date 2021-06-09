@@ -1,5 +1,6 @@
 #include "t33chong.h"
 #include "qmk-vim/src/vim.h"
+#include "qmk-vim/src/modes.h"
 
 const rgblight_segment_t PROGMEM _default_layer_rgb[] = _rgb_all(HSV_CYAN);
 const rgblight_segment_t PROGMEM _numerals_layer_rgb[] = _rgb_all(HSV_CYAN);
@@ -67,6 +68,14 @@ void visual_mode_user(void) {
 
 void visual_line_mode_user(void) {
   rgblight_set_layer_state(_VIM_INDICATOR, true);
+}
+
+bool process_normal_mode_user(uint16_t keycode, const keyrecord_t *record) {
+  if (record->event.pressed && keycode == KC_A) {
+    insert_mode();
+    return false;
+  }
+  return true;
 }
 
 __attribute__ ((weak))
