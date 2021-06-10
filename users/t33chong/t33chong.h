@@ -8,11 +8,6 @@ enum _layers {
   _MOUSEKEYS_LAYER,
   _FUNCTION_LAYER,
   _QUANTUM_LAYER,
-  _LIGHTING_LAYER_SAFE_RANGE
-};
-
-enum _lighting_layers {
-  _VIM_INDICATOR = _LIGHTING_LAYER_SAFE_RANGE
 };
 
 enum _keycodes {
@@ -20,7 +15,7 @@ enum _keycodes {
   _RESETT,              // Restart into bootloader after hold timeout
   _CLRKBD,              // Clear all held keycodes
   _UNDSCR,              // Send _
-  _VIMGRV,              // Former ` key: send ` if alt/ctrl/gui held, else enter Vim mode
+  _VIMGRV,              // Former ` key: send ` if modifier held, else enter Vim mode
   _FMRSFT,              // Former left shift key: send forward delete if shift held, or shift if alt/gui held, else backspace
   _FMRBSL,              // Former \ key: send \ if modifier held, else -
   _FMRMIN,              // Former - key: send - if modifier held, else brightness down
@@ -37,17 +32,8 @@ enum _keycodes {
 #define _TO_MSK TO(_MOUSEKEYS_LAYER)       // Activate mousekeys layer
 #define _ALTBSP A(KC_BSPC)                 // Send alt+backspace
 #define _PUSHTT HYPR(KC_BSLS)              // Hold for push to talk with Shush
-#define _GUIGRV G(KC_GRV)
-#define _HYP_F1 HYPR(KC_F1)
-#define _HYP_F2 HYPR(KC_F2)
-#define _HYP_F3 HYPR(KC_F3)
-#define _HYP_F4 HYPR(KC_F4)
-#define _HYP_F5 HYPR(KC_F5)
-#define _HYP_F6 HYPR(KC_F6)
-#define _HYP_F7 HYPR(KC_F7)
-#define _HYP_F8 HYPR(KC_F8)
-#define _HYP_F9 HYPR(KC_F9)
-#define _HYP_F0 HYPR(KC_F10)
+#define _GUIGRV G(KC_GRV)                  // Send gui+`
+#define _HF(N) HYPR(KC_F ## N)             // Send hyper+function N
 
 #define _is_mod_held (_is_alt_held || _is_ctrl_held || _is_gui_held || _is_shift_held)
 #define _layout(...) LAYOUT_t33chong(__VA_ARGS__)
@@ -73,7 +59,7 @@ enum _keycodes {
     _GUIGRV, G(KC_1), G(KC_2), G(KC_3), G(KC_4), G(KC_5), G(KC_6), G(KC_7), G(KC_8), G(KC_9), G(KC_0), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, \
     KC_TILD, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC, KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_PIPE, KC_COLN,          KC_MINS, \
     KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_BSLS,                   KC_PLUS, \
-    KC_BSPC, _HYP_F1, _HYP_F2, _HYP_F3, _HYP_F4, _HYP_F5, _HYP_F6, _HYP_F7, _HYP_F8, _HYP_F9, _HYP_F0,          KC_EQL,           _______, \
+    KC_BSPC, _HF(1),  _HF(2),  _HF(3),  _HF(4),  _HF(5),  _HF(6),  _HF(7),  _HF(8),  _HF(9),  _HF(10),          KC_EQL,           _______, \
     XXXXXXX, XXXXXXX, XXXXXXX,          XXXXXXX,          XXXXXXX,          KC_SPC,           _UNDSCR, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
 
 #define _MOUSEKEYS_MAP \
