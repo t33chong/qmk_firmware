@@ -2,26 +2,32 @@
 #include "qmk-vim/src/vim.h"
 #include "qmk-vim/src/modes.h"
 
-const rgblight_segment_t PROGMEM _default_layer_rgb[] = _rgb_all(HSV_CYAN);
-const rgblight_segment_t PROGMEM _numerals_layer_rgb[] = _rgb_all(HSV_CYAN);
-const rgblight_segment_t PROGMEM _mousekeys_layer_rgb[] = _rgb_all(HSV_RED);
-const rgblight_segment_t PROGMEM _function_layer_rgb[] = _rgb_all(HSV_YELLOW);
-const rgblight_segment_t PROGMEM _quantum_layer_rgb[] = _rgb_all(HSV_CYAN);
-const rgblight_segment_t PROGMEM _vim_indicator_rgb[] = _rgb_all(HSV_GREEN);
+enum _rgblight_layer_indices {
+  _CYAN_RGBLIGHT_LAYER,
+  _GREEN_RGBLIGHT_LAYER,
+  _YELLOW_RGBLIGHT_LAYER,
+  _RED_RGBLIGHT_LAYER,
+  _MAGENTA_RGBLIGHT_LAYER
+};
+
+const rgblight_segment_t PROGMEM _cyan_rgblight_layer[] = _rgb_all(HSV_CYAN);
+const rgblight_segment_t PROGMEM _green_rgblight_layer[] = _rgb_all(HSV_GREEN);
+const rgblight_segment_t PROGMEM _yellow_rgblight_layer[] = _rgb_all(HSV_YELLOW);
+const rgblight_segment_t PROGMEM _red_rgblight_layer[] = _rgb_all(HSV_RED);
+const rgblight_segment_t PROGMEM _magenta_rgblight_layer[] = _rgb_all(HSV_MAGENTA);
 
 const rgblight_segment_t* const PROGMEM _rgblight_layers[] = RGBLIGHT_LAYERS_LIST(
-  _default_layer_rgb,
-  _numerals_layer_rgb,
-  _mousekeys_layer_rgb,
-  _function_layer_rgb,
-  _quantum_layer_rgb,
-  _vim_indicator_rgb
+  _cyan_rgblight_layer,
+  _green_rgblight_layer,
+  _yellow_rgblight_layer,
+  _red_rgblight_layer,
+  _magenta_rgblight_layer
 );
 
 void keyboard_post_init_user(void) {
   backlight_disable();
-  rgblight_enable_noeeprom();
   rgblight_layers = _rgblight_layers;
+  rgblight_enable_noeeprom();
 }
 
 // If true, don't count a tap and a hold as repetition of the tap action
@@ -44,30 +50,30 @@ int _current_layer;
 layer_state_t layer_state_set_user(layer_state_t state) {
   _current_layer = get_highest_layer(state);
 
-  rgblight_set_layer_state(_DEFAULT_LAYER, layer_state_cmp(state, _DEFAULT_LAYER));
-  rgblight_set_layer_state(_NUMERALS_LAYER, layer_state_cmp(state, _NUMERALS_LAYER));
-  rgblight_set_layer_state(_MOUSEKEYS_LAYER, layer_state_cmp(state, _MOUSEKEYS_LAYER));
-  rgblight_set_layer_state(_FUNCTION_LAYER, layer_state_cmp(state, _FUNCTION_LAYER));
-  rgblight_set_layer_state(_QUANTUM_LAYER, layer_state_cmp(state, _QUANTUM_LAYER));
+  rgblight_set_layer_state(_CYAN_RGBLIGHT_LAYER, (layer_state_cmp(state, _DEFAULT_LAYER || layer_state_cmp(state, _NUMERALS_LAYER)) || layer_state_cmp(state, _QUANTUM_LAYER)));
+  rgblight_set_layer_state(_RED_RGBLIGHT_LAYER, layer_state_cmp(state, _MOUSEKEYS_LAYER));
+  rgblight_set_layer_state(_MAGENTA_RGBLIGHT_LAYER, layer_state_cmp(state, _FUNCTION_LAYER));
 
   return layer_state_set_keymap(state);
 }
 
 void insert_mode_user(void) {
   disable_vim_mode();
-  rgblight_set_layer_state(_VIM_INDICATOR, false);
+  rgblight_set_layer_state(_GREEN_RGBLIGHT_LAYER, false);
+  rgblight_set_layer_state(_YELLOW_RGBLIGHT_LAYER, false);
 }
 
 void normal_mode_user(void) {
-  rgblight_set_layer_state(_VIM_INDICATOR, true);
+  rgblight_set_layer_state(_GREEN_RGBLIGHT_LAYER, true);
+  rgblight_set_layer_state(_YELLOW_RGBLIGHT_LAYER, false);
 }
 
 void visual_mode_user(void) {
-  rgblight_set_layer_state(_VIM_INDICATOR, true);
+  rgblight_set_layer_state(_YELLOW_RGBLIGHT_LAYER, true);
 }
 
 void visual_line_mode_user(void) {
-  rgblight_set_layer_state(_VIM_INDICATOR, true);
+  rgblight_set_layer_state(_YELLOW_RGBLIGHT_LAYER, true);
 }
 
 bool process_normal_mode_user(uint16_t keycode, const keyrecord_t *record) {
