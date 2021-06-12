@@ -16,7 +16,7 @@ enum _keycodes {
   _CLRKBD,              // Clear all held keycodes
   _UNDSCR,              // Send _
   _VIMGRV,              // Former ` key: send ` if modifier held, else enter Vim mode
-  _FMRSFT,              // Former left shift key: send forward delete if shift held, or shift if alt/gui held, else backspace
+  _FMRSFT,              // Former left shift key: send shift if alt/gui held, else backspace
   _FMRBSL,              // Former \ key: send \ if modifier held, else -
   _FMRMIN,              // Former - key: send - if modifier held, else brightness down
   _FMREQL,              // Former = key: send = if modifier held, else brightness up
