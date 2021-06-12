@@ -3,14 +3,6 @@
 #include "qmk-vim/src/modes.h"
 
 // Indicate layers with RGB underglow
-enum _rgblight_layer_indices {
-  _CYAN_RGBLIGHT_LAYER,
-  _GREEN_RGBLIGHT_LAYER,
-  _YELLOW_RGBLIGHT_LAYER,
-  _RED_RGBLIGHT_LAYER,
-  _MAGENTA_RGBLIGHT_LAYER
-};
-
 const rgblight_segment_t PROGMEM _cyan_rgblight_layer[] = _rgb_all(HSV_CYAN);
 const rgblight_segment_t PROGMEM _green_rgblight_layer[] = _rgb_all(HSV_GREEN);
 const rgblight_segment_t PROGMEM _yellow_rgblight_layer[] = _rgb_all(HSV_YELLOW);

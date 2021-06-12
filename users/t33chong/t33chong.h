@@ -10,6 +10,14 @@ enum _layers {
   _QUANTUM_LAYER,
 };
 
+enum _rgblight_layer_indices {
+  _CYAN_RGBLIGHT_LAYER,
+  _GREEN_RGBLIGHT_LAYER,
+  _YELLOW_RGBLIGHT_LAYER,
+  _RED_RGBLIGHT_LAYER,
+  _MAGENTA_RGBLIGHT_LAYER
+};
+
 enum _keycodes {
   _NULVAL = SAFE_RANGE, // Dummy value used to indicate that no key is currently held
   _RESETT,              // Restart into bootloader after hold timeout
