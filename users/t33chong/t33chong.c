@@ -2,6 +2,7 @@
 #include "qmk-vim/src/vim.h"
 #include "qmk-vim/src/modes.h"
 
+// Indicate layers with RGB underglow
 enum _rgblight_layer_indices {
   _CYAN_RGBLIGHT_LAYER,
   _GREEN_RGBLIGHT_LAYER,
@@ -24,6 +25,26 @@ const rgblight_segment_t* const PROGMEM _rgblight_layers[] = RGBLIGHT_LAYERS_LIS
   _magenta_rgblight_layer
 );
 
+int _current_layer;
+
+// Allow for keyboard-specific layer state
+__attribute__ ((weak))
+layer_state_t layer_state_set_keymap(layer_state_t state) {
+  return state;
+}
+
+// Layer state
+layer_state_t layer_state_set_user(layer_state_t state) {
+  _current_layer = get_highest_layer(state);
+
+  rgblight_set_layer_state(_CYAN_RGBLIGHT_LAYER, (layer_state_cmp(state, _DEFAULT_LAYER || layer_state_cmp(state, _NUMERALS_LAYER)) || layer_state_cmp(state, _QUANTUM_LAYER)));
+  rgblight_set_layer_state(_RED_RGBLIGHT_LAYER, layer_state_cmp(state, _MOUSEKEYS_LAYER));
+  rgblight_set_layer_state(_MAGENTA_RGBLIGHT_LAYER, layer_state_cmp(state, _FUNCTION_LAYER));
+
+  return layer_state_set_keymap(state);
+}
+
+// Execute on startup
 void keyboard_post_init_user(void) {
   backlight_disable();
   rgblight_layers = _rgblight_layers;
@@ -41,22 +62,7 @@ bool get_tapping_force_hold(uint16_t keycode, keyrecord_t *record) {
   }
 }
 
-__attribute__ ((weak))
-layer_state_t layer_state_set_keymap(layer_state_t state) {
-  return state;
-}
-
-int _current_layer;
-layer_state_t layer_state_set_user(layer_state_t state) {
-  _current_layer = get_highest_layer(state);
-
-  rgblight_set_layer_state(_CYAN_RGBLIGHT_LAYER, (layer_state_cmp(state, _DEFAULT_LAYER || layer_state_cmp(state, _NUMERALS_LAYER)) || layer_state_cmp(state, _QUANTUM_LAYER)));
-  rgblight_set_layer_state(_RED_RGBLIGHT_LAYER, layer_state_cmp(state, _MOUSEKEYS_LAYER));
-  rgblight_set_layer_state(_MAGENTA_RGBLIGHT_LAYER, layer_state_cmp(state, _FUNCTION_LAYER));
-
-  return layer_state_set_keymap(state);
-}
-
+// Vim mode user hooks
 void insert_mode_user(void) {
   disable_vim_mode();
   rgblight_set_layer_state(_GREEN_RGBLIGHT_LAYER, false);
@@ -76,8 +82,8 @@ void visual_line_mode_user(void) {
   rgblight_set_layer_state(_YELLOW_RGBLIGHT_LAYER, true);
 }
 
+// Override Vim normal mode
 uint16_t _esc_press_timer;
-
 bool process_normal_mode_user(uint16_t keycode, const keyrecord_t *record) {
   switch (keycode) {
     case KC_ESC: // Double tap escape to exit Vim mode
@@ -89,7 +95,7 @@ bool process_normal_mode_user(uint16_t keycode, const keyrecord_t *record) {
         _esc_press_timer = timer_read();
       }
       return true;
-    case KC_A:
+    case KC_A: // Don't move right before entering insert mode
       if (record->event.pressed) {
         insert_mode();
         return false;
@@ -100,9 +106,10 @@ bool process_normal_mode_user(uint16_t keycode, const keyrecord_t *record) {
   }
 }
 
+// Override Vim visual mode
 bool process_visual_mode_user(uint16_t keycode, const keyrecord_t *record) {
   switch (keycode) {
-    case KC_ESC:
+    case KC_ESC: // Set escape press timer for normal mode override
       if (record->event.pressed) {
         _esc_press_timer = timer_read();
       }
@@ -112,11 +119,13 @@ bool process_visual_mode_user(uint16_t keycode, const keyrecord_t *record) {
   }
 }
 
+// Allow for keyboard-specific macros
 __attribute__ ((weak))
 bool process_record_keymap(uint16_t keycode, keyrecord_t *record) {
   return true;
 }
 
+// Macros
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   if (!process_vim_mode(keycode, record)) {
     return false;
@@ -137,7 +146,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   static uint16_t _held_quantum_keycode;
 
   switch (keycode) {
-    // Set modifier held booleans
+    // Set held modifier state
     case _CTLESC:
       if (record->event.pressed) {
         _is_ctrl_held = true;
@@ -206,11 +215,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
       }
       return false;
-    case _FMRSFT: // Former left shift key: send forward delete if shift held, or shift if alt/gui held, else backspace
+    case _FMRSFT: // Former left shift key: send shift if alt/gui held, else backspace
       if (record->event.pressed) {
-        if (_is_alt_held || _is_gui_held) { // Restore left shift key to original function when alt or gui is held
+        if (_is_alt_held || _is_gui_held) {
           _held_fmrsft_keycode = KC_LSFT;
-        } else { // Otherwise send backspace
+        } else {
           _held_fmrsft_keycode = KC_BSPC;
         }
         register_code16(_held_fmrsft_keycode);
@@ -223,9 +232,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       return false;
     case _FMRBSL: // Former \ key: send \ if modifier held, else -
       if (record->event.pressed) {
-        if (_is_mod_held) { // Restore \ key to original function when modifier is held
+        if (_is_mod_held) {
           _held_fmrbsl_keycode = KC_BSLS;
-        } else { // Otherwise send -
+        } else {
           _held_fmrbsl_keycode = KC_MINS;
         }
         register_code16(_held_fmrbsl_keycode);
@@ -238,9 +247,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       return false;
     case _FMRMIN: // Former - key: send - if modifier held, else brightness down
       if (record->event.pressed) {
-        if (_is_mod_held) { // Restore - key to original function when modifier is held
+        if (_is_mod_held) {
           _held_fmrmin_keycode = KC_MINS;
-        } else { // Otherwise send brightness down
+        } else {
           _held_fmrmin_keycode = KC_BRMD;
         }
         register_code16(_held_fmrmin_keycode);
@@ -253,9 +262,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       return false;
     case _FMREQL: // Former = key: send = if modifier held, else brightness up
       if (record->event.pressed) {
-        if (_is_mod_held) { // Restore = key to original function when modifier is held
+        if (_is_mod_held) {
           _held_fmreql_keycode = KC_EQL;
-        } else { // Otherwise send brightness up
+        } else {
           _held_fmreql_keycode = KC_BRMU;
         }
         register_code16(_held_fmreql_keycode);
@@ -268,9 +277,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       return false;
     case _FMRBSP: // Former backspace key: send backspace if modifier held, else volume down
       if (record->event.pressed) {
-        if (_is_mod_held) { // Restore backspace key to original function when modifier is held
+        if (_is_mod_held) {
           _held_fmrbsp_keycode = KC_BSPC;
-        } else { // Otherwise send volume down
+        } else {
           _held_fmrbsp_keycode = KC_VOLD;
         }
         register_code16(_held_fmrbsp_keycode);
@@ -283,9 +292,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       return false;
     case _FMRDEL: // Former delete key: send delete if modifier held, else volume up
       if (record->event.pressed) {
-        if (_is_mod_held) { // Restore delete key to original function when modifier is held
+        if (_is_mod_held) {
           _held_fmrdel_keycode = KC_DEL;
-        } else { // Otherwise send volume up
+        } else {
           _held_fmrdel_keycode = KC_VOLU;
         }
         register_code16(_held_fmrdel_keycode);
@@ -305,7 +314,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
     default:
       if (record->event.pressed) {
-        if (_current_layer == _QUANTUM_LAYER) { // Apply meh or hyper to keycode if right or right+left spacebars are held
+        // Apply meh to keycode if right spacebar held, hyper if right+left spacebars held
+        if (_current_layer == _QUANTUM_LAYER) {
           if (_is_shift_held) {
             _held_quantum_keycode = HYPR(keycode);
           } else {
