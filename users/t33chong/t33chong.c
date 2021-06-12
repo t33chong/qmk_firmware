@@ -297,6 +297,15 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
       return false;
 
+    case _BRCENT: // Add ` {` to end of line and send enter
+      if (record->event.pressed) {
+        tap_code(KC_ESC);
+        tap_code16(LSFT(KC_A));
+        tap_code(KC_SPC);
+        tap_code16(KC_LCBR);
+        tap_code(KC_ENT);
+      }
+      return true;
     case _CLNENT: // Add ; to end of line and send enter if meh held, : if meh + shift held
       if (record->event.pressed) {
         uint16_t _keycode;

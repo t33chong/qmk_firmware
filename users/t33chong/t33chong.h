@@ -22,6 +22,7 @@ enum _keycodes {
   _FMREQL,              // Former = key: send = if modifier held, else brightness up
   _FMRBSP,              // Former backspace key: send backspace if modifier held, else volume down
   _FMRDEL,              // Former delete key: send delete if modifier held, else volume up
+  _BRCENT,              // Add ` {` to end of line and send enter
   _CLNENT,              // Add ; to end of line and send enter if meh held, : if meh + shift held
 };
 
@@ -80,7 +81,7 @@ enum _keycodes {
 
 #define _QUANTUM_MAP \
     KC_GRV,  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_MINS, KC_EQL,  KC_BSPC, KC_DEL,  \
-    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          KC_BSLS, \
+    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _BRCENT, _______,          KC_BSLS, \
     KC_ESC,  _______, _______, _______, _______, _______, _______, _______, _______, _______, _CLNENT, _______,                   _______, \
     _ALTBSP, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,          _______, \
     _______, _______, _______,          _______,          _TO_MSK,          _______,          _______, _______, _______, _______, _______
