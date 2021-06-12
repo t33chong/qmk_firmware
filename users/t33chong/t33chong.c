@@ -62,7 +62,7 @@ bool get_tapping_force_hold(uint16_t keycode, keyrecord_t *record) {
   }
 }
 
-// Vim mode user hooks
+// Vim mode user hooks: set custom state
 void insert_mode_user(void) {
   disable_vim_mode();
   rgblight_set_layer_state(_GREEN_RGBLIGHT_LAYER, false);
@@ -82,7 +82,7 @@ void visual_line_mode_user(void) {
   rgblight_set_layer_state(_YELLOW_RGBLIGHT_LAYER, true);
 }
 
-// Override Vim normal mode
+// Vim process mode user hooks: override keycodes
 uint16_t _esc_press_timer;
 bool process_normal_mode_user(uint16_t keycode, const keyrecord_t *record) {
   switch (keycode) {
@@ -106,8 +106,19 @@ bool process_normal_mode_user(uint16_t keycode, const keyrecord_t *record) {
   }
 }
 
-// Override Vim visual mode
 bool process_visual_mode_user(uint16_t keycode, const keyrecord_t *record) {
+  switch (keycode) {
+    case KC_ESC: // Set escape press timer for normal mode override
+      if (record->event.pressed) {
+        _esc_press_timer = timer_read();
+      }
+      return true;
+    default:
+      return true;
+  }
+}
+
+bool process_visual_line_mode_user(uint16_t keycode, const keyrecord_t *record) {
   switch (keycode) {
     case KC_ESC: // Set escape press timer for normal mode override
       if (record->event.pressed) {
