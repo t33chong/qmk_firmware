@@ -22,8 +22,8 @@ enum _keycodes {
   _FMREQL,              // Former = key: send = if modifier held, else brightness up
   _FMRBSP,              // Former backspace key: send backspace if modifier held, else volume down
   _FMRDEL,              // Former delete key: send delete if modifier held, else volume up
-  _BRCENT,              // Add ` {` to end of line and send enter
-  _CLNENT,              // Add ; to end of line and send enter if meh held, : if meh + shift held
+  _BRCENT,              // Add ` {` to end of line and send enter if meh+shift held, else meh+[
+  _CLNENT,              // Add ; to end of line and send enter if meh held, : if meh+shift held
 };
 
 #define _CTLESC CTL_T(KC_ESC)              // Hold for control, tap for escape
