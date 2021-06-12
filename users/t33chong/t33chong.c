@@ -128,7 +128,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   static bool _is_gui_held;
   static bool _is_shift_held;
   static bool _was_kc_grv_pressed;
-  static bool _was_meh_kc_lbrc_held;
   static uint16_t _held_fmrsft_keycode;
   static uint16_t _held_fmrbsl_keycode;
   static uint16_t _held_fmrmin_keycode;
@@ -297,42 +296,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
       }
       return false;
-
-    case _BRCENT: // Add ` {` to end of line and send enter if meh+shift held, else meh+[
-      if (record->event.pressed) {
-        if (_is_shift_held) {
-          unregister_code(KC_LSFT);
-          tap_code(KC_ESC);
-          tap_code16(LSFT(KC_A));
-          tap_code(KC_SPC);
-          tap_code16(KC_LCBR);
-          tap_code(KC_ENT);
-        } else {
-          register_code16(MEH(KC_LBRC));
-          _was_meh_kc_lbrc_held = true;
-        }
-      } else {
-        if (_was_meh_kc_lbrc_held) {
-          unregister_code16(MEH(KC_LBRC));
-          _was_meh_kc_lbrc_held = false;
-        }
-      }
-      return true;
-    case _CLNENT: // Add ; to end of line and send enter if meh held, : if meh+shift held
-      if (record->event.pressed) {
-        uint16_t _keycode;
-        if (_is_shift_held) {
-          _keycode = KC_COLN;
-          unregister_code(KC_LSFT);
-        } else {
-          _keycode = KC_SCLN;
-        }
-        tap_code(KC_ESC);
-        tap_code16(LSFT(KC_A));
-        tap_code16(_keycode);
-        tap_code(KC_ENT);
-      }
-      return true;
 
     // Exempt special keys on quantum layer from meh/hyper passthrough
     case _ALTBSP:
