@@ -2,10 +2,6 @@
 #include "qmk-vim/src/vim.h"
 #include "qmk-vim/src/modes.h"
 
-// TODO
-// meh + ; sends KC_ESC LSFT(KC_A) KC_SCLN KC_ENT
-// hyper + ; sends KC_ESC LSFT(KC_A) KC_CLN KC_ENT
-
 enum _rgblight_layer_indices {
   _CYAN_RGBLIGHT_LAYER,
   _GREEN_RGBLIGHT_LAYER,
@@ -171,7 +167,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
       return true;
 
-    case _RESETT:
+    case _RESETT: // Restart into bootloader after hold timeout
       if (record->event.pressed) {
           _reset_hold_timer = timer_read();
       } else {
@@ -180,13 +176,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
       }
       return false;
-    case _CLRKBD:
+    case _CLRKBD: // Clear all held keycodes
       if (record->event.pressed) {
         clear_keyboard();
         layer_move(_DEFAULT_LAYER);
       }
       return false;
-    case _UNDSCR:
+    case _UNDSCR: // Send _
       if (record->event.pressed) {
         register_code16(S(KC_MINS));
       } else {
@@ -195,7 +191,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       return false;
 
     // Context-specific remapping of various keys
-    case _VIMGRV:
+    case _VIMGRV: // Former ` key: send ` if modifier held, else enter Vim mode
       if (record->event.pressed) {
         if (_is_mod_held) {
           register_code(KC_GRV);
@@ -210,7 +206,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
       }
       return false;
-    case _FMRSFT:
+    case _FMRSFT: // Former left shift key: send forward delete if shift held, or shift if alt/gui held, else backspace
       if (record->event.pressed) {
         if (_is_alt_held || _is_gui_held) { // Restore left shift key to original function when alt or gui is held
           _held_fmrsft_keycode = KC_LSFT;
@@ -225,7 +221,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
       }
       return false;
-    case _FMRBSL:
+    case _FMRBSL: // Former \ key: send \ if modifier held, else -
       if (record->event.pressed) {
         if (_is_mod_held) { // Restore \ key to original function when modifier is held
           _held_fmrbsl_keycode = KC_BSLS;
@@ -240,7 +236,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
       }
       return false;
-    case _FMRMIN:
+    case _FMRMIN: // Former - key: send - if modifier held, else brightness down
       if (record->event.pressed) {
         if (_is_mod_held) { // Restore - key to original function when modifier is held
           _held_fmrmin_keycode = KC_MINS;
@@ -255,7 +251,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
       }
       return false;
-    case _FMREQL:
+    case _FMREQL: // Former = key: send = if modifier held, else brightness up
       if (record->event.pressed) {
         if (_is_mod_held) { // Restore = key to original function when modifier is held
           _held_fmreql_keycode = KC_EQL;
@@ -270,7 +266,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
       }
       return false;
-    case _FMRBSP:
+    case _FMRBSP: // Former backspace key: send backspace if modifier held, else volume down
       if (record->event.pressed) {
         if (_is_mod_held) { // Restore backspace key to original function when modifier is held
           _held_fmrbsp_keycode = KC_BSPC;
@@ -285,7 +281,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
       }
       return false;
-    case _FMRDEL:
+    case _FMRDEL: // Former delete key: send delete if modifier held, else volume up
       if (record->event.pressed) {
         if (_is_mod_held) { // Restore delete key to original function when modifier is held
           _held_fmrdel_keycode = KC_DEL;
@@ -300,6 +296,22 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
       }
       return false;
+
+    case _CLNENT: // Add ; to end of line and send enter if meh held, : if meh + shift held
+      if (record->event.pressed) {
+        uint16_t _keycode;
+        if (_is_shift_held) {
+          _keycode = KC_COLN;
+          unregister_code(KC_LSFT);
+        } else {
+          _keycode = KC_SCLN;
+        }
+        tap_code(KC_ESC);
+        tap_code16(LSFT(KC_A));
+        tap_code16(_keycode);
+        tap_code(KC_ENT);
+      }
+      return true;
 
     // Exempt special keys on quantum layer from meh/hyper passthrough
     case _ALTBSP:
