@@ -2,6 +2,10 @@
 #include "qmk-vim/src/vim.h"
 #include "qmk-vim/src/modes.h"
 
+// TODO
+// meh + ; sends KC_ESC LSFT(KC_A) KC_SCLN KC_ENT
+// hyper + ; sends KC_ESC LSFT(KC_A) KC_CLN KC_ENT
+
 enum _rgblight_layer_indices {
   _CYAN_RGBLIGHT_LAYER,
   _GREEN_RGBLIGHT_LAYER,
@@ -76,12 +80,40 @@ void visual_line_mode_user(void) {
   rgblight_set_layer_state(_YELLOW_RGBLIGHT_LAYER, true);
 }
 
+uint16_t _esc_press_timer;
+
 bool process_normal_mode_user(uint16_t keycode, const keyrecord_t *record) {
-  if (record->event.pressed && keycode == KC_A) {
-    insert_mode();
-    return false;
+  switch (keycode) {
+    case KC_ESC: // Double tap escape to exit Vim mode
+      if (record->event.pressed) {
+        if (timer_elapsed(_esc_press_timer) < TAPPING_TERM) {
+          insert_mode();
+          return false;
+        }
+        _esc_press_timer = timer_read();
+      }
+      return true;
+    case KC_A:
+      if (record->event.pressed) {
+        insert_mode();
+        return false;
+      }
+      return true;
+    default:
+      return true;
   }
-  return true;
+}
+
+bool process_visual_mode_user(uint16_t keycode, const keyrecord_t *record) {
+  switch (keycode) {
+    case KC_ESC:
+      if (record->event.pressed) {
+        _esc_press_timer = timer_read();
+      }
+      return true;
+    default:
+      return true;
+  }
 }
 
 __attribute__ ((weak))
@@ -94,12 +126,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     return false;
   }
 
-  static uint32_t _reset_hold_timer;
+  static uint16_t _reset_hold_timer;
   static bool _is_alt_held;
   static bool _is_ctrl_held;
   static bool _is_gui_held;
   static bool _is_shift_held;
-  static bool _was_kc_grv_held;
+  static bool _was_kc_grv_pressed;
   static uint16_t _held_fmrsft_keycode;
   static uint16_t _held_fmrbsl_keycode;
   static uint16_t _held_fmrmin_keycode;
@@ -141,9 +173,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
     case _RESETT:
       if (record->event.pressed) {
-          _reset_hold_timer = timer_read32();
+          _reset_hold_timer = timer_read();
       } else {
-        if (timer_elapsed32(_reset_hold_timer) >= 500) {
+        if (timer_elapsed(_reset_hold_timer) >= 500) {
           reset_keyboard();
         }
       }
@@ -167,14 +199,14 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       if (record->event.pressed) {
         if (_is_mod_held) {
           register_code(KC_GRV);
-          _was_kc_grv_held = true;
+          _was_kc_grv_pressed = true;
         } else {
           enable_vim_mode();
         }
       } else {
-        if (_was_kc_grv_held) {
+        if (_was_kc_grv_pressed) {
           unregister_code(KC_GRV);
-          _was_kc_grv_held = false;
+          _was_kc_grv_pressed = false;
         }
       }
       return false;
