@@ -11,7 +11,7 @@ enum _layers {
 };
 
 enum _rgblight_layer_indices {
-  _CYAN_RGBLIGHT_LAYER,
+  _CYAN_RGBLIGHT_LAYER = 0,
   _GREEN_RGBLIGHT_LAYER,
   _YELLOW_RGBLIGHT_LAYER,
   _RED_RGBLIGHT_LAYER,
