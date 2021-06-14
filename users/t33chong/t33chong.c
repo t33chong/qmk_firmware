@@ -95,8 +95,7 @@ bool process_normal_mode_user(uint16_t keycode, const keyrecord_t *record) {
       }
       return true;
     case KC_W: // Jump to beginning of next word
-    case LSFT(KC_W):
-      /* set_visual_direction(V_FORWARD); */
+    case S(KC_W):
       if (record->event.pressed) {
         register_code16(VIM_W);
       } else {
@@ -112,18 +111,13 @@ bool process_normal_mode_user(uint16_t keycode, const keyrecord_t *record) {
 
 bool process_visual_mode_user(uint16_t keycode, const keyrecord_t *record) {
   switch (keycode) {
-    /* case KC_I: // Exit Vim mode */
-    /*   if (record->event.pressed) { */
-    /*     insert_mode(); */
-    /*   } */
-    /*   return false; */
     case KC_ESC: // Set escape press timer for normal mode override
       if (record->event.pressed) {
         _esc_press_timer = timer_read();
       }
       return true;
     case KC_W: // Jump to beginning of next word
-    case LSFT(KC_W):
+    case S(KC_W):
       set_visual_direction(V_FORWARD);
       if (record->event.pressed) {
         register_code16(S(VIM_W));
@@ -140,11 +134,6 @@ bool process_visual_mode_user(uint16_t keycode, const keyrecord_t *record) {
 
 bool process_visual_line_mode_user(uint16_t keycode, const keyrecord_t *record) {
   switch (keycode) {
-    /* case KC_I: // Exit Vim mode */
-    /*   if (record->event.pressed) { */
-    /*     insert_mode(); */
-    /*   } */
-    /*   return false; */
     case KC_ESC: // Set escape press timer for normal mode override
       if (record->event.pressed) {
         _esc_press_timer = timer_read();
@@ -236,14 +225,17 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       return false;
 
     // Context-specific remapping of various keys
-    case _VIMGRV: // Former ` key: send ` if modifier held, else enter Vim mode
+    case _VIMGRV: // Former ` key: send ` if modifier held, else toggle Vim mode
       if (record->event.pressed) {
         if (_is_mod_held) {
           register_code(KC_GRV);
           _was_kc_grv_pressed = true;
         } else {
-          /* enable_vim_mode(); */
-          toggle_vim_mode();
+          if (vim_mode_enabled()) {
+            insert_mode();
+          } else {
+            enable_vim_mode();
+          }
         }
       } else {
         if (_was_kc_grv_pressed) {
