@@ -1,6 +1,7 @@
 #include "t33chong.h"
 #include "qmk-vim/src/vim.h"
 #include "qmk-vim/src/modes.h"
+#include "qmk-vim/src/motions.h"
 
 // Indicate layers with RGB underglow
 const rgblight_segment_t PROGMEM _cyan_rgblight_layer[] = _rgb_all(HSV_CYAN);
@@ -93,6 +94,17 @@ bool process_normal_mode_user(uint16_t keycode, const keyrecord_t *record) {
         return false;
       }
       return true;
+    case KC_W: // Jump to beginning of next word
+    case LSFT(KC_W):
+      /* set_visual_direction(V_FORWARD); */
+      if (record->event.pressed) {
+        register_code16(VIM_W);
+      } else {
+        unregister_code16(VIM_W);
+        tap_code16(VIM_W);
+        tap_code16(VIM_B);
+      }
+      return false;
     default:
       return true;
   }
@@ -100,16 +112,27 @@ bool process_normal_mode_user(uint16_t keycode, const keyrecord_t *record) {
 
 bool process_visual_mode_user(uint16_t keycode, const keyrecord_t *record) {
   switch (keycode) {
-    case KC_I: // Exit Vim mode
-      if (record->event.pressed) {
-        insert_mode();
-      }
-      return false;
+    /* case KC_I: // Exit Vim mode */
+    /*   if (record->event.pressed) { */
+    /*     insert_mode(); */
+    /*   } */
+    /*   return false; */
     case KC_ESC: // Set escape press timer for normal mode override
       if (record->event.pressed) {
         _esc_press_timer = timer_read();
       }
       return true;
+    case KC_W: // Jump to beginning of next word
+    case LSFT(KC_W):
+      set_visual_direction(V_FORWARD);
+      if (record->event.pressed) {
+        register_code16(S(VIM_W));
+      } else {
+        unregister_code16(S(VIM_W));
+        tap_code16(S(VIM_W));
+        tap_code16(S(VIM_B));
+      }
+      return false;
     default:
       return true;
   }
@@ -117,11 +140,11 @@ bool process_visual_mode_user(uint16_t keycode, const keyrecord_t *record) {
 
 bool process_visual_line_mode_user(uint16_t keycode, const keyrecord_t *record) {
   switch (keycode) {
-    case KC_I: // Exit Vim mode
-      if (record->event.pressed) {
-        insert_mode();
-      }
-      return false;
+    /* case KC_I: // Exit Vim mode */
+    /*   if (record->event.pressed) { */
+    /*     insert_mode(); */
+    /*   } */
+    /*   return false; */
     case KC_ESC: // Set escape press timer for normal mode override
       if (record->event.pressed) {
         _esc_press_timer = timer_read();
@@ -219,7 +242,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
           register_code(KC_GRV);
           _was_kc_grv_pressed = true;
         } else {
-          enable_vim_mode();
+          /* enable_vim_mode(); */
+          toggle_vim_mode();
         }
       } else {
         if (_was_kc_grv_pressed) {
