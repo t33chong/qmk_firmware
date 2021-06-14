@@ -100,6 +100,11 @@ bool process_normal_mode_user(uint16_t keycode, const keyrecord_t *record) {
 
 bool process_visual_mode_user(uint16_t keycode, const keyrecord_t *record) {
   switch (keycode) {
+    case KC_I: // Exit Vim mode
+      if (record->event.pressed) {
+        insert_mode();
+      }
+      return false;
     case KC_ESC: // Set escape press timer for normal mode override
       if (record->event.pressed) {
         _esc_press_timer = timer_read();
@@ -112,6 +117,11 @@ bool process_visual_mode_user(uint16_t keycode, const keyrecord_t *record) {
 
 bool process_visual_line_mode_user(uint16_t keycode, const keyrecord_t *record) {
   switch (keycode) {
+    case KC_I: // Exit Vim mode
+      if (record->event.pressed) {
+        insert_mode();
+      }
+      return false;
     case KC_ESC: // Set escape press timer for normal mode override
       if (record->event.pressed) {
         _esc_press_timer = timer_read();
