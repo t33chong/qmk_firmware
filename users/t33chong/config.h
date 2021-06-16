@@ -15,3 +15,4 @@
 #define VIM_G_MOTIONS
 #define VIM_PASTE_BEFORE
 #define VIM_REPLACE
+#define VIM_W_BEGINNING_OF_WORD

@@ -94,16 +94,6 @@ bool process_normal_mode_user(uint16_t keycode, const keyrecord_t *record) {
         return false;
       }
       return true;
-    /* case KC_W: // Jump to beginning of next word */
-    /* case S(KC_W): */
-    /*   if (record->event.pressed) { */
-    /*     register_code16(VIM_W); */
-    /*   } else { */
-    /*     unregister_code16(VIM_W); */
-    /*     tap_code16(VIM_W); */
-    /*     tap_code16(VIM_B); */
-    /*   } */
-    /*   return false; */
     default:
       return true;
   }
@@ -116,17 +106,6 @@ bool process_visual_mode_user(uint16_t keycode, const keyrecord_t *record) {
         _esc_press_timer = timer_read();
       }
       return true;
-    /* case KC_W: // Jump to beginning of next word */
-    /* case S(KC_W): */
-    /*   set_visual_direction(V_FORWARD); */
-    /*   if (record->event.pressed) { */
-    /*     register_code16(S(VIM_W)); */
-    /*   } else { */
-    /*     unregister_code16(S(VIM_W)); */
-    /*     tap_code16(S(VIM_W)); */
-    /*     tap_code16(S(VIM_B)); */
-    /*   } */
-    /*   return false; */
     default:
       return true;
   }
