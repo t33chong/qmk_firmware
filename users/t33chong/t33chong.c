@@ -1,3 +1,4 @@
+// TODO: try reading system time and setting brightness based on it instead of using rgblight layers
 #include "t33chong.h"
 #include "qmk-vim/src/vim.h"
 #include "qmk-vim/src/modes.h"
@@ -52,6 +53,17 @@ bool get_tapping_force_hold(uint16_t keycode, keyrecord_t *record) {
       return true;
     default:
       return false;
+  }
+}
+
+// Number of milliseconds before a pressed key is registered as held
+uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
+  switch (keycode) {
+    case _CTLESC:
+    case _QUASPC:
+      return 120;
+    default:
+      return TAPPING_TERM;
   }
 }
 
