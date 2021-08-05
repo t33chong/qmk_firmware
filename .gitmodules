@@ -21,3 +21,6 @@
 [submodule "users/t33chong/qmk-vim"]
 	path = users/t33chong/qmk-vim
 	url = https://github.com/andrewjrae/qmk-vim.git
+[submodule "keyboards/keebio/fourier/keymaps/t33chong_/qmk-vim"]
+	path = keyboards/keebio/fourier/keymaps/t33chong_/qmk-vim
+	url = https://github.com/andrewjrae/qmk-vim.git

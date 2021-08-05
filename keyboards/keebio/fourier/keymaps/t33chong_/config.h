@@ -1,0 +1,16 @@
+#pragma once
+
+#undef RGBLIGHT_ANIMATIONS
+#undef RGBLED_NUM
+#define RGBLED_NUM 0
+
+#define SPLIT_USB_DETECT
+#define SPLIT_MODS_ENABLE
+#define SPLIT_TRANSPORT_MIRROR
+
+#define VIM_FOR_MAC
+#define BETTER_VISUAL_MODE
+#define VIM_G_MOTIONS
+#define VIM_PASTE_BEFORE
+#define VIM_REPLACE
+#define VIM_W_BEGINNING_OF_WORD
