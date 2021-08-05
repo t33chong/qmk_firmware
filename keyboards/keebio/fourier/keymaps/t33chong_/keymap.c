@@ -184,12 +184,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   static bool _is_gunmin_held;
   static bool _is_left_held;
   static bool _is_right_held;
-  static uint16_t _pressed_quantum_keycode;
-  static uint16_t _pressed_lparen_keycode;
-  static uint16_t _pressed_rparen_keycode;
-  static uint16_t _pressed_bakspc_keycode;
-  static uint16_t _pressed_updown_keycode;
-  static uint16_t _pressed_numerals_keycode;
+  static uint16_t _pressed_quantum_keycode = _NULVAL;
+  static uint16_t _pressed_lparen_keycode = _NULVAL;
+  static uint16_t _pressed_rparen_keycode = _NULVAL;
+  static uint16_t _pressed_bakspc_keycode = _NULVAL;
+  static uint16_t _pressed_updown_keycode = _NULVAL;
+  static uint16_t _pressed_numerals_keycode = _NULVAL;
   static uint16_t _ctlesc_press_timer;
 
   switch (keycode) {
