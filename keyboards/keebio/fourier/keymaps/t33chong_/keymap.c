@@ -3,8 +3,6 @@
 #include "qmk-vim/src/modes.h"
 #include "qmk-vim/src/motions.h"
 
-#include "print.h"
-
 #define LAYOUT_t33chong( \
     LA1, LA2, LA3, LA4, LA5, LA6, RA1, RA2, RA3, RA4, RA5, RA6, RA7, \
     LB1, LB2, LB3, LB4, LB5, LB6,      RB1, RB2, RB3, RB4, RB5, RB7, \
@@ -33,11 +31,10 @@ enum _layers {
 enum _keycodes {
   _NULVAL = SAFE_RANGE, // Dummy value used to indicate that no key is currently held
   _UNDSCR,              // Send _
-  _VIMGRV,              // Former ` key: send ` if modifier held, else enter Vim mode
-  _LPASFT,              // Former left shift key: send shift if alt/gui held, else (
-  _LPAREN,
-  _RPAREN,
-  _BAKSPC,
+  _LPAREN,              // (, or [ if shift is held, or shift if gui/alt are held
+  _RPAREN,              // ), or ] if shift is held
+  _BAKSPC,              // Backspace, or alt+backspace if shift is held
+  _UPDOWN,              // If left+right are held, then up; else down
 };
 
 #define _CTLESC CTL_T(KC_ESC)                // Hold for control, tap for escape
@@ -54,17 +51,11 @@ enum _keycodes {
 #define _is_mod_held (_is_alt_held || _is_ctrl_held || _is_gui_held || _is_shift_held)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-  /* [_DEFAULT_LAYER] = LAYOUT_t33chong( */
-  /*   KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    _LPAREN, _RPAREN, */
-  /*   _CTLESC, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,             KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT, */
-  /*   KC_EQL,  KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,             KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_ENT, */
-  /*   _MO_FUN, KC_LALT, KC_LGUI, _GUNMIN, KC_LSFT, _MO_NUM,          KC_BSPC, _QUASPC, _UNDSCR, KC_LEFT, KC_UP,   KC_RGHT // TODO: arrows */
-  /* ), */
   [_DEFAULT_LAYER] = LAYOUT_t33chong(
     KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_QUOT, KC_EQL,
     _CTLESC, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,             KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_ENT,
     _LPAREN, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,             KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, _RPAREN,
-    _MO_FUN, KC_LALT, KC_LGUI, _GUNMIN, KC_LSFT, _MO_NUM,          _BAKSPC, _QUASPC, _UNDSCR, KC_LEFT, KC_UP,   KC_RGHT // TODO: arrows
+    _MO_FUN, KC_LALT, KC_LGUI, _GUNMIN, KC_LSFT, _MO_NUM,          _BAKSPC, _QUASPC, _UNDSCR, KC_LEFT, _UPDOWN, KC_RGHT
   ),
   [_NUMERALS_LAYER] = LAYOUT_t33chong(
     KC_TILD, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC, KC_CIRC, KC_AMPR, KC_ASTR, KC_BSLS, KC_PIPE, _______, _______,
@@ -114,7 +105,7 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
     case _CTLESC:
     case _QUASPC:
-      return 100;
+      return 120;
     default:
       return TAPPING_TERM;
   }
@@ -182,8 +173,6 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 
 // Macros
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-  uprintf("KL: kc: %u, col: %u, row: %u, pressed: %u\n", keycode, record->event.key.col, record->event.key.row, record->event.pressed);
-
   if (!process_vim_mode(keycode, record)) {
     return false;
   }
@@ -193,11 +182,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   static bool _is_gui_held;
   static bool _is_shift_held;
   static bool _is_gunmin_held;
-  static uint16_t _pressed_fmrsft_keycode;
+  static bool _is_left_held;
+  static bool _is_right_held;
   static uint16_t _pressed_quantum_keycode;
   static uint16_t _pressed_lparen_keycode;
   static uint16_t _pressed_rparen_keycode;
   static uint16_t _pressed_bakspc_keycode;
+  static uint16_t _pressed_updown_keycode;
   static uint16_t _pressed_numerals_keycode;
   static uint16_t _ctlesc_press_timer;
 
@@ -216,15 +207,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
       }
       return true;
-    /* case KC_ESC: */
-    /*   if (record->event.pressed) { */
-    /*     if (_is_shift_held) { */
-    /*       unregister_code(KC_LSFT); */
-    /*       enable_vim_mode(); */
-    /*       return false; */
-    /*     } */
-    /*   } */
-    /*   return true; */
     case KC_LALT:
       if (record->event.pressed) {
         _is_alt_held = true;
@@ -232,13 +214,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         _is_alt_held = false;
       }
       return true;
-    /* case KC_LCTL: // TODO: does this set _is_ctrl_held? */
-    /*   if (record->event.pressed) { */
-    /*     _is_ctrl_held = true; */
-    /*   } else { */
-    /*     _is_ctrl_held = false; */
-    /*   } */
-    /*   return true; */
     case KC_LGUI:
       if (record->event.pressed) {
         _is_gui_held = true;
@@ -260,6 +235,43 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         _is_gunmin_held = false;
       }
       return true;
+    case KC_LEFT:
+      if (record->event.pressed) {
+        _is_left_held = true;
+        if (_is_right_held) {
+          unregister_code(KC_RGHT);
+          return false;
+        }
+      } else {
+        _is_left_held = false;
+      }
+      return true;
+    case KC_RGHT:
+      if (record->event.pressed) {
+        _is_right_held = true;
+        if (_is_left_held) {
+          unregister_code(KC_LEFT);
+          return false;
+        }
+      } else {
+        _is_right_held = false;
+      }
+      return true;
+    case _UPDOWN: // If left+right are held, then up; else down
+      if (record->event.pressed) {
+        if (_is_left_held && _is_right_held) {
+          _pressed_updown_keycode = KC_UP;
+        } else {
+          _pressed_updown_keycode = KC_DOWN;
+        }
+        register_code(_pressed_updown_keycode);
+      } else {
+        if (_pressed_updown_keycode != _NULVAL) {
+          unregister_code(_pressed_updown_keycode);
+          _pressed_updown_keycode = _NULVAL;
+        }
+      }
+      return false;
 
     case _BAKSPC:
       if (record->event.pressed) {
@@ -289,45 +301,17 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
       return false;
 
-    // Context-specific remapping of various keys
-    // FIXME
-    case _LPASFT: // Former left shift key: send shift if alt/gui held, else (
-      if (record->event.pressed) {
-        if (_is_alt_held || _is_gui_held) {
-          _pressed_fmrsft_keycode = KC_LSFT;
-        } else {
-          _pressed_fmrsft_keycode = KC_BSPC;
-        }
-        register_code16(_pressed_fmrsft_keycode);
-      } else {
-        if (_pressed_fmrsft_keycode != _NULVAL) {
-          unregister_code16(_pressed_fmrsft_keycode);
-          _pressed_fmrsft_keycode = _NULVAL;
-        }
-      }
-      return false;
-
     case _LPAREN:
       if (record->event.pressed) {
-        if (_is_shift_held) {
+        if (_is_alt_held || _is_gui_held) { // Send shift if alt/gui held, else (
+          _pressed_lparen_keycode = KC_LSFT;
+        } else if (_is_shift_held) {
           _pressed_lparen_keycode = KC_LBRC;
           unregister_code(KC_LSFT);
         } else {
           _pressed_lparen_keycode = KC_LPRN;
         }
         register_code16(_pressed_lparen_keycode);
-        /* if (_is_shift_held) { */
-        /*   _pressed_lparen_keycode = KC_LBRC; */
-        /*   unregister_code(KC_LSFT); */
-        /*   register_code16(_pressed_lparen_keycode); */
-        /*   register_code(KC_LSFT); */
-        /* } else { */
-        /*   _pressed_lparen_keycode = KC_LPRN; */
-        /*   register_code16(_pressed_lparen_keycode); */
-        /* } */
-        /* if (_is_shift_held) { */
-        /*   register_code(KC_LSFT); */
-        /* } */
       } else {
         if (_pressed_lparen_keycode != _NULVAL) {
           unregister_code16(_pressed_lparen_keycode);
