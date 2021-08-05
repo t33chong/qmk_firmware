@@ -39,7 +39,7 @@ enum _keycodes {
 
 #define _CTLESC CTL_T(KC_ESC)                // Hold for control, tap for escape
 #define _QUASPC LT(_QUANTUM_LAYER, KC_SPC)   // Hold for quantum layer, tap for space
-#define _GUNMIN LT(_NUMERALS_LAYER, KC_MINS) // Hold for gui+number, tap for minus
+#define _GNUMIN LT(_NUMERALS_LAYER, KC_MINS) // Hold for gui+number, tap for minus
 #define _MO_FUN MO(_FUNCTION_LAYER)          // Hold for function layer
 #define _MO_NUM MO(_NUMERALS_LAYER)          // Hold for numerals layer
 #define _TO_DEF TO(_DEFAULT_LAYER)           // Activate default layer
@@ -55,31 +55,31 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_QUOT, KC_EQL,
     _CTLESC, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,             KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_ENT,
     _LPAREN, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,             KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, _RPAREN,
-    _MO_FUN, KC_LALT, KC_LGUI, _GUNMIN, KC_LSFT, _MO_NUM,          _BAKSPC, _QUASPC, _UNDSCR, KC_LEFT, _UPDOWN, KC_RGHT
+    _MO_FUN, KC_LALT, KC_LGUI, _GNUMIN, KC_LSFT, _MO_NUM,          _BAKSPC, _QUASPC, _UNDSCR, KC_LEFT, _UPDOWN, KC_RGHT
   ),
   [_NUMERALS_LAYER] = LAYOUT_t33chong(
-    KC_TILD, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC, KC_CIRC, KC_AMPR, KC_ASTR, KC_BSLS, KC_PIPE, _______, _______,
-    KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,             KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    _______,
+    KC_TILD, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC, KC_CIRC, KC_AMPR, KC_ASTR, KC_BSLS, KC_PIPE, KC_MINS, KC_PLUS,
+    KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,             KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_COLN,
     KC_LCBR, _HF(1),  _HF(2),  _HF(3),  _HF(4),  _HF(5),           _HF(6),  _HF(7),  _HF(8),  _HF(9),  _HF(10), KC_RCBR,
     _______, _______, _______, _______, _______, _______,          _______, _______, _______, _______, _______, _______
   ),
   [_MOUSEKEYS_LAYER] = LAYOUT_t33chong(
-    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
-    _______, _______, _______, _______, _______, _______,          _______, _______, _______, _______, _______, _______,
-    _______, _______, _______, _______, _______, _______,          _______, _______, _______, _______, _______, _______,
-    _______, _______, _______, _______, _______, _______,          _______, _______, _______, _______, _______, _______
+    XXXXXXX, XXXXXXX, KC_WBAK, KC_MS_U, KC_WFWD, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+    _TO_DEF, XXXXXXX, KC_MS_L, KC_MS_D, KC_MS_R, XXXXXXX,          KC_WH_L, KC_WH_D, KC_WH_U, KC_WH_R, XXXXXXX, XXXXXXX,
+    KC_LSFT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,          XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+    KC_LCTL, KC_LALT, KC_LGUI, XXXXXXX, KC_BTN2, KC_BTN4,          KC_BTN3, KC_BTN1, KC_BTN5, XXXXXXX, XXXXXXX, XXXXXXX
   ),
   [_FUNCTION_LAYER] = LAYOUT_t33chong(
-    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
-    _______, _______, _______, _______, _______, _______,          _______, _______, _______, _______, _______, _______,
-    _______, _______, _______, _______, _______, _______,          _______, _______, _______, _______, _______, _______,
-    _______, _______, _______, _______, _______, _______,          _______, _______, _______, _______, _______, _______
+    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+    XXXXXXX, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,            KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  XXXXXXX,
+    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,          XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+    XXXXXXX, _PUSHTT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,          XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
   ),
   [_QUANTUM_LAYER] = LAYOUT_t33chong(
     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
+    KC_ESC,  _______, _______, _______, _______, _______,          _______, _______, _______, _______, _______, _______,
     _______, _______, _______, _______, _______, _______,          _______, _______, _______, _______, _______, _______,
-    _______, _______, _______, _______, _______, _______,          _______, _______, _______, _______, _______, _______,
-    _______, _______, _______, _______, _______, _______,          _______, _______, _______, _______, _______, _______
+    _______, _______, _______, _______, _______, _TO_MSK,          _______, _______, _______, _______, _______, _______
   ),
   /* [_LAYER] = LAYOUT_t33chong( */
   /*   _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, */
@@ -104,7 +104,7 @@ bool get_tapping_force_hold(uint16_t keycode, keyrecord_t *record) {
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
     case _CTLESC:
-    case _QUASPC:
+    /* case _QUASPC: */
       return 120;
     default:
       return TAPPING_TERM;
@@ -181,7 +181,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   /* static bool _is_ctrl_held; */
   static bool _is_gui_held;
   static bool _is_shift_held;
-  static bool _is_gunmin_held;
+  static bool _is_gnumin_held;
   static bool _is_left_held;
   static bool _is_right_held;
   static uint16_t _pressed_quantum_keycode = _NULVAL;
@@ -228,11 +228,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         _is_shift_held = false;
       }
       return true;
-    case _GUNMIN:
+    case _GNUMIN:
       if (record->event.pressed) {
-        _is_gunmin_held = true;
+        _is_gnumin_held = true;
       } else {
-        _is_gunmin_held = false;
+        _is_gnumin_held = false;
       }
       return true;
     case KC_LEFT:
@@ -359,7 +359,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             register_code16(_pressed_quantum_keycode);
             return false;
           case _NUMERALS_LAYER:
-            if (_is_gunmin_held) {
+            if (_is_gnumin_held) {
               _pressed_numerals_keycode = G(keycode);
               register_code16(_pressed_numerals_keycode);
               return false;
