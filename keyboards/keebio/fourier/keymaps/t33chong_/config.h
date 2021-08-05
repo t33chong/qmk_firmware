@@ -1,5 +1,15 @@
 #pragma once
 
+#define IGNORE_MOD_TAP_INTERRUPT
+#define TAPPING_FORCE_HOLD_PER_KEY
+#define TAPPING_TERM_PER_KEY
+
+/* #define MOUSEKEY_INTERVAL 16 */
+/* #define MOUSEKEY_DELAY 0 */
+/* #define MOUSEKEY_TIME_TO_MAX 60 */
+/* #define MOUSEKEY_MAX_SPEED 7 */
+/* #define MOUSEKEY_WHEEL_DELAY 0 */
+
 #undef RGBLIGHT_ANIMATIONS
 #undef RGBLED_NUM
 #define RGBLED_NUM 0
