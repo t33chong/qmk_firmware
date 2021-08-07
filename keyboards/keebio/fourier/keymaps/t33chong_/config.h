@@ -11,8 +11,12 @@
 #define MOUSEKEY_WHEEL_DELAY 0
 
 #undef RGBLIGHT_ANIMATIONS
+#undef RGBLED_SPLIT
+/* #define RGBLED_SPLIT { 1, 1 } */
 #undef RGBLED_NUM
-#define RGBLED_NUM 0
+#define RGBLED_NUM 2
+#define RGBLIGHT_LAYERS
+#define RGBLIGHT_SLEEP
 
 #define SPLIT_USB_DETECT
 #define SPLIT_MODS_ENABLE
