@@ -241,17 +241,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   static uint16_t _pressed_bakspc_keycode = _NULVAL;
   static uint16_t _pressed_updown_keycode = _NULVAL;
   static uint16_t _pressed_numerals_keycode = _NULVAL;
-  static uint16_t _ctlesc_press_timer;
 
   switch (keycode) {
     // Set held modifier state
     case _CTLESC:
       if (record->event.pressed) {
         /* _is_ctrl_held = true; */
-        _ctlesc_press_timer = timer_read();
-      } else {
-        /* _is_ctrl_held = false; */
-        if (_is_shift_held && timer_elapsed(_ctlesc_press_timer) < TAPPING_TERM) {
+        if (_is_shift_held) {
           clear_mods();
           if (vim_mode_enabled()) {
             insert_mode();
@@ -260,6 +256,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
           }
           return false;
         }
+      /* } else { */
+      /*   _is_ctrl_held = false; */
       }
       return true;
     case KC_LALT:
