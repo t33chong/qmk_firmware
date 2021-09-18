@@ -73,8 +73,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_FUNCTION_LAYER] = LAYOUT_t33chong(
     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
     _CLRKBD, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,            KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  XXXXXXX,
-    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,          XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-    XXXXXXX, _PUSHTT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,          XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
+    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,          XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_BRMU, XXXXXXX,
+    XXXXXXX, _PUSHTT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,          XXXXXXX, XXXXXXX, XXXXXXX, KC_VOLD, KC_BRMD, KC_VOLU
   ),
   [_QUANTUM_LAYER] = LAYOUT_t33chong(
     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
@@ -92,26 +92,27 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 // Indicate layers with RGB underglow
 enum _rgblight_layer_indices {
-  _RED_RGBLIGHT_LAYER,
-  _GREEN_RGBLIGHT_LAYER,
-  _YELLOW_RGBLIGHT_LAYER,
-  _CYAN_RGBLIGHT_LAYER,
-  _MAGENTA_RGBLIGHT_LAYER
+  _DEFAULT_RGBLIGHT_LAYER,
+  _VIM_NORMAL_RGBLIGHT_LAYER,
+  _VIM_VISUAL_RGBLIGHT_LAYER,
+  _MOUSEKEYS_RGBLIGHT_LAYER,
+  _FUNCTION_RGBLIGHT_LAYER
 };
 
 #define _rgb_all(color) RGBLIGHT_LAYER_SEGMENTS({0, RGBLED_NUM, color})
-const rgblight_segment_t PROGMEM _red_rgblight_layer[] = _rgb_all(HSV_RED);
-const rgblight_segment_t PROGMEM _green_rgblight_layer[] = _rgb_all(HSV_GREEN);
-const rgblight_segment_t PROGMEM _yellow_rgblight_layer[] = _rgb_all(HSV_YELLOW);
-const rgblight_segment_t PROGMEM _cyan_rgblight_layer[] = _rgb_all(HSV_CYAN);
-const rgblight_segment_t PROGMEM _magenta_rgblight_layer[] = _rgb_all(HSV_MAGENTA);
+#define _HSV_DIM_WHITE 0, 0, 63
+const rgblight_segment_t PROGMEM _default_rgblight_layer[] = _rgb_all(_HSV_DIM_WHITE);
+const rgblight_segment_t PROGMEM _vim_normal_rgblight_layer[] = _rgb_all(HSV_GREEN);
+const rgblight_segment_t PROGMEM _vim_visual_rgblight_layer[] = _rgb_all(HSV_YELLOW);
+const rgblight_segment_t PROGMEM _mousekeys_rgblight_layer[] = _rgb_all(HSV_CYAN);
+const rgblight_segment_t PROGMEM _function_rgblight_layer[] = _rgb_all(HSV_RED);
 
 const rgblight_segment_t* const PROGMEM _rgblight_layers[] = RGBLIGHT_LAYERS_LIST(
-  _red_rgblight_layer,
-  _green_rgblight_layer,
-  _yellow_rgblight_layer,
-  _cyan_rgblight_layer,
-  _magenta_rgblight_layer
+  _default_rgblight_layer,
+  _vim_normal_rgblight_layer,
+  _vim_visual_rgblight_layer,
+  _mousekeys_rgblight_layer,
+  _function_rgblight_layer
 );
 
 // Execute on startup
@@ -145,21 +146,21 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
 // Vim mode user hooks: set custom state
 void insert_mode_user(void) {
   disable_vim_mode();
-  rgblight_set_layer_state(_GREEN_RGBLIGHT_LAYER, false);
-  rgblight_set_layer_state(_YELLOW_RGBLIGHT_LAYER, false);
+  rgblight_set_layer_state(_VIM_NORMAL_RGBLIGHT_LAYER, false);
+  rgblight_set_layer_state(_VIM_VISUAL_RGBLIGHT_LAYER, false);
 }
 
 void normal_mode_user(void) {
-  rgblight_set_layer_state(_GREEN_RGBLIGHT_LAYER, true);
-  rgblight_set_layer_state(_YELLOW_RGBLIGHT_LAYER, false);
+  rgblight_set_layer_state(_VIM_NORMAL_RGBLIGHT_LAYER, true);
+  rgblight_set_layer_state(_VIM_VISUAL_RGBLIGHT_LAYER, false);
 }
 
 void visual_mode_user(void) {
-  rgblight_set_layer_state(_YELLOW_RGBLIGHT_LAYER, true);
+  rgblight_set_layer_state(_VIM_VISUAL_RGBLIGHT_LAYER, true);
 }
 
 void visual_line_mode_user(void) {
-  rgblight_set_layer_state(_YELLOW_RGBLIGHT_LAYER, true);
+  rgblight_set_layer_state(_VIM_VISUAL_RGBLIGHT_LAYER, true);
 }
 
 // Vim process mode user hooks: override keycodes
@@ -215,9 +216,9 @@ int _current_layer;
 layer_state_t layer_state_set_user(layer_state_t state) {
   _current_layer = get_highest_layer(state);
 
-  rgblight_set_layer_state(_RED_RGBLIGHT_LAYER, (layer_state_cmp(state, _DEFAULT_LAYER || layer_state_cmp(state, _NUMERALS_LAYER)) || layer_state_cmp(state, _QUANTUM_LAYER)));
-  rgblight_set_layer_state(_CYAN_RGBLIGHT_LAYER, layer_state_cmp(state, _MOUSEKEYS_LAYER));
-  rgblight_set_layer_state(_MAGENTA_RGBLIGHT_LAYER, layer_state_cmp(state, _FUNCTION_LAYER));
+  rgblight_set_layer_state(_DEFAULT_RGBLIGHT_LAYER, (layer_state_cmp(state, _DEFAULT_LAYER || layer_state_cmp(state, _NUMERALS_LAYER)) || layer_state_cmp(state, _QUANTUM_LAYER)));
+  rgblight_set_layer_state(_MOUSEKEYS_RGBLIGHT_LAYER, layer_state_cmp(state, _MOUSEKEYS_LAYER));
+  rgblight_set_layer_state(_FUNCTION_RGBLIGHT_LAYER, layer_state_cmp(state, _FUNCTION_LAYER));
 
   return state;
 }
@@ -328,9 +329,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
     case _BAKSPC:
       if (record->event.pressed) {
-        if (_is_shift_held) {
+        if (_is_gnumin_held) {
           _pressed_bakspc_keycode = A(KC_BSPC);
-          unregister_code(KC_LSFT);
         } else {
           _pressed_bakspc_keycode = KC_BSPC;
         }
@@ -339,9 +339,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         if (_pressed_bakspc_keycode != _NULVAL) {
           unregister_code16(_pressed_bakspc_keycode);
           _pressed_bakspc_keycode = _NULVAL;
-        }
-        if (_is_shift_held) {
-          register_code(KC_LSFT);
         }
       }
       return false;
