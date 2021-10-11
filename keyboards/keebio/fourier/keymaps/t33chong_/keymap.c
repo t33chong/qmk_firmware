@@ -100,12 +100,12 @@ enum _rgblight_layer_indices {
 };
 
 #define _rgb_all(color) RGBLIGHT_LAYER_SEGMENTS({0, RGBLED_NUM, color})
-#define _HSV_DIM_WHITE 0, 0, 63
-const rgblight_segment_t PROGMEM _default_rgblight_layer[] = _rgb_all(_HSV_DIM_WHITE);
+#define _HSV_DIM_CYAN 128, 255, 63
+const rgblight_segment_t PROGMEM _default_rgblight_layer[] = _rgb_all(_HSV_DIM_CYAN);
 const rgblight_segment_t PROGMEM _vim_normal_rgblight_layer[] = _rgb_all(HSV_GREEN);
 const rgblight_segment_t PROGMEM _vim_visual_rgblight_layer[] = _rgb_all(HSV_YELLOW);
-const rgblight_segment_t PROGMEM _mousekeys_rgblight_layer[] = _rgb_all(HSV_CYAN);
-const rgblight_segment_t PROGMEM _function_rgblight_layer[] = _rgb_all(HSV_RED);
+const rgblight_segment_t PROGMEM _mousekeys_rgblight_layer[] = _rgb_all(HSV_RED);
+const rgblight_segment_t PROGMEM _function_rgblight_layer[] = _rgb_all(HSV_BLUE);
 
 const rgblight_segment_t* const PROGMEM _rgblight_layers[] = RGBLIGHT_LAYERS_LIST(
   _default_rgblight_layer,
