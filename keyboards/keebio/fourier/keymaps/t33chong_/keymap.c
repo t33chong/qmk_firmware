@@ -40,7 +40,7 @@ enum _keycodes {
 
 #define _CTLESC CTL_T(KC_ESC)                // Hold for control, tap for escape
 #define _QUASPC LT(_QUANTUM_LAYER, KC_SPC)   // Hold for quantum layer, tap for space
-#define _GNUMIN LT(_NUMERALS_LAYER, KC_MINS) // Hold for gui+number, tap for minus
+#define _GNUEQL LT(_NUMERALS_LAYER, KC_EQL)  // Hold for gui+number, tap for equals
 #define _MO_FUN MO(_FUNCTION_LAYER)          // Hold for function layer
 #define _MO_NUM MO(_NUMERALS_LAYER)          // Hold for numerals layer
 #define _TO_DEF TO(_DEFAULT_LAYER)           // Activate default layer
@@ -53,14 +53,14 @@ enum _keycodes {
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_DEFAULT_LAYER] = LAYOUT_t33chong(
-    KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_QUOT, KC_EQL,
+    KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_QUOT, XXXXXXX,
     _CTLESC, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,             KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_ENT,
     _LPAREN, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,             KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, _RPAREN,
-    _MO_FUN, KC_LALT, KC_LGUI, _GNUMIN, KC_LSFT, _MO_NUM,          _BAKSPC, _QUASPC, _UNDSCR, KC_LEFT, _UPDOWN, KC_RGHT
+    _MO_FUN, KC_LALT, KC_LGUI, _GNUEQL, KC_LSFT, _MO_NUM,          _BAKSPC, _QUASPC, _UNDSCR, KC_LEFT, _UPDOWN, KC_RGHT
   ),
   [_NUMERALS_LAYER] = LAYOUT_t33chong(
-    KC_TILD, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC, KC_CIRC, KC_AMPR, KC_ASTR, KC_BSLS, KC_PIPE, KC_MINS, KC_PLUS,
-    KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,             KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_COLN,
+    KC_TILD, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC, KC_CIRC, KC_AMPR, KC_ASTR, KC_MINS, KC_PLUS, KC_PIPE, _______,
+    KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,             KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_BSLS,
     KC_LCBR, _HF(1),  _HF(2),  _HF(3),  _HF(4),  _HF(5),           _HF(6),  _HF(7),  _HF(8),  _HF(9),  _HF(10), KC_RCBR,
     _______, _______, _______, _______, _______, _______,          _______, _______, _______, _______, _______, _______
   ),
@@ -233,7 +233,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   /* static bool _is_ctrl_held; */
   static bool _is_gui_held;
   static bool _is_shift_held;
-  static bool _is_gnumin_held;
+  static bool _is_gnueql_held;
   static bool _is_left_held;
   static bool _is_right_held;
   static uint16_t _pressed_quantum_keycode = _NULVAL;
@@ -282,11 +282,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         _is_shift_held = false;
       }
       return true;
-    case _GNUMIN:
+    case _GNUEQL:
       if (record->event.pressed) {
-        _is_gnumin_held = true;
+        _is_gnueql_held = true;
       } else {
-        _is_gnumin_held = false;
+        _is_gnueql_held = false;
       }
       return true;
     case KC_LEFT:
@@ -329,7 +329,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
     case _BAKSPC:
       if (record->event.pressed) {
-        if (_is_gnumin_held) {
+        if (_is_gnueql_held) {
           _pressed_bakspc_keycode = A(KC_BSPC);
         } else {
           _pressed_bakspc_keycode = KC_BSPC;
@@ -415,8 +415,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             register_code16(_pressed_quantum_keycode);
             return false;
           case _NUMERALS_LAYER:
-            if (_is_gnumin_held) {
-              _pressed_numerals_keycode = G(keycode);
+            if (_is_gnueql_held) {
+              if (keycode == KC_PLUS) {
+                _pressed_numerals_keycode = G(KC_EQL);
+              } else {
+                _pressed_numerals_keycode = G(keycode);
+              }
               register_code16(_pressed_numerals_keycode);
               return false;
             }
