@@ -79,8 +79,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_QUANTUM_LAYER] = LAYOUT_t33chong(
     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
     KC_ESC,  _______, _______, _______, _______, _______,          _______, _______, _______, _______, _______, _______,
-    _______, _______, _______, _______, _______, _______,          _______, _______, _______, _______, _______, _______,
-    _______, _______, _______, _______, _______, _TO_MSK,          _______, _______, _______, _______, _______, _______
+    KC_MINS, _______, _______, _______, _______, _______,          _______, _______, _______, _______, _______, KC_EQL,
+    _______, _______, _______, _______, _______, _TO_MSK,          KC_BSPC, _______, _______, _______, KC_DOWN, _______
+    /* _______, _______, _______, _TO_MSK, _______, _VIMODE,          KC_BSPC, _______, _______, _______, KC_DOWN, _______ */
   ),
   /* [_LAYER] = LAYOUT_t33chong( */
   /*   _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, */
@@ -250,7 +251,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         /* _is_ctrl_held = true; */
         if (_is_shift_held) {
           clear_mods();
-          if (vim_mode_enabled()) {
+          if (vim_mode_enabled()) { // TODO: Change Vim mode toggle to _VIMODE key in quantum layer
             insert_mode();
           } else {
             enable_vim_mode();
@@ -400,6 +401,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     // Exempt special keys on quantum layer from meh/hyper passthrough
     case _TO_MSK:
     case _QUASPC:
+    /* case _VIMODE: */
       return true;
 
     default:
@@ -416,10 +418,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             return false;
           case _NUMERALS_LAYER:
             if (_is_gnueql_held) {
-              if (keycode == KC_PLUS) {
-                _pressed_numerals_keycode = G(KC_EQL);
-              } else {
-                _pressed_numerals_keycode = G(keycode);
+              switch (keycode) {
+                case KC_PLUS: // Send equals instead of plus when gui+num layer held
+                  _pressed_numerals_keycode = G(KC_EQL);
+                  break;
+                default:
+                  _pressed_numerals_keycode = G(keycode);
+                  break;
               }
               register_code16(_pressed_numerals_keycode);
               return false;
