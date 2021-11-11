@@ -24,3 +24,6 @@
 [submodule "keyboards/keebio/fourier/keymaps/t33chong_/qmk-vim"]
 	path = keyboards/keebio/fourier/keymaps/t33chong_/qmk-vim
 	url = https://github.com/andrewjrae/qmk-vim.git
+[submodule "keyboards/planck/keymaps/t33chong_/qmk-vim"]
+	path = keyboards/planck/keymaps/t33chong_/qmk-vim
+	url = https://github.com/andrewjrae/qmk-vim.git
