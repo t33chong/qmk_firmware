@@ -20,4 +20,5 @@ AUDIO_ENABLE = no           # Audio output
 LAYOUTS = ortho_1x1
 
 PS2_MOUSE_ENABLE = yes
-PS2_USE_INT = yes
+# PS2_USE_INT = yes
+PS2_USE_USART = yes
