@@ -55,9 +55,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
   [_FUNCTION_LAYER] = LAYOUT_planck_grid(
     KC_BRMD, KC_BRMU, KC_VOLD, KC_VOLU, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-    _CLRKBD, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  XXXXXXX,
-    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-    XXXXXXX, _PUSHTT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_LEFT, KC_RGHT, _______
+    KC_LCTL, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  XXXXXXX,
+    KC_LSFT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+    _CLRKBD, _______, _______, XXXXXXX, _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_LEFT, KC_RGHT, _______
   ),
   [_QUANTUM_LAYER] = LAYOUT_planck_grid(
     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
@@ -78,8 +78,7 @@ enum _rgblight_layer_indices {
   _DEFAULT_RGBLIGHT_LAYER,
   _VIM_NORMAL_RGBLIGHT_LAYER,
   _VIM_VISUAL_RGBLIGHT_LAYER,
-  _MOUSEKEYS_RGBLIGHT_LAYER,
-  _FUNCTION_RGBLIGHT_LAYER
+  _MOUSEKEYS_RGBLIGHT_LAYER
 };
 
 #define _rgb_all(color) RGBLIGHT_LAYER_SEGMENTS({0, RGBLED_NUM, color})
@@ -88,14 +87,12 @@ const rgblight_segment_t PROGMEM _default_rgblight_layer[] = _rgb_all(_HSV_DIM_C
 const rgblight_segment_t PROGMEM _vim_normal_rgblight_layer[] = _rgb_all(HSV_GREEN);
 const rgblight_segment_t PROGMEM _vim_visual_rgblight_layer[] = _rgb_all(HSV_YELLOW);
 const rgblight_segment_t PROGMEM _mousekeys_rgblight_layer[] = _rgb_all(HSV_RED);
-const rgblight_segment_t PROGMEM _function_rgblight_layer[] = _rgb_all(HSV_BLUE);
 
 const rgblight_segment_t* const PROGMEM _rgblight_layers[] = RGBLIGHT_LAYERS_LIST(
   _default_rgblight_layer,
   _vim_normal_rgblight_layer,
   _vim_visual_rgblight_layer,
-  _mousekeys_rgblight_layer,
-  _function_rgblight_layer
+  _mousekeys_rgblight_layer
 );
 
 // Execute on startup
@@ -198,9 +195,8 @@ int _current_layer;
 layer_state_t layer_state_set_user(layer_state_t state) {
   _current_layer = get_highest_layer(state);
 
-  rgblight_set_layer_state(_DEFAULT_RGBLIGHT_LAYER, (layer_state_cmp(state, _DEFAULT_LAYER || layer_state_cmp(state, _NUMERALS_LAYER)) || layer_state_cmp(state, _QUANTUM_LAYER)));
+  rgblight_set_layer_state(_DEFAULT_RGBLIGHT_LAYER, (layer_state_cmp(state, _DEFAULT_LAYER) || layer_state_cmp(state, _NUMERALS_LAYER) || layer_state_cmp(state, _FUNCTION_LAYER) || layer_state_cmp(state, _QUANTUM_LAYER)));
   rgblight_set_layer_state(_MOUSEKEYS_RGBLIGHT_LAYER, layer_state_cmp(state, _MOUSEKEYS_LAYER));
-  rgblight_set_layer_state(_FUNCTION_RGBLIGHT_LAYER, layer_state_cmp(state, _FUNCTION_LAYER));
 
   return state;
 }
