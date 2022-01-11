@@ -16,7 +16,7 @@ enum _keycodes {
   _UNDSCR,              // Send _
   _LPAREN,              // (, or [ if shift is held, or shift if gui/alt are held
   _RPAREN,              // ), or ] if shift is held
-  _BAKSPC,              // Backspace, or alt+backspace if shift is held
+  _BAKSPC,              // Backspace, or alt+backspace if _GNUEQL is held, or delete if shift is held
   _VIMODE,              // Toggle Vim mode
   _CLRKBD,              // Clear held keys
 };
@@ -64,7 +64,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_ESC,  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
     KC_MINS, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_EQL,
     _______, _______, _______, _______, _______, _TO_MSK, KC_BSPC, _______, _______, _______, KC_DOWN, _______
-    /* _______, _______, _______, _TO_MSK, _______, _VIMODE, KC_BSPC, _______, _______, _______, KC_DOWN, _______ */
   ),
   /* [_LAYER] = LAYOUT_planck_grid( */
   /*   _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, */
@@ -120,7 +119,6 @@ bool get_tapping_force_hold(uint16_t keycode, keyrecord_t *record) {
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
     case _CTLESC:
-    /* case _QUASPC: */
       return 150;
     default:
       return TAPPING_TERM;
@@ -244,34 +242,16 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
       return false;
     // Set held modifier state
-    /* case _CTLESC: */
-    /*   if (record->event.pressed) { */
-    /*     /1* _is_ctrl_held = true; *1/ */
-    /*     if (_is_shift_held) { */
-    /*       clear_mods(); */
-    /*       if (vim_mode_enabled()) { // TODO: Change Vim mode toggle to _VIMODE key in quantum layer */
-    /*         insert_mode(); */
-    /*       } else { */
-    /*         enable_vim_mode(); */
-    /*       } */
-    /*       return false; */
-    /*     } */
-    /*   /1* } else { *1/ */
-    /*   /1*   _is_ctrl_held = false; *1/ */
-    /*   } */
-    /*   return true; */
     case KC_LALT:
       if (record->event.pressed) {
         _is_alt_held = true;
         if (_is_vimode_held) {
-          // Register _PUSHTT
           register_code16(_PUSHTT);
           _was_pushtt_pressed = true;
         }
       } else {
         _is_alt_held = false;
         if (_was_pushtt_pressed) {
-          // Unregister _PUSHTT
           unregister_code16(_PUSHTT);
           _was_pushtt_pressed = false;
         }
@@ -302,6 +282,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       if (record->event.pressed) {
         if (_is_gnueql_held) {
           _pressed_bakspc_keycode = A(KC_BSPC);
+        } else if (_is_shift_held) {
+          _pressed_bakspc_keycode = KC_DEL;
         } else {
           _pressed_bakspc_keycode = KC_BSPC;
         }
@@ -371,7 +353,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     // Exempt special keys on quantum layer from meh/hyper passthrough
     case _TO_MSK:
     case _QUASPC:
-    /* case _VIMODE: */
       return true;
 
     default:
