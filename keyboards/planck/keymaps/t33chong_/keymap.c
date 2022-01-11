@@ -17,7 +17,7 @@ enum _keycodes {
   _LPAREN,              // (, or [ if shift is held, or shift if gui/alt are held
   _RPAREN,              // ), or ] if shift is held
   _BAKSPC,              // Backspace, or alt+backspace if shift is held
-  _UPDOWN,              // If left+right are held, then up; else down
+  _VIMODE,              // Toggle Vim mode
   _CLRKBD,              // Clear held keys
 };
 
@@ -39,7 +39,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_QUOT,
     _CTLESC, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_ENT,
     _LPAREN, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, _RPAREN,
-    _MO_FUN, KC_LALT, KC_LGUI, _GNUEQL, KC_LSFT, _MO_NUM, _BAKSPC, _QUASPC, _UNDSCR, KC_LEFT, _UPDOWN, KC_RGHT
+    _VIMODE, KC_LALT, KC_LGUI, _GNUEQL, KC_LSFT, _MO_NUM, _BAKSPC, _QUASPC, _UNDSCR, KC_DOWN, KC_UP,   _MO_FUN
   ),
   [_NUMERALS_LAYER] = LAYOUT_planck_grid(
     KC_TILD, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC, KC_CIRC, KC_AMPR, KC_ASTR, KC_MINS, KC_PLUS, KC_PIPE,
@@ -54,10 +54,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_LCTL, KC_LALT, KC_LGUI, XXXXXXX, KC_BTN2, KC_BTN4, KC_BTN3, KC_BTN1, KC_BTN5, XXXXXXX, XXXXXXX, XXXXXXX
   ),
   [_FUNCTION_LAYER] = LAYOUT_planck_grid(
-    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+    KC_BRMD, KC_BRMU, KC_VOLD, KC_VOLU, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
     _CLRKBD, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  XXXXXXX,
-    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_BRMU, XXXXXXX,
-    XXXXXXX, _PUSHTT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_VOLD, KC_BRMD, KC_VOLU
+    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+    XXXXXXX, _PUSHTT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_LEFT, KC_RGHT, _______
   ),
   [_QUANTUM_LAYER] = LAYOUT_planck_grid(
     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
@@ -218,38 +218,63 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   static bool _is_gui_held;
   static bool _is_shift_held;
   static bool _is_gnueql_held;
-  static bool _is_left_held;
-  static bool _is_right_held;
+  static bool _is_vimode_held;
+  static uint16_t _vimode_hold_timer;
+  static bool _was_pushtt_pressed;
   static uint16_t _pressed_quantum_keycode = _NULVAL;
   static uint16_t _pressed_lparen_keycode = _NULVAL;
   static uint16_t _pressed_rparen_keycode = _NULVAL;
   static uint16_t _pressed_bakspc_keycode = _NULVAL;
-  static uint16_t _pressed_updown_keycode = _NULVAL;
   static uint16_t _pressed_numerals_keycode = _NULVAL;
 
   switch (keycode) {
-    // Set held modifier state
-    case _CTLESC:
+    case _VIMODE:
       if (record->event.pressed) {
-        /* _is_ctrl_held = true; */
-        if (_is_shift_held) {
-          clear_mods();
-          if (vim_mode_enabled()) { // TODO: Change Vim mode toggle to _VIMODE key in quantum layer
+        _is_vimode_held = true;
+        _vimode_hold_timer = timer_read();
+      } else {
+        _is_vimode_held = false;
+        if (timer_elapsed(_vimode_hold_timer) < TAPPING_TERM) {
+          if (vim_mode_enabled()) {
             insert_mode();
           } else {
             enable_vim_mode();
           }
-          return false;
         }
-      /* } else { */
-      /*   _is_ctrl_held = false; */
       }
-      return true;
+      return false;
+    // Set held modifier state
+    /* case _CTLESC: */
+    /*   if (record->event.pressed) { */
+    /*     /1* _is_ctrl_held = true; *1/ */
+    /*     if (_is_shift_held) { */
+    /*       clear_mods(); */
+    /*       if (vim_mode_enabled()) { // TODO: Change Vim mode toggle to _VIMODE key in quantum layer */
+    /*         insert_mode(); */
+    /*       } else { */
+    /*         enable_vim_mode(); */
+    /*       } */
+    /*       return false; */
+    /*     } */
+    /*   /1* } else { *1/ */
+    /*   /1*   _is_ctrl_held = false; *1/ */
+    /*   } */
+    /*   return true; */
     case KC_LALT:
       if (record->event.pressed) {
         _is_alt_held = true;
+        if (_is_vimode_held) {
+          // Register _PUSHTT
+          register_code16(_PUSHTT);
+          _was_pushtt_pressed = true;
+        }
       } else {
         _is_alt_held = false;
+        if (_was_pushtt_pressed) {
+          // Unregister _PUSHTT
+          unregister_code16(_PUSHTT);
+          _was_pushtt_pressed = false;
+        }
       }
       return true;
     case KC_LGUI:
@@ -273,44 +298,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         _is_gnueql_held = false;
       }
       return true;
-    case KC_LEFT:
-      if (record->event.pressed) {
-        _is_left_held = true;
-        if (_is_right_held) {
-          unregister_code(KC_RGHT);
-          return false;
-        }
-      } else {
-        _is_left_held = false;
-      }
-      return true;
-    case KC_RGHT:
-      if (record->event.pressed) {
-        _is_right_held = true;
-        if (_is_left_held) {
-          unregister_code(KC_LEFT);
-          return false;
-        }
-      } else {
-        _is_right_held = false;
-      }
-      return true;
-    case _UPDOWN: // If left+right are held, then up; else down
-      if (record->event.pressed) {
-        if (_is_left_held && _is_right_held) {
-          _pressed_updown_keycode = KC_UP;
-        } else {
-          _pressed_updown_keycode = KC_DOWN;
-        }
-        register_code(_pressed_updown_keycode);
-      } else {
-        if (_pressed_updown_keycode != _NULVAL) {
-          unregister_code(_pressed_updown_keycode);
-          _pressed_updown_keycode = _NULVAL;
-        }
-      }
-      return false;
-
     case _BAKSPC:
       if (record->event.pressed) {
         if (_is_gnueql_held) {
