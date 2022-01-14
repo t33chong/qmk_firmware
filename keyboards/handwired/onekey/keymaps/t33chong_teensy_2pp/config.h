@@ -84,7 +84,7 @@
 // Audio
 #ifdef AUDIO_ENABLE
 #define AUDIO_PIN C6
-#define AUDIO_PIN_ALT B5
+/* #define AUDIO_PIN_ALT B5 */
 #define STARTUP_SONG SONG(STARTUP_SOUND)
 #endif //AUDIO_ENABLE
 
@@ -93,3 +93,11 @@
 #define ADAFRUIT_BLE_CS_PIN  B4
 #define ADAFRUIT_BLE_IRQ_PIN E6
 #endif // BLUETOOTH_ENABLE
+
+#ifdef HAPTIC_ENABLE
+#define SOLENOID_PIN B5
+/* #define HAPTIC_ENABLE_PIN F3 */
+/* #define SOLENOID_DEFAULT_DWELL 12 */ 
+/* #define SOLENOID_MAX_DWELL 100 */
+/* #define SOLENOID_MIN_DWELL 4 */
+#endif // HAPTIC_ENABLE
