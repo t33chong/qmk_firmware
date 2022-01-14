@@ -16,7 +16,8 @@ enum _keycodes {
   _UNDSCR,              // Send _
   _LPAREN,              // (, or [ if shift is held, or shift if gui/alt are held
   _RPAREN,              // ), or ] if shift is held
-  _BAKSPC,              // Backspace, or alt+backspace if _GNUEQL is held, or delete if shift is held
+  /* _BAKSPC,              // Backspace, or alt+backspace if _GNUEQL is held, or delete if shift is held */
+  _BAKSPC,              // Backspace, or alt+backspace if _GNUEQL is held
   _VIMODE,              // Toggle Vim mode
   _CLRKBD,              // Clear held keys
 };
@@ -278,8 +279,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       if (record->event.pressed) {
         if (_is_gnueql_held) {
           _pressed_bakspc_keycode = A(KC_BSPC);
-        } else if (_is_shift_held) {
-          _pressed_bakspc_keycode = KC_DEL;
+        /* } else if (_is_shift_held) { */
+        /*   _pressed_bakspc_keycode = KC_DEL; */
         } else {
           _pressed_bakspc_keycode = KC_BSPC;
         }
