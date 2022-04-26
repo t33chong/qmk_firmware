@@ -20,16 +20,24 @@
 
 /* #define PRODUCT Onekey Teensy 2.0++ */
 
-#define MATRIX_COL_PINS { F4 }
-#define MATRIX_ROW_PINS { F5 }
+/* #define MATRIX_COL_PINS { F4 } */
+/* #define MATRIX_ROW_PINS { F5 } */
+#undef MATRIX_COL_PINS
+#undef MATRIX_ROW_PINS
+#define MATRIX_COL_PINS { F0 }
+#define MATRIX_ROW_PINS { F1 }
 #define UNUSED_PINS
 
-#define BACKLIGHT_PIN B6
+// Backlight
+#ifdef BACKLIGHT_ENABLE
+#undef BACKLIGHT_PIN
+#define BACKLIGHT_PIN B5
+#endif // BACKLIGHT_ENABLE
 
+// RGB
+#ifdef RGBLIGHT_ENABLE
 #define RGB_DI_PIN F6
-#define RGB_CI_PIN B1
-
-#define ADC_PIN F6
+#endif // RGBLIGHT_ENABLE
 
 // Trackpoint - USART
 #ifdef PS2_MOUSE_ENABLE
@@ -76,8 +84,10 @@
 
 // Encoder
 #ifdef ENCODER_ENABLE
-#define ENCODERS_PAD_A { F7 }
-#define ENCODERS_PAD_B { F6 }
+#define ENCODERS_PAD_A { F7, F3 }
+#define ENCODERS_PAD_B { F6, F2 }
+/* #define ENCODERS_PAD_A { F7 } */
+/* #define ENCODERS_PAD_B { F6 } */
 #define ENCODER_RESOLUTION 2
 #endif // ENCODER_ENABLE
 
@@ -88,16 +98,34 @@
 #define STARTUP_SONG SONG(STARTUP_SOUND)
 #endif //AUDIO_ENABLE
 
+// Bluetooth
 #ifdef BLUETOOTH_ENABLE
 #define ADAFRUIT_BLE_RST_PIN D4
 #define ADAFRUIT_BLE_CS_PIN  B4
 #define ADAFRUIT_BLE_IRQ_PIN E6
 #endif // BLUETOOTH_ENABLE
 
+// Haptic Feedback
 #ifdef HAPTIC_ENABLE
-#define SOLENOID_PIN B5
-/* #define HAPTIC_ENABLE_PIN F3 */
-/* #define SOLENOID_DEFAULT_DWELL 12 */ 
+#define SOLENOID_PIN C4
+#define SOLENOID_DEFAULT_DWELL 12
+#define SOLENOID_MAX_DWELL 100
+#define SOLENOID_MIN_DWELL 4
+#endif // HAPTIC_ENABLE
+
+/* #ifdef UNOFFICIAL_HAPTIC_ENABLE */
+/* #define SOLENOID_PIN B5 */
+/* #define SOLENOID_DEFAULT_DWELL 12 */
 /* #define SOLENOID_MAX_DWELL 100 */
 /* #define SOLENOID_MIN_DWELL 4 */
-#endif // HAPTIC_ENABLE
+/* #endif // HAPTIC_ENABLE */
+
+// OLED Display
+#ifdef OLED_ENABLE
+#define OLED_DISPLAY_128X64
+#endif // OLED_ENABLE
+
+// Pointing Device
+#ifdef POINTING_DEVICE_ENABLE
+#define PIMORONI_TRACKBALL_SCALE 1
+#endif // POINTING_DEVICE_ENABLE

@@ -20,13 +20,22 @@
 
 #define PRODUCT Onekey Pro Micro
 
-#define MATRIX_COL_PINS { F4 }
-#define MATRIX_ROW_PINS { F5 }
+#undef MATRIX_COLS
+#undef MATRIX_ROWS
+#define MATRIX_COLS 1
+#define MATRIX_ROWS 5
+/* #define MATRIX_COL_PINS { F4 } */
+/* #define MATRIX_ROW_PINS { F5 } */
+#undef MATRIX_COL_PINS
+#undef MATRIX_ROW_PINS
+#define MATRIX_COL_PINS { E6 }
+#define MATRIX_ROW_PINS { B6, B2, B3, B4, B5 }
+#define DIODE_DIRECTION COL2ROW
 #define UNUSED_PINS
 
-#define BACKLIGHT_PIN B6
+/* #define BACKLIGHT_PIN B6 */
 
-#define RGB_DI_PIN F6
-#define RGB_CI_PIN B1
+/* #define RGB_DI_PIN F6 */
+/* #define RGB_CI_PIN B1 */
 
-#define ADC_PIN F6
+/* #define ADC_PIN F6 */
