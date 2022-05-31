@@ -37,6 +37,10 @@
 // RGB
 #ifdef RGBLIGHT_ENABLE
 #define RGB_DI_PIN F6
+#define RGBLED_NUM 2
+#define RGBLED_DEFAULT_HUE 0
+#define RGBLED_DEFAULT_SAT 0
+#define RGBLED_DEFAULT_VAL 100
 #endif // RGBLIGHT_ENABLE
 
 // Trackpoint - USART

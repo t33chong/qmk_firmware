@@ -155,7 +155,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 // If true, don't count a tap and a hold as repetition of the tap action
 bool get_tapping_force_hold(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
-    /* case _CTLESC: */
+    case _CTLESC:
     case _QUASPC:
       return true;
     default:
@@ -453,6 +453,35 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       return true; // Process all other keycodes normally
   }
 }
+
+#ifdef DIP_SWITCH_ENABLE
+bool dip_switch_update_user(uint8_t index, bool active) {
+  switch (index) {
+    case 0:
+      if (active) {
+        audio_on();
+      } else {
+        audio_off();
+      }
+      break;
+    case 1:
+      if (active) {
+        rgblight_enable();
+      } else {
+        rgblight_disable();
+      }
+      break;
+    case 2:
+      if (active) {
+        haptic_enable();
+      } else {
+        haptic_disable();
+      }
+      break;
+  }
+  return true;
+}
+#endif // DIP_SWITCH_ENABLE
 
 #ifdef OLED_ENABLE
 oled_rotation_t oled_init_kb(oled_rotation_t rotation) {

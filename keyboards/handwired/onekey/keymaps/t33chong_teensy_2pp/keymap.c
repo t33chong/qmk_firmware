@@ -102,8 +102,8 @@ float startup_sound[][2] = SONG(STARTUP_SOUND);
 
 // Keymap
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-  LAYOUT_ortho_1x1(KC_BTN3)
-  /* LAYOUT_ortho_1x1(KC_A) */
+  /* LAYOUT_ortho_1x1(KC_BTN3) */
+  LAYOUT_ortho_1x1(KC_A)
   /* LAYOUT_ortho_1x1(BL_TOGG) */
 };
 
@@ -154,6 +154,7 @@ uint8_t pointing_device_handle_buttons(uint8_t buttons, bool pressed, pointing_d
 }
 void keyboard_post_init_user(void) {
   pimoroni_trackball_set_rgbw(0, 0, 255, 0);
+  rgblight_setrgb(RGB_WHITE);
 }
 #endif // POINTING_DEVICE_ENABLE
 

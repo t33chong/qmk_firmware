@@ -27,3 +27,6 @@
 [submodule "keyboards/planck/keymaps/t33chong_/qmk-vim"]
 	path = keyboards/planck/keymaps/t33chong_/qmk-vim
 	url = https://github.com/andrewjrae/qmk-vim.git
+[submodule "keyboards/p01nt4g0n/keymaps/default/qmk-vim"]
+	path = keyboards/p01nt4g0n/keymaps/default/qmk-vim
+	url = git@github.com:t33chong/qmk-vim.git
