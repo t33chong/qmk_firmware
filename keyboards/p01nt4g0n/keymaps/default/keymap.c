@@ -5,12 +5,11 @@
 #include "qmk-vim/src/vim.h"
 #include "qmk-vim/src/modes.h"
 #include "qmk-vim/src/motions.h"
-/* float startup_sound[][2] = SONG(STARTUP_SOUND); */
 
 enum _layers {
   _DEFAULT_LAYER = 0,
   _NUMERALS_LAYER,
-  _MOUSEKEYS_LAYER,
+  /* _MOUSEKEYS_LAYER, */
   _FUNCTION_LAYER,
   _QUANTUM_LAYER,
 };
@@ -27,15 +26,17 @@ enum _keycodes {
 };
 
 #define _CTLESC CTL_T(KC_ESC)                // Hold for control, tap for escape
+/* #define _CTLESC MT(MOD_LCTL, KC_ESC)         // Hold for control, tap for escape */
 #define _QUASPC LT(_QUANTUM_LAYER, KC_SPC)   // Hold for quantum layer, tap for space
 #define _GNUEQL LT(_NUMERALS_LAYER, KC_EQL)  // Hold for gui+number, tap for equals
 #define _MO_FUN MO(_FUNCTION_LAYER)          // Hold for function layer
 #define _MO_NUM MO(_NUMERALS_LAYER)          // Hold for numerals layer
 #define _TO_DEF TO(_DEFAULT_LAYER)           // Activate default layer
-#define _TO_MSK TO(_MOUSEKEYS_LAYER)         // Activate mousekeys layer
+/* #define _TO_MSK TO(_MOUSEKEYS_LAYER)         // Activate mousekeys layer */
 #define _PUSHTT HYPR(KC_BSLS)                // Hold for push to talk with Shush
 #define _GUIGRV G(KC_GRV)                    // Send gui+`
 #define _HF(N) HYPR(KC_F ## N)               // Send hyper+function N
+#define _H(X) HYPR(KC_ ## X)                 // Send hyper+X
 
 #define _is_mod_held (_is_alt_held || _is_ctrl_held || _is_gui_held || _is_shift_held)
 
@@ -59,20 +60,20 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   /* [_DEFAULT_LAYER] = LAYOUT( */
   /*   KC_0, */
   /*   KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,             KC_1,             KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_QUOT, */
-  /*   KC_ESC , KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                               KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_ENT, */
+  /*   _CTLESC, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                               KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_ENT, */
   /*                                                                  KC_UP, */  
-  /*   KC_LPRN, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_LEFT, KC_ENT,  KC_RGHT, KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RPRN, */
+  /*   _LPAREN, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_LEFT, KC_ENT,  KC_RGHT, KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, _RPAREN, */
   /*                                                                  KC_DOWN, */
-  /*   KC_TILD, KC_LALT, KC_LGUI, KC_EXLM, KC_LSFT, KC_AT,   KC_BTN1, KC_BTN3, KC_BTN2, KC_CIRC, KC_AMPR, KC_ASTR, KC_DOWN, KC_UP,   KC_LCBR */
+  /*   _VIMODE, KC_LALT, KC_LGUI, _GNUEQL, KC_LSFT, _MO_NUM, KC_BTN1, KC_BTN3, KC_BTN2, _BAKSPC, _QUASPC, _UNDSCR, KC_DOWN, KC_UP,   _MO_FUN */
   /* ), */
 
   [_DEFAULT_LAYER] = LAYOUT(
     KC_0,
     KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,             KC_1,             KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_QUOT,
     _CTLESC, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                               KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_ENT,
-                                                                   KC_UP,  
-    _LPAREN, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_LEFT, KC_ENT,  KC_RGHT, KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, _RPAREN,
-                                                                   KC_DOWN,
+                                                                   _H(U),
+    _LPAREN, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    _H(O),   KC_NO,   _H(P),   KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, _RPAREN,
+                                                                   _H(I),
     _VIMODE, KC_LALT, KC_LGUI, _GNUEQL, KC_LSFT, _MO_NUM, KC_BTN1, KC_BTN3, KC_BTN2, _BAKSPC, _QUASPC, _UNDSCR, KC_DOWN, KC_UP,   _MO_FUN
   ),
 
@@ -86,15 +87,15 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
   ),
 
-  [_MOUSEKEYS_LAYER] = LAYOUT(
-    _______,
-    XXXXXXX, XXXXXXX, KC_WBAK, KC_MS_U, KC_WFWD, XXXXXXX,          _______,          XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-    _TO_DEF, XXXXXXX, KC_MS_L, KC_MS_D, KC_MS_R, XXXXXXX,                            KC_WH_L, KC_WH_D, KC_WH_U, KC_WH_R, XXXXXXX, XXXXXXX,
-                                                                   _______,
-    KC_LSFT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______, _______, _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-                                                                   _______,
-    KC_LCTL, KC_LALT, KC_LGUI, XXXXXXX, KC_BTN2, KC_BTN4, _______, _______, _______, KC_BTN3, KC_BTN1, KC_BTN5, XXXXXXX, XXXXXXX, XXXXXXX
-  ),
+  /* [_MOUSEKEYS_LAYER] = LAYOUT( */
+  /*   _______, */
+  /*   XXXXXXX, XXXXXXX, KC_WBAK, KC_MS_U, KC_WFWD, XXXXXXX,          _______,          XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, */
+  /*   _TO_DEF, XXXXXXX, KC_MS_L, KC_MS_D, KC_MS_R, XXXXXXX,                            KC_WH_L, KC_WH_D, KC_WH_U, KC_WH_R, XXXXXXX, XXXXXXX, */
+  /*                                                                  _______, */
+  /*   KC_LSFT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______, _______, _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, */
+  /*                                                                  _______, */
+  /*   KC_LCTL, KC_LALT, KC_LGUI, XXXXXXX, KC_BTN2, KC_BTN4, _______, _______, _______, KC_BTN3, KC_BTN1, KC_BTN5, XXXXXXX, XXXXXXX, XXXXXXX */
+  /* ), */
 
   [_FUNCTION_LAYER] = LAYOUT(
     _______,
@@ -113,7 +114,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                                                    _______,
     KC_MINS, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_EQL,
                                                                    _______,
-    _______, _______, _______, _______, _______, _TO_MSK, _______, _______, _______, KC_BSPC, _______, _______, _______, KC_DOWN, _______
+    _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_BSPC, _______, _______, _______, KC_DOWN, _______
+    /* _______, _______, _______, _______, _______, _TO_MSK, _______, _______, _______, KC_BSPC, _______, _______, _______, KC_DOWN, _______ */
   ),
 
   /* [_LAYER] = LAYOUT( */
@@ -124,33 +126,37 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   /* ), */
 };
 
-/* // Indicate layers with RGB underglow */
-/* enum _rgblight_layer_indices { */
-/*   _DEFAULT_RGBLIGHT_LAYER, */
-/*   _VIM_NORMAL_RGBLIGHT_LAYER, */
-/*   _VIM_VISUAL_RGBLIGHT_LAYER, */
-/*   _MOUSEKEYS_RGBLIGHT_LAYER */
-/* }; */
+// Indicate layers with RGB underglow
+enum _rgblight_layer_indices {
+  _DEFAULT_RGBLIGHT_LAYER,
+  _VIM_NORMAL_RGBLIGHT_LAYER,
+  _VIM_VISUAL_RGBLIGHT_LAYER
+  /* _MOUSEKEYS_RGBLIGHT_LAYER */
+};
 
-/* #define _rgb_all(color) RGBLIGHT_LAYER_SEGMENTS({0, RGBLED_NUM, color}) */
+#define _rgb_all(color) RGBLIGHT_LAYER_SEGMENTS({0, RGBLED_NUM, color})
 /* #define _HSV_DIM_CYAN 128, 255, 63 */
+#define _DIM_WHITE 0, 0, 31
+#define _DIM_GREEN 85, 255, 31
+#define _DIM_YELLOW 30, 218, 31
 /* const rgblight_segment_t PROGMEM _default_rgblight_layer[] = _rgb_all(_HSV_DIM_CYAN); */
-/* const rgblight_segment_t PROGMEM _vim_normal_rgblight_layer[] = _rgb_all(HSV_GREEN); */
-/* const rgblight_segment_t PROGMEM _vim_visual_rgblight_layer[] = _rgb_all(HSV_YELLOW); */
+const rgblight_segment_t PROGMEM _default_rgblight_layer[] = _rgb_all(_DIM_WHITE);
+const rgblight_segment_t PROGMEM _vim_normal_rgblight_layer[] = _rgb_all(_DIM_GREEN);
+const rgblight_segment_t PROGMEM _vim_visual_rgblight_layer[] = _rgb_all(_DIM_YELLOW);
 /* const rgblight_segment_t PROGMEM _mousekeys_rgblight_layer[] = _rgb_all(HSV_RED); */
 
-/* const rgblight_segment_t* const PROGMEM _rgblight_layers[] = RGBLIGHT_LAYERS_LIST( */
-/*   _default_rgblight_layer, */
-/*   _vim_normal_rgblight_layer, */
-/*   _vim_visual_rgblight_layer, */
-/*   _mousekeys_rgblight_layer */
-/* ); */
+const rgblight_segment_t* const PROGMEM _rgblight_layers[] = RGBLIGHT_LAYERS_LIST(
+  _default_rgblight_layer,
+  _vim_normal_rgblight_layer,
+  _vim_visual_rgblight_layer
+  /* _mousekeys_rgblight_layer */
+);
 
-/* // Execute on startup */
-/* void keyboard_post_init_user(void) { */
-/*   rgblight_layers = _rgblight_layers; */
-/*   rgblight_enable_noeeprom(); */
-/* } */
+// Execute on startup
+void keyboard_post_init_user(void) {
+  rgblight_layers = _rgblight_layers;
+  rgblight_enable_noeeprom();
+}
 
 // If true, don't count a tap and a hold as repetition of the tap action
 bool get_tapping_force_hold(uint16_t keycode, keyrecord_t *record) {
@@ -176,22 +182,22 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
 // Vim mode user hooks: set custom state
 void insert_mode_user(void) {
   disable_vim_mode();
-  /* rgblight_set_layer_state(_VIM_NORMAL_RGBLIGHT_LAYER, false); */
-  /* rgblight_set_layer_state(_VIM_VISUAL_RGBLIGHT_LAYER, false); */
+  rgblight_set_layer_state(_VIM_NORMAL_RGBLIGHT_LAYER, false);
+  rgblight_set_layer_state(_VIM_VISUAL_RGBLIGHT_LAYER, false);
 }
 
-/* /1* void normal_mode_user(void) { *1/ */
-/* /1*   rgblight_set_layer_state(_VIM_NORMAL_RGBLIGHT_LAYER, true); *1/ */
-/* /1*   rgblight_set_layer_state(_VIM_VISUAL_RGBLIGHT_LAYER, false); *1/ */
-/* /1* } *1/ */
+void normal_mode_user(void) {
+  rgblight_set_layer_state(_VIM_NORMAL_RGBLIGHT_LAYER, true);
+  rgblight_set_layer_state(_VIM_VISUAL_RGBLIGHT_LAYER, false);
+}
 
-/* /1* void visual_mode_user(void) { *1/ */
-/* /1*   rgblight_set_layer_state(_VIM_VISUAL_RGBLIGHT_LAYER, true); *1/ */
-/* /1* } *1/ */
+void visual_mode_user(void) {
+  rgblight_set_layer_state(_VIM_VISUAL_RGBLIGHT_LAYER, true);
+}
 
-/* /1* void visual_line_mode_user(void) { *1/ */
-/* /1*   rgblight_set_layer_state(_VIM_VISUAL_RGBLIGHT_LAYER, true); *1/ */
-/* /1* } *1/ */
+void visual_line_mode_user(void) {
+  rgblight_set_layer_state(_VIM_VISUAL_RGBLIGHT_LAYER, true);
+}
 
 // Vim process mode user hooks: override keycodes
 uint16_t _esc_press_timer;
@@ -246,18 +252,11 @@ int _current_layer;
 layer_state_t layer_state_set_user(layer_state_t state) {
   _current_layer = get_highest_layer(state);
 
-  /* rgblight_set_layer_state(_DEFAULT_RGBLIGHT_LAYER, (layer_state_cmp(state, _DEFAULT_LAYER) || layer_state_cmp(state, _NUMERALS_LAYER) || layer_state_cmp(state, _FUNCTION_LAYER) || layer_state_cmp(state, _QUANTUM_LAYER))); */
+  rgblight_set_layer_state(_DEFAULT_RGBLIGHT_LAYER, (layer_state_cmp(state, _DEFAULT_LAYER) || layer_state_cmp(state, _NUMERALS_LAYER) || layer_state_cmp(state, _FUNCTION_LAYER) || layer_state_cmp(state, _QUANTUM_LAYER)));
   /* rgblight_set_layer_state(_MOUSEKEYS_RGBLIGHT_LAYER, layer_state_cmp(state, _MOUSEKEYS_LAYER)); */
 
   return state;
 }
-
-/* bool process_record_user(uint16_t keycode, keyrecord_t *record) { */
-/*   if (record->event.pressed) { */
-/*     PLAY_SONG(startup_sound); */
-/*   } */
-/*   return true; */
-/* } */
 
 // Macros
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
@@ -405,7 +404,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       return false;
 
     // Exempt special keys on quantum layer from meh/hyper passthrough
-    case _TO_MSK:
+    /* case _TO_MSK: */
     case _QUASPC:
       return true;
 

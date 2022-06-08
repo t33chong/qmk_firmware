@@ -7,7 +7,7 @@
 
 /* USB Device descriptor parameter */
 #define VENDOR_ID    0x7EEC
-#define PRODUCT_ID   0x0001
+#define PRODUCT_ID   0x0140
 #define DEVICE_VER   0x0001
 #define MANUFACTURER t33chong
 #define PRODUCT      P01NT4G0N
@@ -28,7 +28,8 @@
  *                  ROW2COL = ROW = Anode (+), COL = Cathode (-, marked on diode)
  *
  */
-#define MATRIX_ROW_PINS { B2, F1, F6, F7, C7, C6, C1, B1 }
+#define MATRIX_ROW_PINS { B2, F1, F6, F7, C7, C4, C1, B1 }
+/* #define MATRIX_ROW_PINS { B2, F1, F6, F7, C7, C6, C1, B1 } */
 #define MATRIX_COL_PINS { B4, E0, E1, C0, C2, D7, B3, C5 }
 /* #define MATRIX_ROW_PINS { B2, F1, F6, F7, C7, C6, C1, B1 } */
 /* #define MATRIX_COL_PINS { B4, E0, E1, C0, C2, D7 } */
@@ -41,7 +42,8 @@
 
 // Audio
 #ifdef AUDIO_ENABLE
-#define AUDIO_PIN C4
+#define AUDIO_PIN C6
+/* #define AUDIO_PIN C4 */
 #define STARTUP_SONG SONG(STARTUP_SOUND)
 #endif //AUDIO_ENABLE
 
