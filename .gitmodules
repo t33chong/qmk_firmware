@@ -30,3 +30,6 @@
 [submodule "keyboards/p01nt4g0n/keymaps/default/qmk-vim"]
 	path = keyboards/p01nt4g0n/keymaps/default/qmk-vim
 	url = git@github.com:t33chong/qmk-vim.git
+[submodule "keyboards/overboard/keymaps/default/qmk-vim"]
+	path = keyboards/overboard/keymaps/default/qmk-vim
+	url = git@github.com:t33chong/qmk-vim.git
