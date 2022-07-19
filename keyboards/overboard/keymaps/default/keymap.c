@@ -43,9 +43,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   /* XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                   XXXXXXX, XXXXXXX, XXXXXXX,                   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX  */
 
   [_DEFAULT_LAYER] = LAYOUT(
-    KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,             KC_UP,                              KC_UP,            KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_QUOT,
-    _CTLESC, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_LEFT, KC_ENT,  KC_RGHT,          KC_LEFT, KC_ENT,  KC_RGHT, KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_ENT,
-    _LPAREN, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,             KC_DOWN,     KC_BTN4,  KC_BTN5,     KC_DOWN,          KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, _RPAREN,
+    KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,             _H(U),                              KC_UP,            KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_QUOT,
+    _CTLESC, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    _H(O),   KC_ENT,  _H(P),            KC_LEFT, KC_ENT,  KC_RGHT, KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_ENT,
+    _LPAREN, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,             _H(I),       KC_BTN4,  KC_BTN5,     KC_DOWN,          KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, _RPAREN,
     _VIMODE, KC_LALT, KC_LGUI, _GNUEQL, KC_LSFT, _MO_NUM,                   KC_BTN1, KC_BTN3, KC_BTN2,                   _BAKSPC, _QUASPC, _UNDSCR, KC_DOWN, KC_UP,   _MO_FUN
   ),
 
@@ -92,13 +92,18 @@ const rgblight_segment_t* const PROGMEM _rgblight_layers[] = RGBLIGHT_LAYERS_LIS
   _vim_normal_rgblight_layer,
   _vim_visual_rgblight_layer
 );
+#endif // RGBLIGHT_ENABLE
 
 // Execute on startup
 void keyboard_post_init_user(void) {
+/* #ifdef BACKLIGHT_ENABLE */
+/*   backlight_enable(); */
+/* #endif // BACKLIGHT_ENABLE */
+#ifdef RGBLIGHT_ENABLE
   rgblight_layers = _rgblight_layers;
   rgblight_enable_noeeprom();
-}
 #endif // RGBLIGHT_ENABLE
+}
 
 // If true, don't count a tap and a hold as repetition of the tap action
 bool get_tapping_force_hold(uint16_t keycode, keyrecord_t *record) {
@@ -435,7 +440,7 @@ bool dip_switch_update_user(uint8_t index, bool active) {
 
 #ifdef OLED_ENABLE
 bool oled_task_user(void) {
-    oled_write_P(PSTR("Hello world\nHello world\nHello world\nHello world"), false);
+    oled_write_P(PSTR("Hello world!!!!!!!!!\nHello world!!!!!!!!!\nHello world!!!!!!!!!\nHello world!!!!!!!!!\nHello world!!!!!!!!!\nHello world!!!!!!!!!\nHello world!!!!!!!!!\nHello world!!!!!!!!!\n"), false);
     return false;
 }
 #endif // OLED_ENABLE
